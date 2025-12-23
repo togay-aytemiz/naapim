@@ -31,30 +31,61 @@ serve(async (req) => {
             )
         }
 
-        // Weighted random feeling - more positive outcomes
-        const getRandomFeeling = () => {
+        // Pick outcome_type: 70% decided, 30% cancelled (no thinking - they don't write comments)
+        const getRandomOutcomeType = () => {
+            return Math.random() < 0.70 ? 'decided' : 'cancelled'
+        }
+
+        // Feeling based on outcome_type
+        const getRandomFeeling = (outcomeType: string) => {
             const rand = Math.random()
-            if (rand < 0.45) return 'happy'      // 45% happy
-            if (rand < 0.70) return 'neutral'    // 25% neutral
-            if (rand < 0.85) return 'uncertain'  // 15% uncertain
-            return 'regret'                       // 15% regret
+            if (outcomeType === 'decided') {
+                // Decided: mostly positive
+                if (rand < 0.50) return 'happy'      // 50% happy
+                if (rand < 0.75) return 'neutral'    // 25% neutral
+                if (rand < 0.90) return 'uncertain'  // 15% uncertain
+                return 'regret'                       // 10% regret
+            } else {
+                // Cancelled: mixed feelings
+                if (rand < 0.40) return 'happy'      // 40% happy (relieved)
+                if (rand < 0.70) return 'neutral'    // 30% neutral
+                if (rand < 0.90) return 'regret'     // 20% regret (missed opportunity)
+                return 'uncertain'                    // 10% uncertain
+            }
         }
 
-        // Generate feelings with guaranteed diversity
-        // At least one should not be 'happy' for realism
-        let feelings = Array.from({ length: count }, () => getRandomFeeling())
+        // Generate outcome combinations
+        const outcomeCombos = Array.from({ length: count }, () => {
+            const outcomeType = getRandomOutcomeType()
+            const feeling = getRandomFeeling(outcomeType)
+            return { outcomeType, feeling }
+        })
 
-        // If all are 'happy', force one to be different
-        if (feelings.every(f => f === 'happy') && feelings.length >= 2) {
+        // Ensure diversity: at least one cancelled if all are decided
+        if (outcomeCombos.every(c => c.outcomeType === 'decided') && count >= 2) {
+            outcomeCombos[1].outcomeType = 'cancelled'
+            outcomeCombos[1].feeling = getRandomFeeling('cancelled')
+        }
+
+        // Ensure feeling diversity: not all happy
+        if (outcomeCombos.every(c => c.feeling === 'happy') && count >= 2) {
             const alternatives = ['neutral', 'uncertain', 'regret']
-            feelings[1] = alternatives[Math.floor(Math.random() * alternatives.length)]
+            outcomeCombos[1].feeling = alternatives[Math.floor(Math.random() * alternatives.length)]
         }
 
-        const feelingDescriptions: Record<string, string> = {
-            happy: 'mutlu ve memnun, kararından çok hoşnut',
-            neutral: 'nötr, ne çok mutlu ne de mutsuz, idare eder',
-            uncertain: 'kararsız ve belirsiz, hala emin değil',
-            regret: 'pişman, keşke farklı yapsaydı diyor'
+        const feelingDescriptions: Record<string, Record<string, string>> = {
+            decided: {
+                happy: 'mutlu ve memnun, kararından çok hoşnut, iyi ki yapmış',
+                neutral: 'nötr, yaptı ama ne çok mutlu ne mutsuz',
+                uncertain: 'hala tam emin değil, doğru mu yaptı acaba diyor',
+                regret: 'pişman, keşke yapmasaydı diyor'
+            },
+            cancelled: {
+                happy: 'rahatlamış, vazgeçtiği için mutlu, iyi ki yapmamış',
+                neutral: 'vazgeçti ama önemli bir şey değilmiş gibi',
+                uncertain: 'acaba yapsaydım mı diyor, hala düşünüyor',
+                regret: 'keşke deneseymiş, fırsatı kaçırmış gibi hissediyor'
+            }
         }
 
         const prompt = `Sen Türkçe yazan bir içerik üreticisisin. Aşağıdaki soruya benzer bir karar veren ${count} farklı kişinin deneyimlerini yaz.
@@ -62,33 +93,36 @@ serve(async (req) => {
 Orijinal soru: "${user_question}"
 
 Her kişi için:
-1. Benzer ama biraz farklı bir soru versiyonu yaz (anlam aynı olsun ama kelimeler değişsin)
-2. O kişinin hissini belirt ve buna uygun bir deneyim hikayesi yaz
-3. Hikaye doğal ve insan yazısı gibi olsun (AI gibi durmasın)
-4. Uzunluk 1-3 cümle arasında olsun, bazıları kısa bazıları uzun
-5. Bazılarında spesifik detay olsun (ama çok aşırı değil)
+1. Benzer ama biraz farklı bir soru versiyonu yaz
+2. Verilen karar durumu ve hissine uygun bir deneyim hikayesi yaz
+3. Hikaye TUTARLI olmalı: karar verdiyse "yaptım/aldım/gittim", vazgeçtiyse "yapmadım/almadım/gitmedim" gibi
+4. Doğal ve insan yazısı gibi olsun
+5. 1-3 cümle arası, bazıları kısa bazıları uzun
 
-Hisler ve tonlar:
-${feelings.map((f, i) => `${i + 1}. Kişi: ${feelingDescriptions[f]}`).join('\n')}
+Kişiler ve durumları:
+${outcomeCombos.map((c, i) => `${i + 1}. Kişi: ${c.outcomeType === 'decided' ? 'KARAR VERDİ (yaptı)' : 'VAZGEÇTİ (yapmadı)'} - ${feelingDescriptions[c.outcomeType][c.feeling]}`).join('\n')}
 
 JSON formatında yanıt ver:
 {
   "outcomes": [
     {
       "similar_question": "benzer soru versiyonu",
-      "outcome_text": "kişinin deneyim hikayesi",
-      "feeling": "${feelings[0]}",
-      "outcome_type": "decided veya thinking veya cancelled"
+      "outcome_text": "kişinin deneyim hikayesi - KARAR DURUMUNA UYGUN OLMALI",
+      "feeling": "${outcomeCombos[0].feeling}",
+      "outcome_type": "${outcomeCombos[0].outcomeType}"
     }
   ]
 }
 
-Önemli:
-- Türkçe yaz
-- Doğal ol, resmi olma
-- Her hikaye farklı uzunlukta olsun
-- Bazılarında emoji kullanılabilir ama zorunlu değil
-- outcome_type genelde "decided" olsun ama bir tanesi "thinking" veya "cancelled" olabilir`
+ÇOK ÖNEMLİ:
+- outcome_type "decided" ise: "aldım", "yaptım", "başladım" gibi YAPILDI ifadeleri kullan
+- outcome_type "cancelled" ise: NEDEN vazgeçtiğini kısaca açıkla! Örnek:
+  - "Almaktan vazgeçtim, düşününce masrafları fazla geldi"
+  - "Sonunda yapmamaya karar verdim, şartlar uygun değildi"  
+  - "Vazgeçtim çünkü daha iyi bir seçenek çıktı"
+  Ama çok uzun yazma, 1-2 cümle yeter. Doğal insan dili kullan.
+- feeling ile outcome_type tutarlı olmalı (örn: cancelled + happy = "vazgeçtiğim için rahatladım")
+- Türkçe yaz, doğal ol, resmi olma`
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -166,9 +200,9 @@ JSON formatında yanıt ver:
                 const embedding = await generateEmbedding(textForEmbedding)
                 return {
                     session_id: null,
-                    outcome_type: o.outcome_type || 'decided',
+                    outcome_type: o.outcome_type || outcomeCombos[index]?.outcomeType || 'decided',
                     outcome_text: o.outcome_text,
-                    feeling: feelings[index],
+                    feeling: o.feeling || outcomeCombos[index]?.feeling || 'neutral',
                     related_question: o.similar_question,
                     archetype_id: archetype_id || null,
                     is_generated: true,

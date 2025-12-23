@@ -69,7 +69,13 @@ RULES:
   DO NOT always choose "cautious" - read the context and choose appropriately!
   If the user seems excited and the situation is reasonable, use "positive".
   
-- followup_question: Short question in Turkish asking if they made a decision.
+- followup_question: MUST be specific to the user's question and situation.
+  BAD examples (too generic): "Kararınızı verdiniz mi?", "Ne oldu?", "Bir şey değişti mi?"
+  GOOD examples (specific to USER'S topic): 
+    - If user asked about buying a car: "Araba almaya karar verdin mi?"
+    - If user asked about changing jobs: "Yeni iş teklifini kabul ettin mi?"
+    - If user asked about moving: "Taşınmaya başladın mı?"
+  The question MUST reference the actual topic the user asked about.
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {

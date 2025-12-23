@@ -321,6 +321,18 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     return (
         <div className="max-w-xl mx-auto px-5 py-6 w-full min-h-screen flex flex-col">
+            {/* User's Original Question */}
+            {userInput && (
+                <div className="mb-4 text-center">
+                    <p
+                        className="text-sm italic"
+                        style={{ color: 'var(--text-muted)' }}
+                    >
+                        "{userInput}"
+                    </p>
+                </div>
+            )}
+
             {/* Header / Progress */}
             <div className="flex items-center gap-4 mb-2">
                 <button

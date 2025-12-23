@@ -192,9 +192,31 @@ export const ReturnFlow: React.FC = () => {
     };
 
     // Select feeling
-    const handleFeelingSelect = (f: FeelingType) => {
+    const handleFeelingSelect = async (f: FeelingType) => {
         setFeeling(f);
-        setStep('share-outcome');
+
+        // If "thinking", skip share step and save immediately
+        if (outcomeType === 'thinking' && sessionData) {
+            setLoading(true);
+            try {
+                await saveOutcome({
+                    session_id: sessionData.session_id,
+                    outcome_type: outcomeType,
+                    outcome_text: undefined,
+                    feeling: f,
+                    archetype_id: sessionData.archetype_id
+                });
+                await fetchCommunityStories();
+                setStep('view-stories');
+            } catch (err) {
+                console.error('Error saving outcome:', err);
+                setStep('view-stories');
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setStep('share-outcome');
+        }
     };
 
     // Share outcome
@@ -542,7 +564,7 @@ export const ReturnFlow: React.FC = () => {
                     <div className="space-y-8 animate-in">
                         <div className="text-center space-y-3">
                             <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                                Şu an ne durumdasın?
+                                {sessionData.analysis?.followup_question || `"${sessionData.user_question}" konusunda ne oldu?`}
                             </h1>
                         </div>
 

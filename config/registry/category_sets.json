@@ -186,7 +186,10 @@
                 "school_criteria",
                 "parental_wellbeing",
                 "social_context_child",
-                "activity_balance"
+                "activity_balance",
+                "screen_management",
+                "sleep_habits",
+                "caregiver_context"
             ]
         },
         {

@@ -551,6 +551,24 @@
             "label": "Seni bu kararı vermekten alıkoyan en büyük engel ne?",
             "type": "single_select",
             "option_set_id": "emotional_blocker_v1"
+        },
+        {
+            "key": "screen_approach",
+            "label": "Ekran kullanımı konusunda kuralın nedir?",
+            "type": "single_select",
+            "option_set_id": "screen_rules_v1"
+        },
+        {
+            "key": "sleep_arrangement",
+            "label": "Uyku düzeniniz şu an nasıl?",
+            "type": "single_select",
+            "option_set_id": "sleep_context_v1"
+        },
+        {
+            "key": "care_support_quality",
+            "label": "Çocuğuna bakan kişilere (veya desteğe) ne kadar güveniyorsun?",
+            "type": "single_select",
+            "option_set_id": "caregiver_trust_v1"
         }
     ]
 }

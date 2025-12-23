@@ -2063,6 +2063,72 @@
                     "label": "Duygusal olarak gücüm/enerjim yok"
                 }
             ]
+        },
+        {
+            "id": "screen_rules_v1",
+            "description": "Ekran kuralları",
+            "options": [
+                {
+                    "id": "strict",
+                    "label": "Çok katı kurallarımız var / Yasak"
+                },
+                {
+                    "id": "content_focus",
+                    "label": "Süre değil içeriğe odaklanıyoruz"
+                },
+                {
+                    "id": "reward",
+                    "label": "Ödül olarak veriyoruz"
+                },
+                {
+                    "id": "unrestricted",
+                    "label": "Oldukça serbest, kısıtlama yok"
+                }
+            ]
+        },
+        {
+            "id": "sleep_context_v1",
+            "description": "Uyku düzeni",
+            "options": [
+                {
+                    "id": "co_sleeping",
+                    "label": "Birlikte uyuyoruz (Co-sleeping)"
+                },
+                {
+                    "id": "training",
+                    "label": "Uyku eğitimi veriyoruz/deniyoruz"
+                },
+                {
+                    "id": "independent",
+                    "label": "Kendi odasında/yatağında uyuyor"
+                },
+                {
+                    "id": "struggle",
+                    "label": "Her gece savaş/kaos var"
+                }
+            ]
+        },
+        {
+            "id": "caregiver_trust_v1",
+            "description": "Bakıcı/Destek güveni",
+            "options": [
+                {
+                    "id": "full_trust",
+                    "label": "Gözüm arkada kalmıyor (Anneanne/Babaanne vb.)"
+                },
+                {
+                    "id": "anxious",
+                    "label": "Sürekli kontrol etme ihtiyacı hissediyorum"
+                },
+                {
+                    "id": "solo",
+                    "label": "Kimsemiz yok, her şeyi kendimiz yapıyoruz"
+                },
+                {
+                    "id": "changing",
+                    "label": "Sık sık bakıcı/destek değişiyor"
+                }
+            ]
         }
     ],
     "_meta": {

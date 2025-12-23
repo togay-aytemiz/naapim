@@ -612,6 +612,27 @@
             "field_keys": [
                 "main_emotional_blocker"
             ]
+        },
+        {
+            "id": "screen_management",
+            "label": "Ekran Yönetimi",
+            "field_keys": [
+                "screen_approach"
+            ]
+        },
+        {
+            "id": "sleep_habits",
+            "label": "Uyku Düzeni",
+            "field_keys": [
+                "sleep_arrangement"
+            ]
+        },
+        {
+            "id": "caregiver_context",
+            "label": "Bakım Desteği/Güven",
+            "field_keys": [
+                "care_support_quality"
+            ]
         }
     ],
     "_meta": {

@@ -180,91 +180,7 @@ const StoryCard = ({ story, sessionId }: { story: Outcome; sessionId: string }) 
         </div>
     );
 };
-const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
-const feelingInfo = feelingOptions.find(f => f.type === story.feeling);
-if (!feelingInfo) return null;
-
-const badgeColors: Record<string, { bg: string; text: string }> = {
-    happy: { bg: 'var(--emerald-100)', text: 'var(--emerald-700)' },
-    neutral: { bg: 'var(--neutral-200)', text: 'var(--neutral-700)' },
-    regret: { bg: 'var(--amber-100)', text: 'var(--amber-700)' },
-    uncertain: { bg: 'var(--blue-100)', text: 'var(--blue-700)' }
-};
-
-const colors = badgeColors[story.feeling || 'neutral'];
-
-// Outcome type styling
-const outcomeTypeStyles: Record<string, { icon: React.ReactNode; label: string; bg: string; text: string }> = {
-    decided: {
-        icon: <Check className="w-3 h-3" />,
-        label: 'Karar verdi',
-        bg: 'var(--emerald-100)',
-        text: 'var(--emerald-700)'
-    },
-    cancelled: {
-        icon: <X className="w-3 h-3" />,
-        label: 'Vazgeçti',
-        bg: 'var(--red-100)',
-        text: 'var(--red-600)'
-    },
-    thinking: {
-        icon: <Clock className="w-3 h-3" />,
-        label: 'Düşünüyor',
-        bg: 'var(--amber-100)',
-        text: 'var(--amber-700)'
-    }
-};
-
-const outcomeStyle = outcomeTypeStyles[story.outcome_type] || outcomeTypeStyles.decided;
-
-return (
-    <div className="p-5 rounded-2xl transition-all duration-300 hover:shadow-sm" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-        <div className="flex items-center gap-2 mb-3">
-            {/* Outcome Type Badge */}
-            <span
-                className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: outcomeStyle.bg, color: outcomeStyle.text }}
-            >
-                {outcomeStyle.icon}
-                {outcomeStyle.label}
-            </span>
-            {/* Feeling Badge */}
-            <span className="text-lg">{feelingInfo.emoji}</span>
-            <span
-                className="text-xs font-medium px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: colors.bg, color: colors.text }}
-            >
-                {feelingInfo.label}
-            </span>
-        </div>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            "{story.outcome_text}"
-        </p>
-        <div className="flex items-center justify-between mt-3">
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>— Anonim kullanıcı</p>
-
-            {/* Feedback Buttons */}
-            <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <button
-                    onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
-                    className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'up' ? 'bg-green-100 text-green-600 scale-110' : 'text-gray-400 hover:text-green-600 hover:bg-green-50'}`}
-                    title="Faydalı"
-                >
-                    <ThumbsUp className="w-3.5 h-3.5" />
-                </button>
-                <button
-                    onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
-                    className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'down' ? 'bg-red-100 text-red-600 scale-110' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}
-                    title="Faydasız"
-                >
-                    <ThumbsDown className="w-3.5 h-3.5" />
-                </button>
-            </div>
-        </div>
-    </div>
-);
-};
 
 export const ReturnFlow: React.FC = () => {
     const navigate = useNavigate();
@@ -386,29 +302,40 @@ export const ReturnFlow: React.FC = () => {
 
     // Select feeling
     const handleFeelingSelect = async (f: FeelingType) => {
-        setFeeling(f);
+        try {
+            setFeeling(f);
 
-        // If "thinking", skip share step and save immediately
-        if (outcomeType === 'thinking' && sessionData) {
-            setLoading(true);
-            try {
-                await saveOutcome({
-                    session_id: sessionData.session_id,
-                    outcome_type: outcomeType,
-                    outcome_text: undefined,
-                    feeling: f,
-                    archetype_id: sessionData.archetype_id
-                });
-                await fetchCommunityStories();
-                setStep('view-stories');
-            } catch (err) {
-                console.error('Error saving outcome:', err);
-                setStep('view-stories');
-            } finally {
-                setLoading(false);
+            // If "thinking", skip share step and save immediately
+            if (outcomeType === 'thinking' && sessionData) {
+                setLoading(true);
+                try {
+                    await saveOutcome({
+                        session_id: sessionData.session_id,
+                        outcome_type: outcomeType,
+                        outcome_text: undefined,
+                        feeling: f,
+                        archetype_id: sessionData.archetype_id
+                    });
+                    await fetchCommunityStories();
+                    setStep('view-stories');
+                } catch (err) {
+                    console.error('Error saving outcome:', err);
+                    setStep('view-stories');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setStep('share-outcome');
             }
-        } else {
-            setStep('share-outcome');
+        } catch (error) {
+            console.error("Unexpected error in feeling selection", error);
+            // Default fallthrough to next step if something weird happens, 
+            // but for 'thinking' mode we don't want to advance if save failed totally? 
+            // Actually, if it failed it's handled in inner catch. 
+            // Outer catch catches sync errors (unlikely).
+            if (outcomeType !== 'thinking') {
+                setStep('share-outcome');
+            }
         }
     };
 
@@ -753,32 +680,45 @@ export const ReturnFlow: React.FC = () => {
                 )}
 
                 {/* Step 3: Choose Outcome (Change Decision) */}
-                {step === 'choose-outcome' && sessionData && (
-                    <div className="space-y-8 animate-in">
-                        <div className="text-center space-y-3">
-                            <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                                {sessionData.analysis?.followup_question || `"${sessionData.user_question}" konusunda ne oldu?`}
-                            </h1>
-                        </div>
+                {step === 'choose-outcome' && sessionData && (() => {
+                    const lastOutcomeType = sessionData.previous_outcomes?.[0]?.outcome_type;
+                    return (
+                        <div className="space-y-8 animate-in">
+                            <div className="text-center space-y-3">
+                                <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                    {sessionData.analysis?.followup_question || `"${sessionData.user_question}" konusunda ne oldu?`}
+                                </h1>
+                            </div>
 
-                        <div className="flex flex-col gap-3">
-                            <button onClick={() => handleOutcomeSelect('decided')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
-                                <Check className="w-5 h-5" style={{ color: 'var(--emerald-600)' }} /> Karar verdim
-                            </button>
-                            <button onClick={() => handleOutcomeSelect('thinking')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
-                                <Clock className="w-5 h-5" style={{ color: 'var(--amber-600)' }} /> Hala düşünüyorum
-                            </button>
-                            <button onClick={() => handleOutcomeSelect('cancelled')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
-                                <X className="w-5 h-5" style={{ color: 'var(--red-500)' }} /> Vazgeçtim
-                            </button>
+                            <div className="flex flex-col gap-3">
+                                <button onClick={() => handleOutcomeSelect('decided')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
+                                    <Check className="w-5 h-5" style={{ color: 'var(--emerald-600)' }} /> Karar verdim
+                                </button>
+                                {/* Only show 'thinking' if last outcome wasn't 'thinking' - user is changing their mind */}
+                                {lastOutcomeType !== 'thinking' && (
+                                    <button onClick={() => handleOutcomeSelect('thinking')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
+                                        <Clock className="w-5 h-5" style={{ color: 'var(--amber-600)' }} /> Hala düşünüyorum
+                                    </button>
+                                )}
+                                <button onClick={() => handleOutcomeSelect('cancelled')} className="w-full py-4 rounded-xl font-medium flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
+                                    <X className="w-5 h-5" style={{ color: 'var(--red-500)' }} /> Vazgeçtim
+                                </button>
+                            </div>
+
+                            {/* Back button */}
+                            <div className="text-center">
+                                <button onClick={() => setStep('returning-user')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                    ← Geri dön
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    );
+                })()}
 
                 {/* Step 4: Ask Feeling */}
                 {step === 'ask-feeling' && sessionData && (
-                    <div className="space-y-8 animate-in">
-                        <div className="text-center space-y-3">
+                    <div className="space-y-8 animate-in text-center">
+                        <div className="space-y-3">
                             <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
                                 Bu kararla ilgili nasıl hissediyorsun?
                             </h1>
@@ -789,14 +729,35 @@ export const ReturnFlow: React.FC = () => {
                                 <button
                                     key={f.type}
                                     onClick={() => handleFeelingSelect(f.type)}
-                                    className="py-5 rounded-xl font-medium flex flex-col items-center gap-2"
-                                    style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}
+                                    disabled={loading}
+                                    className="py-5 rounded-xl font-medium flex flex-col items-center gap-2 transition-all duration-200 active:scale-95"
+                                    style={{
+                                        backgroundColor: 'var(--bg-secondary)',
+                                        border: '1px solid var(--border-primary)',
+                                        color: 'var(--text-primary)',
+                                        opacity: loading ? 0.5 : 1,
+                                        cursor: loading ? 'not-allowed' : 'pointer'
+                                    }}
                                 >
                                     <span className="text-3xl">{f.emoji}</span>
                                     <span className="text-sm">{f.label}</span>
                                 </button>
                             ))}
                         </div>
+                        {loading && (
+                            <p className="text-sm animate-pulse" style={{ color: 'var(--text-secondary)' }}>
+                                İşleminiz yapılıyor, lütfen bekleyin...
+                            </p>
+                        )}
+
+                        {/* Back button */}
+                        {!loading && (
+                            <div className="text-center">
+                                <button onClick={() => setStep('choose-outcome')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                    ← Geri dön
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -856,6 +817,15 @@ export const ReturnFlow: React.FC = () => {
                                 <>Paylaş ve diğerlerini gör <ChevronDown className="w-5 h-5" /></>
                             )}
                         </button>
+
+                        {/* Back button */}
+                        {!isModerating && !loading && (
+                            <div className="text-center">
+                                <button onClick={() => setStep('ask-feeling')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                    ← Geri dön
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
 

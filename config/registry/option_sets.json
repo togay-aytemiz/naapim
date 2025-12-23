@@ -2129,6 +2129,88 @@
                     "label": "Sık sık bakıcı/destek değişiyor"
                 }
             ]
+        },
+        {
+            "id": "reversibility_v1",
+            "description": "Kararın geri döndürülebilirliği",
+            "options": [
+                {
+                    "id": "reversible",
+                    "label": "Evet, vazgeçersem geri dönebilirim"
+                },
+                {
+                    "id": "hard_reversible",
+                    "label": "Zor olur ama imkansız değil"
+                },
+                {
+                    "id": "irreversible",
+                    "label": "Hayır, geri dönüşü olmayan bir yol"
+                }
+            ]
+        },
+        {
+            "id": "trial_v1",
+            "description": "Deneme şansı",
+            "options": [
+                {
+                    "id": "yes_trial",
+                    "label": "Evet, küçük bir deneme yapabilirim"
+                },
+                {
+                    "id": "no_trial",
+                    "label": "Hayır, tek seferde karar vermeliyim"
+                }
+            ]
+        },
+        {
+            "id": "impact_scope_v1",
+            "description": "Etki alanı",
+            "options": [
+                {
+                    "id": "personal",
+                    "label": "Sadece beni etkiliyor"
+                },
+                {
+                    "id": "close_circle",
+                    "label": "Ailemi / Yakınlarımı da etkiliyor"
+                },
+                {
+                    "id": "wide_circle",
+                    "label": "Geniş bir çevreyi etkiliyor"
+                }
+            ]
+        },
+        {
+            "id": "history_v1",
+            "description": "Karar geçmişi",
+            "options": [
+                {
+                    "id": "yes_similar",
+                    "label": "Evet, daha önce benzer bir karar aldım"
+                },
+                {
+                    "id": "no_first_time",
+                    "label": "Hayır, bu ilk defa başıma geliyor"
+                }
+            ]
+        },
+        {
+            "id": "outcome_sentiment_v1",
+            "description": "Geçmiş sonuç hissi",
+            "options": [
+                {
+                    "id": "positive",
+                    "label": "İyi sonuçlanmıştı, memnundum"
+                },
+                {
+                    "id": "negative",
+                    "label": "Kötüydü / Pişman oldum"
+                },
+                {
+                    "id": "neutral",
+                    "label": "Nötr / Ne iyi ne kötüydü"
+                }
+            ]
         }
     ],
     "_meta": {

@@ -214,13 +214,6 @@
             ]
         },
         {
-            "id": "daily_routine",
-            "label": "Günlük rutin",
-            "field_keys": [
-                "routine_flexibility"
-            ]
-        },
-        {
             "id": "change_readiness",
             "label": "Değişime hazırlık",
             "field_keys": [
@@ -410,13 +403,6 @@
             ]
         },
         {
-            "id": "mental_triggers",
-            "label": "Stres ve Zihin",
-            "field_keys": [
-                "stress_source"
-            ]
-        },
-        {
             "id": "physical_limit",
             "label": "Fiziksel Durum",
             "field_keys": [
@@ -470,13 +456,6 @@
             "label": "Sosyal Çevre",
             "field_keys": [
                 "community_importance"
-            ]
-        },
-        {
-            "id": "pace_of_life",
-            "label": "Yaşam Temposu",
-            "field_keys": [
-                "life_pace_pref"
             ]
         },
         {
@@ -632,6 +611,32 @@
             "label": "Bakım Desteği/Güven",
             "field_keys": [
                 "care_support_quality"
+            ]
+        },
+        {
+            "id": "decision_nature",
+            "label": "Karar Doğası",
+            "field_keys": [
+                "decision_reversibility",
+                "trial_possible",
+                "decision_scope",
+                "past_similar_decision",
+                "past_outcome_sentiment"
+            ]
+        },
+        {
+            "id": "lifestyle_routine",
+            "label": "Yaşam Rutini ve Temposu",
+            "field_keys": [
+                "routine_flexibility",
+                "life_pace_pref"
+            ]
+        },
+        {
+            "id": "emotional_state",
+            "label": "Duygusal Durum",
+            "field_keys": [
+                "stress_source"
             ]
         }
     ],

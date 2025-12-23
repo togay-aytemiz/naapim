@@ -7,7 +7,8 @@
                 "urgency",
                 "support_system",
                 "priority_goal",
-                "constraint_blocker"
+                "constraint_blocker",
+                "decision_nature"
             ]
         },
         {
@@ -17,7 +18,8 @@
                 "urgency",
                 "support_system",
                 "priority_goal",
-                "emotional_barriers"
+                "emotional_barriers",
+                "decision_nature"
             ]
         },
         {
@@ -112,7 +114,7 @@
             "category_ids": [
                 "location_preference",
                 "social_needs",
-                "daily_routine",
+                "lifestyle_routine",
                 "change_readiness",
                 "daily_availability",
                 "timeline_horizon",
@@ -198,7 +200,7 @@
             "category_ids": [
                 "fitness_nutrition",
                 "habit_quality",
-                "mental_triggers",
+                "emotional_state",
                 "physical_limit",
                 "functional_impairment",
                 "medical_history"
@@ -220,8 +222,7 @@
             "category_ids": [
                 "environment_pref",
                 "climate_needs",
-                "community_level",
-                "pace_of_life"
+                "community_level"
             ]
         }
     ]

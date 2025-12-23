@@ -569,6 +569,36 @@
             "label": "Çocuğuna bakan kişilere (veya desteğe) ne kadar güveniyorsun?",
             "type": "single_select",
             "option_set_id": "caregiver_trust_v1"
+        },
+        {
+            "key": "decision_reversibility",
+            "label": "Bu karar geri döndürülebilir mi?",
+            "type": "single_select",
+            "option_set_id": "reversibility_v1"
+        },
+        {
+            "key": "trial_possible",
+            "label": "Kararı vermeden önce deneme şansın var mı?",
+            "type": "single_select",
+            "option_set_id": "trial_v1"
+        },
+        {
+            "key": "decision_scope",
+            "label": "Bu karar başkasını doğrudan etkiliyor mu?",
+            "type": "single_select",
+            "option_set_id": "impact_scope_v1"
+        },
+        {
+            "key": "past_similar_decision",
+            "label": "Daha önce benzer bir karar aldın mı?",
+            "type": "single_select",
+            "option_set_id": "history_v1"
+        },
+        {
+            "key": "past_outcome_sentiment",
+            "label": "O zamanki sonuç nasıldı?",
+            "type": "single_select",
+            "option_set_id": "outcome_sentiment_v1"
         }
     ]
 }

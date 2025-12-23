@@ -114,20 +114,6 @@ export const ResultPage = () => {
                             analysis: analysisResult
                         });
                     }
-
-                    // Generate seeded outcomes (fire and forget style but capture result)
-                    if (userInput && archetypeId) {
-                        setIsLoadingSeeds(true);
-                        try {
-                            const context = Object.entries(answers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
-                            const outcomes = await AnalysisService.generateSeededOutcomes(userInput, archetypeId, context);
-                            setSeededOutcomes(outcomes?.outcomes || []);
-                        } catch (err) {
-                            console.warn('Seeded outcomes error:', err);
-                        } finally {
-                            setIsLoadingSeeds(false);
-                        }
-                    }
                 } catch (error) {
                     console.error('Error generating result:', error);
                 } finally {
@@ -140,6 +126,27 @@ export const ResultPage = () => {
         };
         performParallelWork();
     }, [code, userInput, answers, archetypeId, sessionId, navigate, location.state]);
+
+    // Separate effect for seeded outcomes - runs after main loading completes
+    // User reads the analysis while this loads in background
+    useEffect(() => {
+        if (isLoading || !analysis || !userInput || !archetypeId) return;
+
+        const loadSeededOutcomes = async () => {
+            setIsLoadingSeeds(true);
+            try {
+                const context = Object.entries(answers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
+                const outcomes = await AnalysisService.generateSeededOutcomes(userInput, archetypeId, context);
+                setSeededOutcomes(outcomes?.outcomes || []);
+            } catch (err) {
+                console.warn('Seeded outcomes error:', err);
+            } finally {
+                setIsLoadingSeeds(false);
+            }
+        };
+
+        loadSeededOutcomes();
+    }, [isLoading, analysis, userInput, archetypeId, answers]);
 
     const handleReminderSet = (_email: string) => {
         setReminderAlreadySet(true);

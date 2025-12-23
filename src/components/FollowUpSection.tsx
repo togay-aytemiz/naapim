@@ -129,7 +129,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 opacity: 0.8 - (intensity * 0.15)
             }}
         >
-            <div className={`flex items-center gap-2 mb-3 blur-[${2 + intensity}px]`}>
+            <div className="flex items-center gap-2 mb-3 blur-sm">
                 <div
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
                     style={{ backgroundColor: 'var(--border-secondary)' }}
@@ -140,7 +140,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 <span className="text-lg opacity-50">😊</span>
             </div>
             <p
-                className={`text-sm leading-relaxed select-none blur-[${4 + intensity * 2}px]`}
+                className="text-sm leading-relaxed select-none blur-sm"
                 style={{ color: 'var(--text-secondary)' }}
             >
                 {text}
@@ -231,25 +231,8 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                         </p>
                     </div>
 
+                    {/* Cards container with overlay */}
                     <div className="space-y-3 relative">
-                        {/* Gradient overlay at bottom */}
-                        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--bg-primary)] to-transparent z-20 pointer-events-none" />
-
-                        {/* Lock Icon Overlay */}
-                        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                            <div
-                                className="p-3 rounded-full shadow-lg backdrop-blur-sm"
-                                style={{
-                                    backgroundColor: 'var(--bg-primary)',
-                                    border: '1px solid var(--border-secondary)'
-                                }}
-                            >
-                                <svg className="w-5 h-5" style={{ color: 'var(--text-muted)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                            </div>
-                        </div>
-
                         {/* Card 1: Real seeded outcome or skeleton */}
                         {isLoadingSeeds ? (
                             <SkeletonCard />
@@ -264,6 +247,24 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 
                         {/* Card 3: Fake more blurred */}
                         <FakeBlurredCard text={fakeTexts[1]} intensity={2} />
+
+                        {/* Gradient overlay at bottom */}
+                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent z-20 pointer-events-none" />
+
+                        {/* Lock Icon Overlay - centered on cards */}
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+                            <div
+                                className="p-3 rounded-full shadow-lg"
+                                style={{ backgroundColor: 'var(--text-primary)' }}
+                            >
+                                <svg className="w-5 h-5" style={{ color: 'var(--bg-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <p className="mt-2 text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-secondary)' }}>
+                                Sen paylaş, hepsini gör
+                            </p>
+                        </div>
                     </div>
                 </div>
 

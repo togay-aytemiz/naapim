@@ -388,6 +388,50 @@
                 ],
                 "exclusions": []
             }
+        },
+        {
+            "id": "social_decisions",
+            "label": "Sosyal İlişkiler ve Arkadaşlık",
+            "default_followup_days": 14,
+            "category_set_ids": [
+                "core_v1",
+                "social_v1",
+                "social_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Arkadaşlar, komşular, geniş aile veya iş arkadaşlarıyla (duygusal boyutlu) yaşanan sorunlar ve kararlar.",
+                "positive_examples": [
+                    "Arkadaşımla küstük, barışmalı mıyım?",
+                    "Ev arkadaşımla sorun yaşıyorum, evden ayrılmalı mıyım?",
+                    "Komşumla tartıştıktan sonra nasıl davranmalıyım?",
+                    "Akrabalarımla görüşmeyi kesmeli miyim?",
+                    "Düğünüme kimi çağıracağıma karar veremiyorum."
+                ],
+                "negative_examples": [
+                    "Sevgilimden ayrılmalı mıyım? (relationship)",
+                    "Çocuğumla iletişimim kötü (parenting)",
+                    "İş yerindeki profesyonel bir sorun (career)"
+                ],
+                "keywords": [
+                    "arkadaş",
+                    "dost",
+                    "küslük",
+                    "komşu",
+                    "akraba",
+                    "kuzen",
+                    "ev arkadaşı",
+                    "düğün",
+                    "davet",
+                    "sosyal çevre",
+                    "kavga",
+                    "barışmak"
+                ],
+                "exclusions": [
+                    "romantik partner (relationship)",
+                    "çekirdek aile/çocuk (parenting)",
+                    "sadece iş odaklı çatışma (career)"
+                ]
+            }
         }
     ]
 }

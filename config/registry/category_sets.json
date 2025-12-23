@@ -5,11 +5,28 @@
             "label": "Ortak çekirdek",
             "category_ids": [
                 "urgency",
-                "risk_preference",
-                "budget_flexibility",
                 "support_system",
                 "priority_goal",
                 "constraint_blocker"
+            ]
+        },
+        {
+            "id": "social_v1",
+            "label": "Sosyal ilişkiler özel",
+            "category_ids": [
+                "relationship_bonding",
+                "social_conflict_type"
+            ]
+        },
+        {
+            "id": "social_details_v1",
+            "label": "Sosyal detaylar",
+            "category_ids": [
+                "communication_style",
+                "conflict_style",
+                "social_impact",
+                "conflict_context",
+                "resolution_effort"
             ]
         },
         {
@@ -21,7 +38,9 @@
                 "market_confidence",
                 "risk_tolerance_work",
                 "career_time_budget",
-                "timeline_horizon"
+                "timeline_horizon",
+                "budget_flexibility",
+                "risk_preference"
             ]
         },
         {
@@ -31,7 +50,8 @@
                 "child_age_stage",
                 "care_context",
                 "child_temperament",
-                "family_capacity"
+                "family_capacity",
+                "budget_flexibility"
             ]
         },
         {
@@ -49,7 +69,9 @@
             "category_ids": [
                 "income_stability",
                 "debt_level",
-                "savings_goal"
+                "savings_goal",
+                "budget_flexibility",
+                "risk_preference"
             ]
         },
         {
@@ -70,7 +92,8 @@
                 "current_level",
                 "learning_style",
                 "time_commitment",
-                "career_goal_edu"
+                "career_goal_edu",
+                "budget_flexibility"
             ]
         },
         {
@@ -82,7 +105,8 @@
                 "daily_routine",
                 "change_readiness",
                 "daily_availability",
-                "timeline_horizon"
+                "timeline_horizon",
+                "budget_flexibility"
             ]
         },
         {
@@ -92,7 +116,9 @@
                 "purchase_type",
                 "usage_frequency",
                 "resale_value",
-                "timeline_horizon"
+                "timeline_horizon",
+                "budget_flexibility",
+                "risk_preference"
             ]
         },
         {
@@ -112,7 +138,9 @@
                 "culture_preference",
                 "growth_type",
                 "burnout_level",
-                "relocation_readiness"
+                "relocation_readiness",
+                "work_life_impact",
+                "competence_readiness"
             ]
         },
         {
@@ -142,7 +170,13 @@
                 "edu_philosophy",
                 "screen_rules",
                 "support_network",
-                "activity_focus"
+                "activity_focus",
+                "nutrition_habits",
+                "behavioral_context",
+                "school_criteria",
+                "parental_wellbeing",
+                "social_context_child",
+                "activity_balance"
             ]
         },
         {
@@ -152,7 +186,9 @@
                 "fitness_nutrition",
                 "habit_quality",
                 "mental_triggers",
-                "physical_limit"
+                "physical_limit",
+                "functional_impairment",
+                "medical_history"
             ]
         },
         {

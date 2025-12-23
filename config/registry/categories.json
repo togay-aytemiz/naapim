@@ -499,6 +499,112 @@
             "field_keys": [
                 "deadline_horizon"
             ]
+        },
+        {
+            "id": "relationship_bonding",
+            "label": "Yakınlık Derecesi",
+            "field_keys": [
+                "friendship_depth"
+            ]
+        },
+        {
+            "id": "social_conflict_type",
+            "label": "Sorun Kaynağı",
+            "field_keys": [
+                "conflict_reason"
+            ]
+        },
+        {
+            "id": "social_impact",
+            "label": "Etki Alanı",
+            "field_keys": [
+                "conflict_impact"
+            ]
+        },
+        {
+            "id": "conflict_context",
+            "label": "Geçmiş",
+            "field_keys": [
+                "conflict_history"
+            ]
+        },
+        {
+            "id": "label_outcome",
+            "field_keys": [
+                "desired_outcome"
+            ]
+        },
+        {
+            "id": "work_life_impact",
+            "label": "İş-Özel Yaşam Dengesi",
+            "field_keys": [
+                "current_work_balance"
+            ]
+        },
+        {
+            "id": "competence_readiness",
+            "label": "Gereklilikler",
+            "field_keys": [
+                "skill_gap"
+            ]
+        },
+        {
+            "id": "functional_impairment",
+            "label": "Engel Durumu",
+            "field_keys": [
+                "daily_life_blocker"
+            ]
+        },
+        {
+            "id": "medical_history",
+            "label": "Şikayet Geçmişi",
+            "field_keys": [
+                "symptom_duration_log"
+            ]
+        },
+        {
+            "id": "nutrition_habits",
+            "label": "Beslenme Durumu",
+            "field_keys": [
+                "child_eating_habit",
+                "meal_stress_level"
+            ]
+        },
+        {
+            "id": "behavioral_context",
+            "label": "Davranış ve Disiplin",
+            "field_keys": [
+                "main_behavior_challenge",
+                "parenting_style"
+            ]
+        },
+        {
+            "id": "school_criteria",
+            "label": "Okul Beklentisi",
+            "field_keys": [
+                "school_expectation"
+            ]
+        },
+        {
+            "id": "parental_wellbeing",
+            "label": "Ebeveyn Ruh Hali",
+            "field_keys": [
+                "parent_state"
+            ]
+        },
+        {
+            "id": "social_context_child",
+            "label": "Çocuğun Sosyal Ortamı",
+            "field_keys": [
+                "child_social_dynamic"
+            ]
+        },
+        {
+            "id": "activity_balance",
+            "label": "Aktivite Dengesi",
+            "field_keys": [
+                "schedule_load"
+            ]
         }
     ],
     "_meta": {

@@ -1621,6 +1621,418 @@
                     "label": "Uzun vade (1 yıldan fazla)"
                 }
             ]
+        },
+        {
+            "id": "friendship_depth_v1",
+            "description": "Arkadaşlık/yakınlık derecesi",
+            "options": [
+                {
+                    "id": "acquaintance",
+                    "label": "Tanıdık / Merhaba-Merhaba"
+                },
+                {
+                    "id": "casual",
+                    "label": "Arkadaş (Ara sıra görüşülen)"
+                },
+                {
+                    "id": "close",
+                    "label": "Yakın Arkadaş"
+                },
+                {
+                    "id": "best_friend",
+                    "label": "En Yakın Dost / Kardeş gibi"
+                },
+                {
+                    "id": "family_member",
+                    "label": "Aile Üyesi / Akraba"
+                }
+            ]
+        },
+        {
+            "id": "social_conflict_v1",
+            "description": "Sosyal çatışma kaynağı",
+            "options": [
+                {
+                    "id": "trust_issue",
+                    "label": "Güven kırılması / Yalan / Sır ifşası"
+                },
+                {
+                    "id": "growing_apart",
+                    "label": "Uzaklaşma / İlgi azalması"
+                },
+                {
+                    "id": "toxic_behavior",
+                    "label": "Toksik davranışlar (Kıskançlık, Manipülasyon)"
+                },
+                {
+                    "id": "misunderstanding",
+                    "label": "Yanlış anlaşılma / İletişimsizlik"
+                },
+                {
+                    "id": "money_boundary",
+                    "label": "Para veya sınır ihlali"
+                },
+                {
+                    "id": "lifestyle_clash",
+                    "label": "Hayat tarzı uyuşmazlığı"
+                }
+            ]
+        },
+        {
+            "id": "social_impact_v1",
+            "description": "Durumun etki alanı",
+            "options": [
+                {
+                    "id": "just_us",
+                    "label": "Sadece ikimizi ilgilendiriyor"
+                },
+                {
+                    "id": "common_friends",
+                    "label": "Ortak arkadaşlarımız etkileniyor"
+                },
+                {
+                    "id": "family",
+                    "label": "Aile ve akrabalar da dahil"
+                },
+                {
+                    "id": "work",
+                    "label": "İş ortamı/kariyerim etkileniyor"
+                }
+            ]
+        },
+        {
+            "id": "social_history_v1",
+            "description": "Sorunun geçmişi",
+            "options": [
+                {
+                    "id": "first_time",
+                    "label": "İlk defa böyle bir sorun yaşıyoruz"
+                },
+                {
+                    "id": "recurring",
+                    "label": "Daha önce de oldu, tekrar ediyor"
+                },
+                {
+                    "id": "ongoing",
+                    "label": "Uzun süredir devam eden kronik bir sorun"
+                },
+                {
+                    "id": "sudden",
+                    "label": "Aniden ortaya çıktı, şoktayım"
+                }
+            ]
+        },
+        {
+            "id": "social_effort_v1",
+            "description": "Çözüm çabası",
+            "options": [
+                {
+                    "id": "none_yet",
+                    "label": "Henüz bir şey yapmadım"
+                },
+                {
+                    "id": "tried_failed",
+                    "label": "Konuştum ama değişen bir şey olmadı"
+                },
+                {
+                    "id": "exhausted",
+                    "label": "Her şeyi denedim, tükendim"
+                },
+                {
+                    "id": "waiting",
+                    "label": "Karşı taraftan adım bekliyorum"
+                }
+            ]
+        },
+        {
+            "id": "social_outcome_v1",
+            "description": "İstenen sonuç",
+            "options": [
+                {
+                    "id": "reconcile",
+                    "label": "Barışmak ve ilişkiyi düzeltmek"
+                },
+                {
+                    "id": "distance",
+                    "label": "Mesafe koymak ama kopmamak"
+                },
+                {
+                    "id": "cut_ties",
+                    "label": "İlişkiyi tamamen bitirmek"
+                },
+                {
+                    "id": "apology",
+                    "label": "Sadece özür/telafi bekliyorum"
+                }
+            ]
+        },
+        {
+            "id": "work_balance_v1",
+            "description": "İş-yaşam dengesi etkisi",
+            "options": [
+                {
+                    "id": "consuming",
+                    "label": "İş tüm hayatımı kaplıyor, nefes alamıyorum"
+                },
+                {
+                    "id": "manageable",
+                    "label": "Bazen yoğun ama genelde yönetilebilir"
+                },
+                {
+                    "id": "good_balance",
+                    "label": "Dengeli, özel hayatıma vakit kalıyor"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Çok esnek, zamanı ben yönetiyorum"
+                }
+            ]
+        },
+        {
+            "id": "skill_readiness_v1",
+            "description": "Yetkinlik hazırlığı",
+            "options": [
+                {
+                    "id": "fully_ready",
+                    "label": "Tamamen hazırım, deneyimim var"
+                },
+                {
+                    "id": "need_upskilling",
+                    "label": "Temelim var ama geliştirmem gerek"
+                },
+                {
+                    "id": "learning_needed",
+                    "label": "Öğrenmem gereken çok şey var"
+                },
+                {
+                    "id": "total_pivot",
+                    "label": "Sıfırdan başlıyorum, bir şey bilmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "symptom_severity_v1",
+            "description": "Semptom şiddeti ve hayata etkisi",
+            "options": [
+                {
+                    "id": "blocking",
+                    "label": "Hayatımı durduruyor, çok şiddetli"
+                },
+                {
+                    "id": "annoying",
+                    "label": "Rahatsız ediyor ama işlerimi yapabiliyorum"
+                },
+                {
+                    "id": "minor",
+                    "label": "Hafif, sadece ara sıra hissediyorum"
+                },
+                {
+                    "id": "preventive",
+                    "label": "Şu an sorun yok, önlem almak istiyorum"
+                }
+            ]
+        },
+        {
+            "id": "health_history_v1",
+            "description": "Sağlık sorununun süresi",
+            "options": [
+                {
+                    "id": "acute",
+                    "label": "Yeni başladı / Aniden oldu"
+                },
+                {
+                    "id": "chronic",
+                    "label": "Yıllardır devam ediyor (Kronik)"
+                },
+                {
+                    "id": "cyclic",
+                    "label": "Dönemsel olarak gelip gidiyor"
+                },
+                {
+                    "id": "recurring_injury",
+                    "label": "Eski bir sorun nüksetti"
+                }
+            ]
+        },
+        {
+            "id": "eating_habits_v1",
+            "description": "Yeme alışkanlıkları",
+            "options": [
+                {
+                    "id": "picky_eater",
+                    "label": "Yemek seçiyor, zor yiyor (Picky Eater)"
+                },
+                {
+                    "id": "good_appetite",
+                    "label": "İştahı yerinde, her şeyi yer"
+                },
+                {
+                    "id": "allergy_medical",
+                    "label": "Alerji veya tıbbi kısıtlamalar var"
+                },
+                {
+                    "id": "junk_food",
+                    "label": "Abur cubur / Şeker bağımlılığı var"
+                }
+            ]
+        },
+        {
+            "id": "mealtime_stress_v1",
+            "description": "Yemek saati stresi",
+            "options": [
+                {
+                    "id": "stressful",
+                    "label": "Savaş alanı gibi, çok stresli"
+                },
+                {
+                    "id": "routine",
+                    "label": "Rutin, ne iyi ne kötü"
+                },
+                {
+                    "id": "enjoyable",
+                    "label": "Keyifli aile zamanı"
+                },
+                {
+                    "id": "variable",
+                    "label": "Gününe göre değişiyor"
+                }
+            ]
+        },
+        {
+            "id": "behavior_challenge_v1",
+            "description": "Davranışsal zorluklar",
+            "options": [
+                {
+                    "id": "tantrums",
+                    "label": "Öfke nöbetleri / İnatlaşma"
+                },
+                {
+                    "id": "sleep_issues",
+                    "label": "Uyku sorunları / Gece uyanmaları"
+                },
+                {
+                    "id": "screen_addiction",
+                    "label": "Ekran bağımlılığı / Tablet kavgası"
+                },
+                {
+                    "id": "social_shy",
+                    "label": "Utangaçlık / Sosyal kaygı"
+                },
+                {
+                    "id": "focus_issue",
+                    "label": "Odaklanma / Dikkat eksikliği"
+                }
+            ]
+        },
+        {
+            "id": "discipline_style_v1",
+            "description": "Ebeveynlik/Disiplin tarzı",
+            "options": [
+                {
+                    "id": "authoritative",
+                    "label": "Kurallarımız net ve katı (Otoriter)"
+                },
+                {
+                    "id": "permissive",
+                    "label": "Oldukça özgür ve esnek (İzin verici)"
+                },
+                {
+                    "id": "democratic",
+                    "label": "Konuşarak/Anlaşarak çözüyoruz (Demokratik)"
+                },
+                {
+                    "id": "inconsistent",
+                    "label": "Bazen katı bazen esnek (Tutarsız)"
+                }
+            ]
+        },
+        {
+            "id": "school_priority_v1",
+            "description": "Okul beklentisi",
+            "options": [
+                {
+                    "id": "academic",
+                    "label": "Akademik başarı ve disiplin"
+                },
+                {
+                    "id": "happiness",
+                    "label": "Mutluluk ve sosyal beceriler"
+                },
+                {
+                    "id": "global",
+                    "label": "Yabancı dil ve global vizyon"
+                },
+                {
+                    "id": "values",
+                    "label": "Değerler eğitimi ve karakter"
+                }
+            ]
+        },
+        {
+            "id": "parent_wellbeing_v1",
+            "description": "Ebeveynin ruh hali",
+            "options": [
+                {
+                    "id": "exhausted",
+                    "label": "Tükenmiş / Burnout sınırında"
+                },
+                {
+                    "id": "guilt",
+                    "label": "Sürekli vicdan azabı çekiyorum"
+                },
+                {
+                    "id": "confident",
+                    "label": "Kendimden emin ve iyiyim"
+                },
+                {
+                    "id": "overwhelmed",
+                    "label": "Her şeye yetişmeye çalışırken boğuluyorum"
+                }
+            ]
+        },
+        {
+            "id": "child_social_v1",
+            "description": "Çocuğun sosyal durumu",
+            "options": [
+                {
+                    "id": "popular",
+                    "label": "Popüler / Lider ruhlu"
+                },
+                {
+                    "id": "loner",
+                    "label": "Yalnız takılıyor / Çekingen"
+                },
+                {
+                    "id": "follower",
+                    "label": "Uyumlu ama yönlendirilmeyi bekler"
+                },
+                {
+                    "id": "excluded",
+                    "label": "Dışlanıyor / Zorbalığa uğruyor"
+                }
+            ]
+        },
+        {
+            "id": "activity_balance_v1",
+            "description": "Aktivite dengesi",
+            "options": [
+                {
+                    "id": "overscheduled",
+                    "label": "Programı çok dolu, nefes alacak vakti yok"
+                },
+                {
+                    "id": "bored",
+                    "label": "Sürekli 'sıkıldım' diyor, aktivite az"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli, yeterince serbest zamanı var"
+                },
+                {
+                    "id": "screen_heavy",
+                    "label": "Tüm boş vakti ekran başında"
+                }
+            ]
         }
     ],
     "_meta": {

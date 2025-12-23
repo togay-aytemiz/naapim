@@ -437,6 +437,114 @@
             "label": "Bu hedefe ne kadar sürede ulaşmayı bekliyorsun?",
             "type": "single_select",
             "option_set_id": "time_horizon_general_v1"
+        },
+        {
+            "key": "friendship_depth",
+            "label": "Bu kişiyle yakınlığınız nedir?",
+            "type": "single_select",
+            "option_set_id": "friendship_depth_v1"
+        },
+        {
+            "key": "conflict_reason",
+            "label": "Aranızdaki temel sorun nedir?",
+            "type": "single_select",
+            "option_set_id": "social_conflict_v1"
+        },
+        {
+            "key": "conflict_impact",
+            "label": "Bu durum başkalarını etkiliyor mu?",
+            "type": "single_select",
+            "option_set_id": "social_impact_v1"
+        },
+        {
+            "key": "conflict_history",
+            "label": "Bu sorun ne zamandır devam ediyor?",
+            "type": "single_select",
+            "option_set_id": "social_history_v1"
+        },
+        {
+            "key": "effort_level",
+            "label": "Çözüm için ne kadar çaba harcadın?",
+            "type": "single_select",
+            "option_set_id": "social_effort_v1"
+        },
+        {
+            "key": "desired_outcome",
+            "label": "Bu durumun sonunda ideal isteğin nedir?",
+            "type": "single_select",
+            "option_set_id": "social_outcome_v1"
+        },
+        {
+            "key": "current_work_balance",
+            "label": "Mevcut işin özel hayatını nasıl etkiliyor?",
+            "type": "single_select",
+            "option_set_id": "work_balance_v1"
+        },
+        {
+            "key": "skill_gap",
+            "label": "Hedeflediğin iş için gerekli yetkinliklere sahip misin?",
+            "type": "single_select",
+            "option_set_id": "skill_readiness_v1"
+        },
+        {
+            "key": "daily_life_blocker",
+            "label": "Bu durum günlük hayatını ne kadar engelliyor?",
+            "type": "single_select",
+            "option_set_id": "symptom_severity_v1"
+        },
+        {
+            "key": "symptom_duration_log",
+            "label": "Bu şikayetlerin ne kadardır devam ediyor?",
+            "type": "single_select",
+            "option_set_id": "health_history_v1"
+        },
+        {
+            "key": "child_eating_habit",
+            "label": "Çocuğunun beslenme alışkanlıklarını nasıl tanımlarsın?",
+            "type": "single_select",
+            "option_set_id": "eating_habits_v1"
+        },
+        {
+            "key": "meal_stress_level",
+            "label": "Yemek saatleri sizin için nasıl geçiyor?",
+            "type": "single_select",
+            "option_set_id": "mealtime_stress_v1"
+        },
+        {
+            "key": "main_behavior_challenge",
+            "label": "Şu aralar en çok zorlandığın konu nedir?",
+            "type": "single_select",
+            "option_set_id": "behavior_challenge_v1"
+        },
+        {
+            "key": "parenting_style",
+            "label": "Kendi ebeveynlik tarzını nasıl tanımlarsın?",
+            "type": "single_select",
+            "option_set_id": "discipline_style_v1"
+        },
+        {
+            "key": "school_expectation",
+            "label": "Bir okuldan öncelikli beklentin nedir?",
+            "type": "single_select",
+            "option_set_id": "school_priority_v1"
+        },
+        {
+            "key": "parent_state",
+            "label": "Ebeveyn olarak şu an kendini nasıl hissediyorsun?",
+            "type": "single_select",
+            "option_set_id": "parent_wellbeing_v1"
+        },
+        {
+            "key": "child_social_dynamic",
+            "label": "Çocuğunun okul/sosyal ortamındaki konumu nasıl?",
+            "type": "single_select",
+            "option_set_id": "child_social_v1"
+        },
+        {
+            "key": "schedule_load",
+            "label": "Çocuğunun haftalık programı ne kadar yoğun?",
+            "type": "single_select",
+            "option_set_id": "activity_balance_v1"
         }
     ]
 }

@@ -1555,6 +1555,72 @@
                     "label": "Planlı, programlı ve öngörülebilir"
                 }
             ]
+        },
+        {
+            "id": "time_avail_daily_v1",
+            "description": "Günlük ayrılabilen süre (sağlık/hobi odaklı)",
+            "options": [
+                {
+                    "id": "15_min",
+                    "label": "Günde 15-20 dakika"
+                },
+                {
+                    "id": "30_45_min",
+                    "label": "Günde 30-45 dakika"
+                },
+                {
+                    "id": "1_hour",
+                    "label": "Günde 1 saat"
+                },
+                {
+                    "id": "2_hours_plus",
+                    "label": "Günde 2 saat veya daha fazla"
+                }
+            ]
+        },
+        {
+            "id": "time_avail_career_v1",
+            "description": "Kariyer değişimi için ayrılabilen zaman dilimi",
+            "options": [
+                {
+                    "id": "evenings",
+                    "label": "Sadece akşamları ve hafta sonları"
+                },
+                {
+                    "id": "part_time_transition",
+                    "label": "Mevcut işi azaltıp zaman ayırabilirim"
+                },
+                {
+                    "id": "full_time_break",
+                    "label": "İşten ayrıldım/ara verdim, tüm günüm boş"
+                },
+                {
+                    "id": "on_the_job",
+                    "label": "Mevcut işim sırasında (öğrenerek) yapabilirim"
+                }
+            ]
+        },
+        {
+            "id": "time_horizon_general_v1",
+            "description": "Genel vade/deadline beklentisi",
+            "options": [
+                {
+                    "id": "immediate",
+                    "label": "Hemen (1 ay içinde)"
+                },
+                {
+                    "id": "short_term",
+                    "label": "Kısa vade (3-6 ay)"
+                },
+                {
+                    "id": "medium_term",
+                    "label": "Orta vade (1 yıl)"
+                },
+                {
+                    "id": "long_term",
+                    "label": "Uzun vade (1 yıldan fazla)"
+                }
+            ]
         }
     ],
     "_meta": {

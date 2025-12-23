@@ -419,6 +419,24 @@
             "label": "Hayatın akış hızı beklentin nedir?",
             "type": "single_select",
             "option_set_id": "pace_v1"
+        },
+        {
+            "key": "daily_time_slot",
+            "label": "Bu hedef için günlük ne kadar zaman ayırabilirsin?",
+            "type": "single_select",
+            "option_set_id": "time_avail_daily_v1"
+        },
+        {
+            "key": "career_time_investment",
+            "label": "Kariyer değişikliği için zamanı nasıl yaratacaksın?",
+            "type": "single_select",
+            "option_set_id": "time_avail_career_v1"
+        },
+        {
+            "key": "deadline_horizon",
+            "label": "Bu hedefe ne kadar sürede ulaşmayı bekliyorsun?",
+            "type": "single_select",
+            "option_set_id": "time_horizon_general_v1"
         }
     ]
 }

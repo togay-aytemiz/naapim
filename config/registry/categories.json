@@ -478,6 +478,27 @@
             "field_keys": [
                 "life_pace_pref"
             ]
+        },
+        {
+            "id": "daily_availability",
+            "label": "Günlük Zaman",
+            "field_keys": [
+                "daily_time_slot"
+            ]
+        },
+        {
+            "id": "career_time_budget",
+            "label": "Kariyer Zaman Yatırımı",
+            "field_keys": [
+                "career_time_investment"
+            ]
+        },
+        {
+            "id": "timeline_horizon",
+            "label": "Hedef Vadesi",
+            "field_keys": [
+                "deadline_horizon"
+            ]
         }
     ],
     "_meta": {

@@ -86,9 +86,9 @@ const getSmartActiveCount = (): number => {
     return Math.max(12, Math.round(baseCount + minuteVariation + randomVariation));
 };
 
-// Code format validation - accepts NY-XXX-XX or NY-XXXX-XX formats
+// Code format validation - accepts 8-character alphanumeric codes
 const isValidCode = (code: string): boolean => {
-    const codeRegex = /^NY-[A-Z0-9]{2,5}-[A-Z0-9]{2,4}$/i;
+    const codeRegex = /^[A-Z0-9]{8}$/i;
     return codeRegex.test(code.trim());
 };
 
@@ -337,7 +337,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                         </div>
                     ) : (
                         <div className="animate-in space-y-2">
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 justify-center">
                                 <input
                                     type="text"
                                     value={codeInput}
@@ -347,8 +347,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                                             handleCodeSubmit();
                                         }
                                     }}
-                                    placeholder="NY-XXXX-XX"
-                                    className="flex-1 px-4 py-2 rounded-xl text-center font-mono tracking-wider text-sm uppercase transition-colors"
+                                    maxLength={8}
+                                    placeholder="XXXXXXXX"
+                                    className="w-36 px-3 py-2 rounded-xl text-center font-mono tracking-wider text-sm uppercase transition-colors"
                                     style={{
                                         backgroundColor: 'var(--bg-secondary)',
                                         border: '1px solid var(--border-primary)',

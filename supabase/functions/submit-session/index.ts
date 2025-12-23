@@ -74,16 +74,45 @@ Deno.serve(async (req) => {
             }
         }
 
-        // 3. Create Result (Placeholder code generation)
-        const randomSuffix = Math.random().toString(36).substring(2, 4).toUpperCase()
-        const code = `NY-${archetype_id ? archetype_id.substring(0, 3).toUpperCase() : 'GEN'}-${randomSuffix}`
+        // 3. Generate unique tracking code
+        // Format: 8 alphanumeric characters (32^8 = ~1 trillion combinations)
+        const generateUniqueCode = async (): Promise<string> => {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Exclude confusing: 0,O,1,I
+            const maxAttempts = 10;
+
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                // Generate cryptographically random bytes
+                const randomBytes = crypto.getRandomValues(new Uint8Array(8));
+                const code = Array.from(randomBytes)
+                    .map(b => chars[b % chars.length])
+                    .join('');
+
+                // Check for collision in results table
+                const { data: existing } = await supabase
+                    .from('results')
+                    .select('id')
+                    .eq('notes', code)
+                    .maybeSingle();
+
+                if (!existing) {
+                    return code; // Unique code found
+                }
+                console.warn(`Code collision attempt ${attempt + 1}: ${code}`);
+            }
+
+            // Fallback: use timestamp + random
+            const ts = Date.now().toString(36).toUpperCase().slice(-8);
+            return ts.padStart(8, 'X');
+        };
+
+        const code = await generateUniqueCode();
 
         const { error: resultError } = await supabase
             .from('results')
             .insert({
                 session_id: session.id,
                 decision: 'Analiz tamamlandı',
-                confidence_score: 5, // Must be 1-10 per DB constraint
+                confidence_score: 5,
                 notes: code
             })
 

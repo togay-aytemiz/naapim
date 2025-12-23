@@ -318,7 +318,7 @@ export const ReturnFlow: React.FC = () => {
                                 value={code}
                                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                                 onKeyPress={handleKeyPress}
-                                placeholder="NY-XXXX-XX"
+                                placeholder="XXXXXXXX"
                                 className="w-full px-5 py-4 text-center text-xl font-mono tracking-widest rounded-2xl"
                                 style={{
                                     backgroundColor: 'var(--bg-secondary)',

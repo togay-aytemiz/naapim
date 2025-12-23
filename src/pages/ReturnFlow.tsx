@@ -240,8 +240,8 @@ export const ReturnFlow: React.FC = () => {
                 archetype_id: sessionData.archetype_id
             });
 
-            // Fetch community stories before showing them (exclude current user's session)
-            await fetchCommunityStories(sessionData.archetype_id, sessionData.session_id);
+            // Fetch community stories before showing them (uses session context for matching)
+            await fetchCommunityStories();
 
             setStep('view-stories');
         } catch (err) {
@@ -252,9 +252,18 @@ export const ReturnFlow: React.FC = () => {
         }
     };
 
-    // Fetch community stories from DB
-    const fetchCommunityStories = async (archetypeId?: string, sessionId?: string) => {
+    // Fetch community stories from DB - matches based on user's question + context
+    const fetchCommunityStories = async () => {
+        if (!sessionData) return;
+
         try {
+            // Build context from session responses for semantic matching
+            const context = sessionData.responses
+                ? Object.entries(sessionData.responses)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(', ')
+                : '';
+
             const response = await fetch(`${SUPABASE_URL}/functions/v1/fetch-community-stories`, {
                 method: 'POST',
                 headers: {
@@ -262,9 +271,11 @@ export const ReturnFlow: React.FC = () => {
                     'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                 },
                 body: JSON.stringify({
-                    archetype_id: archetypeId,
+                    archetype_id: sessionData.archetype_id,
                     limit: 10,
-                    exclude_session_id: sessionId  // Exclude current user's session
+                    exclude_session_id: sessionData.session_id,
+                    user_question: sessionData.user_question,  // For semantic matching
+                    context: context  // User's answers for better matching
                 })
             });
 

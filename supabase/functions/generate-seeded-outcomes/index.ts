@@ -13,7 +13,7 @@ serve(async (req) => {
     }
 
     try {
-        const { user_question, archetype_id, count = 3 } = await req.json()
+        const { user_question, archetype_id, context = '', count = 3 } = await req.json()
 
         if (!user_question) {
             return new Response(
@@ -156,10 +156,14 @@ JSON formatında yanıt ver:
             }
         }
 
-        // Generate embeddings for each outcome (based on similar_question)
+        // Generate embeddings for each outcome (based on similar_question + original context)
+        // This ensures generated outcomes match users with similar question AND answers
         const outcomesWithEmbeddings = await Promise.all(
             outcomes.map(async (o: any, index: number) => {
-                const embedding = await generateEmbedding(o.similar_question || user_question)
+                const textForEmbedding = context
+                    ? `${o.similar_question || user_question} | ${context}`
+                    : (o.similar_question || user_question)
+                const embedding = await generateEmbedding(textForEmbedding)
                 return {
                     session_id: null,
                     outcome_type: o.outcome_type || 'decided',

@@ -84,7 +84,8 @@ export class AnalysisService {
             console.log('🎨 Sentiment:', result.sentiment);
 
             // Fire and forget: Generate seeded community outcomes in background
-            this.generateSeededOutcomes(userQuestion, archetypeId).catch(err => {
+            // Pass context so generated outcomes have similar embeddings
+            this.generateSeededOutcomes(userQuestion, archetypeId, context).catch(err => {
                 console.warn('Failed to generate seeded outcomes:', err);
             });
 
@@ -109,7 +110,11 @@ export class AnalysisService {
     /**
      * Generate seeded community outcomes in background
      */
-    private static async generateSeededOutcomes(userQuestion: string, archetypeId: string): Promise<void> {
+    private static async generateSeededOutcomes(
+        userQuestion: string,
+        archetypeId: string,
+        context: string
+    ): Promise<void> {
         if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping seeded outcomes');
             return;
@@ -125,6 +130,7 @@ export class AnalysisService {
                 body: JSON.stringify({
                     user_question: userQuestion,
                     archetype_id: archetypeId,
+                    context: context,  // Pass user's answers for better matching
                     count: 3
                 })
             });

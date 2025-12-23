@@ -39,6 +39,8 @@ export const ResultPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [reminderAlreadySet, setReminderAlreadySet] = useState(false);
     const [showReminderOptIn, setShowReminderOptIn] = useState(true);
+    const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
+    const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
 
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
@@ -111,6 +113,20 @@ export const ResultPage = () => {
                             code: finalCode,
                             analysis: analysisResult
                         });
+                    }
+
+                    // Generate seeded outcomes (fire and forget style but capture result)
+                    if (userInput && archetypeId) {
+                        setIsLoadingSeeds(true);
+                        try {
+                            const context = Object.entries(answers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
+                            const outcomes = await AnalysisService.generateSeededOutcomes(userInput, archetypeId, context);
+                            setSeededOutcomes(outcomes?.outcomes || []);
+                        } catch (err) {
+                            console.warn('Seeded outcomes error:', err);
+                        } finally {
+                            setIsLoadingSeeds(false);
+                        }
                     }
                 } catch (error) {
                     console.error('Error generating result:', error);
@@ -324,7 +340,10 @@ export const ResultPage = () => {
 
                 <div className="divider mx-5 opacity-50" />
 
-                <FollowUpSection followupDays={followupDays} />
+                <FollowUpSection
+                    seededOutcomes={seededOutcomes}
+                    isLoadingSeeds={isLoadingSeeds}
+                />
 
                 <div className="divider mx-5 opacity-50" />
 

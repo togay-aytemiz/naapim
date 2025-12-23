@@ -67,9 +67,13 @@ serve(async (req) => {
             outcomeCombos[1].feeling = getRandomFeeling('cancelled')
         }
 
-        // Ensure feeling diversity: not all happy
-        if (outcomeCombos.every(c => c.feeling === 'happy') && count >= 2) {
-            const alternatives = ['neutral', 'uncertain', 'regret']
+        // Ensure feeling diversity: not all the same feeling
+        const allFeelings = outcomeCombos.map(c => c.feeling)
+        const uniqueFeelings = new Set(allFeelings)
+        if (uniqueFeelings.size === 1 && count >= 2) {
+            // All same feeling, force one to be different
+            const currentFeeling = allFeelings[0]
+            const alternatives = ['happy', 'neutral', 'uncertain', 'regret'].filter(f => f !== currentFeeling)
             outcomeCombos[1].feeling = alternatives[Math.floor(Math.random() * alternatives.length)]
         }
 

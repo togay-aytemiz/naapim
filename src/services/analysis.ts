@@ -83,11 +83,7 @@ export class AnalysisService {
             console.log('📊 LLM Analysis Result:', result);
             console.log('🎨 Sentiment:', result.sentiment);
 
-            // Fire and forget: Generate seeded community outcomes in background
-            // Pass context so generated outcomes have similar embeddings
-            this.generateSeededOutcomes(userQuestion, archetypeId, context).catch(err => {
-                console.warn('Failed to generate seeded outcomes:', err);
-            });
+            // Note: Seeded outcomes are now generated in ResultPage to capture results for UI
 
             return result;
 
@@ -110,14 +106,14 @@ export class AnalysisService {
     /**
      * Generate seeded community outcomes in background
      */
-    private static async generateSeededOutcomes(
+    static async generateSeededOutcomes(
         userQuestion: string,
         archetypeId: string,
         context: string
-    ): Promise<void> {
+    ): Promise<{ outcomes: any[] } | null> {
         if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping seeded outcomes');
-            return;
+            return null;
         }
 
         try {
@@ -138,11 +134,14 @@ export class AnalysisService {
             if (response.ok) {
                 const data = await response.json();
                 console.log('🌱 Generated seeded outcomes:', data.generated_count);
+                return data;
             } else {
                 console.warn('Seeded outcomes generation failed:', response.status);
+                return null;
             }
         } catch (err) {
             console.warn('Error generating seeded outcomes:', err);
+            return null;
         }
     }
 }

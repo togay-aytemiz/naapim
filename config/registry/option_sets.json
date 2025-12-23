@@ -2033,6 +2033,36 @@
                     "label": "Tüm boş vakti ekran başında"
                 }
             ]
+        },
+        {
+            "id": "emotional_blocker_v1",
+            "description": "Duygusal engelleyiciler - parenting/social/relationship için",
+            "options": [
+                {
+                    "id": "uncertainty",
+                    "label": "Doğru şeyi yapıp yapmadığımdan emin değilim"
+                },
+                {
+                    "id": "partner",
+                    "label": "Eşimle/Partnerimle bu konuda anlaşamıyoruz"
+                },
+                {
+                    "id": "reaction",
+                    "label": "Çocuğumun/Karşı tarafın tepkisinden çekiniyorum"
+                },
+                {
+                    "id": "guilt",
+                    "label": "Vicdan azabı veya suçluluk hissediyorum"
+                },
+                {
+                    "id": "judgment",
+                    "label": "Çevrenin tepkisinden/Eleştirilmekten korkuyorum"
+                },
+                {
+                    "id": "energy",
+                    "label": "Duygusal olarak gücüm/enerjim yok"
+                }
+            ]
         }
     ],
     "_meta": {

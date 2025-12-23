@@ -50,7 +50,7 @@
             "label": "Ebeveynlik ve çocuk",
             "default_followup_days": 14,
             "category_set_ids": [
-                "core_v1",
+                "core_emotional_v1",
                 "parenting_v1",
                 "parenting_details_v1"
             ],
@@ -93,7 +93,7 @@
             "label": "İlişki kararları",
             "default_followup_days": 21,
             "category_set_ids": [
-                "core_v1",
+                "core_emotional_v1",
                 "relationship_v1",
                 "relationship_details_v1"
             ],
@@ -394,7 +394,7 @@
             "label": "Sosyal İlişkiler ve Arkadaşlık",
             "default_followup_days": 14,
             "category_set_ids": [
-                "core_v1",
+                "core_emotional_v1",
                 "social_v1",
                 "social_details_v1"
             ],

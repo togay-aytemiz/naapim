@@ -11,6 +11,16 @@
             ]
         },
         {
+            "id": "core_emotional_v1",
+            "label": "Duygusal odaklı çekirdek (bütçesiz)",
+            "category_ids": [
+                "urgency",
+                "support_system",
+                "priority_goal",
+                "emotional_barriers"
+            ]
+        },
+        {
             "id": "social_v1",
             "label": "Sosyal ilişkiler özel",
             "category_ids": [

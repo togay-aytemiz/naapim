@@ -605,6 +605,13 @@
             "field_keys": [
                 "schedule_load"
             ]
+        },
+        {
+            "id": "emotional_barriers",
+            "label": "Duygusal Engeller",
+            "field_keys": [
+                "main_emotional_blocker"
+            ]
         }
     ],
     "_meta": {

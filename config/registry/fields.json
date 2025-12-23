@@ -545,6 +545,12 @@
             "label": "Çocuğunun haftalık programı ne kadar yoğun?",
             "type": "single_select",
             "option_set_id": "activity_balance_v1"
+        },
+        {
+            "key": "main_emotional_blocker",
+            "label": "Seni bu kararı vermekten alıkoyan en büyük engel ne?",
+            "type": "single_select",
+            "option_set_id": "emotional_blocker_v1"
         }
     ]
 }

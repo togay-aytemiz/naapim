@@ -122,11 +122,17 @@ JSON formatında yanıt ver:
 - outcome_type "decided" ise: "aldım", "yaptım", "başladım" gibi YAPILDI ifadeleri kullan
 - outcome_type "cancelled" ise: NEDEN vazgeçtiğini kısaca açıkla! Örnek:
   - "Almaktan vazgeçtim, düşününce masrafları fazla geldi"
-  - "Sonunda yapmamaya karar verdim, şartlar uygun değildi"  
+  - "Yapmamaya karar verdim, şartlar uygun değildi"  
   - "Vazgeçtim çünkü daha iyi bir seçenek çıktı"
   Ama çok uzun yazma, 1-2 cümle yeter. Doğal insan dili kullan.
 - feeling ile outcome_type tutarlı olmalı (örn: cancelled + happy = "vazgeçtiğim için rahatladım")
-- Türkçe yaz, doğal ol, resmi olma`
+- Türkçe yaz, doğal ol, resmi olma
+
+CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
+- "Sonunda" kelimesiyle çok fazla cümle başlatma! Her hikayede farklı başlangıç kullan.
+- İYİ başlangıç örnekleri: "Baya düşündüm ve...", "Uzun süre tartıştım ama...", "İlk başta...", "Tam...", "Aslında...", "Beklemeden...", "Hemen..."
+- KÖTÜ: Her cümle "Sonunda..." ile başlıyor - BUNU YAPMA!
+- Her hikayenin başlangıcı FARKLI olmalı.`
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',

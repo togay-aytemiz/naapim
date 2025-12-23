@@ -69,13 +69,17 @@ RULES:
   DO NOT always choose "cautious" - read the context and choose appropriately!
   If the user seems excited and the situation is reasonable, use "positive".
   
-- followup_question: MUST be specific to the user's question and situation.
-  BAD examples (too generic): "Kararınızı verdiniz mi?", "Ne oldu?", "Bir şey değişti mi?"
-  GOOD examples (specific to USER'S topic): 
-    - If user asked about buying a car: "Araba almaya karar verdin mi?"
-    - If user asked about changing jobs: "Yeni iş teklifini kabul ettin mi?"
-    - If user asked about moving: "Taşınmaya başladın mı?"
-  The question MUST reference the actual topic the user asked about.
+- followup_question: CRITICAL - This MUST directly reference the user's original question: "${user_question}"
+  Transform their question into a past-tense follow-up about their decision.
+  
+  TRANSFORMATION RULE: Take the core topic from their question and ask if they did it.
+  - User asked "Bu haftasonu ne yapsam?" → followup: "Haftasonu ne yapmaya karar verdin?"
+  - User asked "Araba almalı mıyım?" → followup: "Araba almaya karar verdin mi?"
+  - User asked "Yazılım kursuna gitmeli miyim?" → followup: "Yazılım kursuna gitmeye karar verdin mi?"
+  - User asked "Taşınmalı mıyım?" → followup: "Taşınmaya karar verdin mi?"
+  
+  NEVER ask about something NOT mentioned in the original question!
+  The follow-up should feel like a friend checking in about the EXACT thing they asked.
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {

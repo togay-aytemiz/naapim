@@ -780,9 +780,42 @@ export const ReturnFlow: React.FC = () => {
 
                                             const colors = badgeColors[story.feeling || 'neutral'];
 
+                                            // Outcome type styling
+                                            const outcomeTypeStyles: Record<string, { icon: React.ReactNode; label: string; bg: string; text: string }> = {
+                                                decided: {
+                                                    icon: <Check className="w-3 h-3" />,
+                                                    label: 'Karar verdi',
+                                                    bg: 'var(--emerald-100)',
+                                                    text: 'var(--emerald-700)'
+                                                },
+                                                cancelled: {
+                                                    icon: <X className="w-3 h-3" />,
+                                                    label: 'Vazgeçti',
+                                                    bg: 'var(--red-100)',
+                                                    text: 'var(--red-600)'
+                                                },
+                                                thinking: {
+                                                    icon: <Clock className="w-3 h-3" />,
+                                                    label: 'Düşünüyor',
+                                                    bg: 'var(--amber-100)',
+                                                    text: 'var(--amber-700)'
+                                                }
+                                            };
+
+                                            const outcomeStyle = outcomeTypeStyles[story.outcome_type] || outcomeTypeStyles.decided;
+
                                             return (
                                                 <div key={story.id} className="p-5 rounded-2xl" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                                                     <div className="flex items-center gap-2 mb-3">
+                                                        {/* Outcome Type Badge */}
+                                                        <span
+                                                            className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+                                                            style={{ backgroundColor: outcomeStyle.bg, color: outcomeStyle.text }}
+                                                        >
+                                                            {outcomeStyle.icon}
+                                                            {outcomeStyle.label}
+                                                        </span>
+                                                        {/* Feeling Badge */}
                                                         <span className="text-lg">{feelingInfo.emoji}</span>
                                                         <span
                                                             className="text-xs font-medium px-2 py-0.5 rounded-full"

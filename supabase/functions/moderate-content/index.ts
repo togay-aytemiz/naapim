@@ -55,7 +55,11 @@ serve(async (req) => {
 2. YAZIM DÜZELTMESİ - Yazım ve dilbilgisi hatalarını düzelt
 
 YASAKLI İÇERİKLER:
-1. İletişim bilgileri (e-posta, telefon numarası, sosyal medya hesapları, web sitesi)
+1. İletişim bilgileri - HER FORMATTA:
+   - E-posta adresleri (örn: test@gmail.com)
+   - Telefon numaraları - rakamlarla VEYA yazıyla yazılmış (örn: "532 123 45 67" veya "beş yüz otuz iki, yüz yirmi üç...")
+   - Sosyal medya hesapları (@kullaniciadi, instagram hesabı, vb.)
+   - Web sitesi adresleri
 2. Reklam veya tanıtım içeriği (ürün, hizmet, şirket tanıtımı)
 3. Finansal tavsiye (yatırım tavsiyeleri, kripto, borsa önerileri)
 4. Hakaret, küfür veya saldırgan dil

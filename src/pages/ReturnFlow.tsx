@@ -240,8 +240,8 @@ export const ReturnFlow: React.FC = () => {
                 archetype_id: sessionData.archetype_id
             });
 
-            // Fetch community stories before showing them
-            await fetchCommunityStories(sessionData.archetype_id);
+            // Fetch community stories before showing them (exclude current user's session)
+            await fetchCommunityStories(sessionData.archetype_id, sessionData.session_id);
 
             setStep('view-stories');
         } catch (err) {
@@ -253,7 +253,7 @@ export const ReturnFlow: React.FC = () => {
     };
 
     // Fetch community stories from DB
-    const fetchCommunityStories = async (archetypeId?: string) => {
+    const fetchCommunityStories = async (archetypeId?: string, sessionId?: string) => {
         try {
             const response = await fetch(`${SUPABASE_URL}/functions/v1/fetch-community-stories`, {
                 method: 'POST',
@@ -261,7 +261,11 @@ export const ReturnFlow: React.FC = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                 },
-                body: JSON.stringify({ archetype_id: archetypeId, limit: 10 })
+                body: JSON.stringify({
+                    archetype_id: archetypeId,
+                    limit: 10,
+                    exclude_session_id: sessionId  // Exclude current user's session
+                })
             });
 
             const data = await response.json();

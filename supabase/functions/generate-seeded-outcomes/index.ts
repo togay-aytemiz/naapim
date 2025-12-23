@@ -132,19 +132,50 @@ JSON formatında yanıt ver:
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
         const supabase = createClient(supabaseUrl, supabaseKey)
 
-        const outcomesToInsert = outcomes.map((o: any, index: number) => ({
-            session_id: null,  // No session for generated outcomes
-            outcome_type: o.outcome_type || 'decided',
-            outcome_text: o.outcome_text,
-            feeling: feelings[index],  // Use our pre-generated weighted feelings
-            related_question: o.similar_question,
-            archetype_id: archetype_id || null,
-            is_generated: true
-        }))
+        // Helper function to generate embedding
+        const generateEmbedding = async (text: string): Promise<number[] | null> => {
+            if (!text) return null
+            try {
+                const resp = await fetch('https://api.openai.com/v1/embeddings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${openaiApiKey}`,
+                    },
+                    body: JSON.stringify({
+                        model: 'text-embedding-3-small',
+                        input: text.substring(0, 8000),
+                        dimensions: 1536
+                    })
+                })
+                if (!resp.ok) return null
+                const data = await resp.json()
+                return data.data[0]?.embedding || null
+            } catch {
+                return null
+            }
+        }
+
+        // Generate embeddings for each outcome (based on similar_question)
+        const outcomesWithEmbeddings = await Promise.all(
+            outcomes.map(async (o: any, index: number) => {
+                const embedding = await generateEmbedding(o.similar_question || user_question)
+                return {
+                    session_id: null,
+                    outcome_type: o.outcome_type || 'decided',
+                    outcome_text: o.outcome_text,
+                    feeling: feelings[index],
+                    related_question: o.similar_question,
+                    archetype_id: archetype_id || null,
+                    is_generated: true,
+                    embedding
+                }
+            })
+        )
 
         const { data: insertedOutcomes, error: insertError } = await supabase
             .from('outcomes')
-            .insert(outcomesToInsert)
+            .insert(outcomesWithEmbeddings)
             .select()
 
         if (insertError) {

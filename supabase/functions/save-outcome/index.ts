@@ -11,11 +11,39 @@ interface SaveOutcomeRequest {
     outcome_type: 'decided' | 'thinking' | 'cancelled';
     outcome_text?: string;
     feeling?: 'happy' | 'neutral' | 'regret' | 'uncertain';
-    archetype_id?: string;  // NEW: for matching similar questions
+    archetype_id?: string;
+}
+
+// Helper function to generate embedding
+async function generateEmbedding(text: string): Promise<number[] | null> {
+    const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
+    if (!openaiApiKey || !text) return null
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/embeddings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${openaiApiKey}`,
+            },
+            body: JSON.stringify({
+                model: 'text-embedding-3-small',
+                input: text.substring(0, 8000),
+                dimensions: 1536
+            })
+        })
+
+        if (!response.ok) return null
+
+        const data = await response.json()
+        return data.data[0]?.embedding || null
+    } catch (err) {
+        console.error('Embedding generation failed:', err)
+        return null
+    }
 }
 
 serve(async (req) => {
-    // Handle CORS preflight
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders })
     }
@@ -31,38 +59,28 @@ serve(async (req) => {
         if (!session_id || !outcome_type) {
             return new Response(
                 JSON.stringify({ error: 'Missing required fields: session_id, outcome_type' }),
-                {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                    status: 400,
-                }
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
             )
         }
 
-        // Validate outcome_type
         if (!['decided', 'thinking', 'cancelled'].includes(outcome_type)) {
             return new Response(
-                JSON.stringify({ error: 'Invalid outcome_type. Must be: decided, thinking, or cancelled' }),
-                {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                    status: 400,
-                }
+                JSON.stringify({ error: 'Invalid outcome_type' }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
             )
         }
 
-        // Validate feeling if provided
         if (feeling && !['happy', 'neutral', 'regret', 'uncertain'].includes(feeling)) {
             return new Response(
-                JSON.stringify({ error: 'Invalid feeling. Must be: happy, neutral, regret, or uncertain' }),
-                {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                    status: 400,
-                }
+                JSON.stringify({ error: 'Invalid feeling' }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
             )
         }
 
-        // Fetch session to get user_question and archetype_id if not provided
+        // Fetch session to get user_question, archetype_id, and responses for context
         let finalArchetypeId = archetype_id;
         let relatedQuestion: string | null = null;
+        let contextForEmbedding = '';
 
         const { data: sessionData, error: sessionError } = await supabase
             .from('sessions')
@@ -72,12 +90,28 @@ serve(async (req) => {
 
         if (!sessionError && sessionData) {
             relatedQuestion = sessionData.user_question;
+            contextForEmbedding = sessionData.user_question || '';
             if (!finalArchetypeId) {
                 finalArchetypeId = sessionData.archetype_id;
             }
         }
 
-        // Insert the outcome with all fields
+        // Fetch responses to build richer context for embedding
+        const { data: responses } = await supabase
+            .from('responses')
+            .select('field_key, value')
+            .eq('session_id', session_id)
+
+        if (responses && responses.length > 0) {
+            const responseContext = responses.map(r => `${r.field_key}: ${r.value}`).join(', ')
+            contextForEmbedding += ` | ${responseContext}`
+        }
+
+        // Generate embedding for semantic matching
+        console.log('🧠 Generating embedding for:', contextForEmbedding.substring(0, 100) + '...')
+        const embedding = await generateEmbedding(contextForEmbedding)
+
+        // Insert the outcome with embedding
         const { data, error: insertError } = await supabase
             .from('outcomes')
             .insert({
@@ -87,7 +121,8 @@ serve(async (req) => {
                 feeling: feeling || null,
                 archetype_id: finalArchetypeId || null,
                 related_question: relatedQuestion,
-                is_generated: false  // Real user outcome
+                is_generated: false,
+                embedding: embedding  // NEW: Store embedding
             })
             .select('id, created_at')
             .single()
@@ -102,12 +137,10 @@ serve(async (req) => {
                 success: true,
                 outcome_id: data.id,
                 created_at: data.created_at,
+                has_embedding: !!embedding,
                 message: 'Outcome saved successfully'
             }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200,
-            }
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
         )
 
     } catch (error) {
@@ -115,11 +148,7 @@ serve(async (req) => {
         const errorMessage = error instanceof Error ? error.message : JSON.stringify(error)
         return new Response(
             JSON.stringify({ error: errorMessage }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 500,
-            }
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
         )
     }
 })
-

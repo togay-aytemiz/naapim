@@ -13,7 +13,7 @@ interface QuestionFlowProps {
     userInput?: string;
     archetypeId?: string;
     selectedFieldKeys?: string[]; // Optional: LLM-selected field keys
-    onComplete: (answers: Record<string, string>, archetypeId: string, selectedFieldKeys?: string[]) => void;
+    onComplete: (answers: Record<string, string>, archetypeId: string, selectedFieldKeys?: string[], effectiveQuestion?: string) => void;
     onBack: () => void;
 }
 
@@ -31,6 +31,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     // Loading state - start loading if we have userInput but no archetype yet
     const [isLoading, setIsLoading] = useState<boolean>(!!userInput && !initialArchetypeId);
     const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+    // Clarification state for vague inputs
+    const [needsClarification, setNeedsClarification] = useState(false);
+    const [clarificationPrompt, setClarificationPrompt] = useState<string | null>(null);
+    const [clarifiedInput, setClarifiedInput] = useState('');
+    const [effectiveQuestion, setEffectiveQuestion] = useState<string>(userInput || '');
 
     // Track which userInput has been classified to prevent duplicates
     const classifiedInputRef = useRef<string | null>(null);
@@ -55,6 +61,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
         const classify = async () => {
             setIsLoading(true);
+            setNeedsClarification(false);
             console.log('🔍 Starting classification for:', userInput);
             try {
                 // Load archetypes for classification
@@ -65,6 +72,16 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 console.log('🚀 Calling ClassificationService...');
                 const classificationResult = await ClassificationService.classifyUserQuestion(userInput, archetypes);
                 console.log('✅ Classification result:', classificationResult);
+
+                // Check if clarification is needed
+                if (classificationResult.needs_clarification) {
+                    console.log('⚠️ Clarification needed:', classificationResult.clarification_prompt);
+                    setNeedsClarification(true);
+                    setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen kararınızı biraz daha açıklayın.');
+                    setClarifiedInput(userInput); // Pre-fill with original input
+                    setIsLoading(false);
+                    return;
+                }
 
                 // Step 2: Select Questions
                 console.log('🚀 Calling QuestionSelectionService...');
@@ -179,7 +196,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 setSelectedOptionId(null);
             } else {
                 // Pass back valid archetypeId and keys
-                onComplete(newAnswers, archetypeId, selectedFieldKeys);
+                onComplete(newAnswers, archetypeId, selectedFieldKeys, effectiveQuestion);
             }
             setIsTransitioning(false);
         }, 400); // Wait for animation
@@ -248,6 +265,119 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                             ][loadingMessageIndex]}
                         </p>
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Clarification needed - elegant UI to ask for more details
+    if (needsClarification) {
+        const handleClarificationSubmit = () => {
+            if (!clarifiedInput.trim()) return;
+            // Reset classification state and re-classify with clarified input
+            classifiedInputRef.current = null;
+            setNeedsClarification(false);
+            // Trigger re-classification by simulating userInput change
+            // We need to classify with the new input
+            setIsLoading(true);
+            const reclassify = async () => {
+                try {
+                    const archetypes = (registryData as { archetypes: Archetype[] }).archetypes;
+                    const classificationResult = await ClassificationService.classifyUserQuestion(clarifiedInput.trim(), archetypes);
+
+                    if (classificationResult.needs_clarification) {
+                        // Still needs clarification - update prompt
+                        setNeedsClarification(true);
+                        setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen biraz daha detay verin.');
+                        setIsLoading(false);
+                        return;
+                    }
+
+                    const selectionResult = await QuestionSelectionService.selectQuestions(
+                        clarifiedInput.trim(),
+                        classificationResult.archetype_id
+                    );
+                    // Update the effective question to the clarified input
+                    setEffectiveQuestion(clarifiedInput.trim());
+                    setArchetypeId(classificationResult.archetype_id);
+                    setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                } catch (error) {
+                    console.error('Reclassification failed:', error);
+                    setArchetypeId('career_decisions');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            reclassify();
+        };
+
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-500">
+                <div className="text-center space-y-6 max-w-md w-full">
+                    {/* Thinking Icon */}
+                    <div
+                        className="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)' }}
+                    >
+                        <svg
+                            className="w-8 h-8"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            style={{ color: 'var(--amber-500)' }}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                            Biraz daha detay verir misin?
+                        </h2>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            {clarificationPrompt}
+                        </p>
+                    </div>
+
+                    {/* Input for clarification */}
+                    <div className="space-y-3 w-full">
+                        <textarea
+                            value={clarifiedInput}
+                            onChange={(e) => setClarifiedInput(e.target.value)}
+                            placeholder="Örneğin: İkinci çocuğu yapmalı mıyız diye düşünüyorum ama emin değilim..."
+                            className="w-full p-4 rounded-xl resize-none"
+                            style={{
+                                backgroundColor: 'var(--bg-secondary)',
+                                border: '1px solid var(--border-primary)',
+                                color: 'var(--text-primary)',
+                                minHeight: '100px'
+                            }}
+                            rows={3}
+                            autoFocus
+                        />
+
+                        <button
+                            onClick={handleClarificationSubmit}
+                            disabled={!clarifiedInput.trim()}
+                            className="w-full py-4 rounded-xl font-medium transition-all duration-200"
+                            style={{
+                                backgroundColor: clarifiedInput.trim() ? 'var(--btn-primary-bg)' : 'var(--btn-disabled-bg)',
+                                color: clarifiedInput.trim() ? 'var(--btn-primary-text)' : 'var(--btn-disabled-text)',
+                                cursor: clarifiedInput.trim() ? 'pointer' : 'not-allowed'
+                            }}
+                        >
+                            Devam Et
+                        </button>
+                    </div>
+
+                    {/* Back button */}
+                    <button
+                        onClick={onBack}
+                        className="text-sm hover:underline"
+                        style={{ color: 'var(--text-muted)' }}
+                    >
+                        ← Geri dön
+                    </button>
                 </div>
             </div>
         );
@@ -326,14 +456,14 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     return (
         <div className="max-w-xl mx-auto px-5 py-6 w-full min-h-screen flex flex-col">
-            {/* User's Original Question */}
-            {userInput && (
+            {/* User's Question (original or clarified) */}
+            {effectiveQuestion && (
                 <div className="mb-4 text-center">
                     <p
                         className="text-sm italic"
                         style={{ color: 'var(--text-muted)' }}
                     >
-                        "{userInput}"
+                        "{effectiveQuestion}"
                     </p>
                 </div>
             )}

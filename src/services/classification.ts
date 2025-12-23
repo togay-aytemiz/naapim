@@ -6,17 +6,26 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export interface ClassificationResult {
     archetype_id: string;
     confidence: number;
+    needs_clarification: boolean;
+    clarification_prompt?: string;
+    interpreted_question?: string;
 }
 
 export class ClassificationService {
     /**
      * Classifies the user's question into one of the provided archetypes.
+     * Returns needs_clarification: true if the input is too vague.
      */
     static async classifyUserQuestion(userQuestion: string, archetypes: Archetype[]): Promise<ClassificationResult> {
         // Check if Supabase is configured
         if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
             console.warn("Supabase not configured. Returning fallback.");
-            return { archetype_id: archetypes[0]?.id || 'career_decisions', confidence: 0 };
+            return {
+                archetype_id: archetypes[0]?.id || 'career_decisions',
+                confidence: 0,
+                needs_clarification: true,
+                clarification_prompt: 'Lütfen kararınızı biraz daha açıklayın.'
+            };
         }
 
         try {
@@ -43,16 +52,20 @@ export class ClassificationService {
             const result = await response.json();
             return {
                 archetype_id: result.archetype_id || archetypes[0]?.id || 'career_decisions',
-                confidence: result.confidence || 0
+                confidence: result.confidence || 0,
+                needs_clarification: result.needs_clarification || false,
+                clarification_prompt: result.clarification_prompt || undefined,
+                interpreted_question: result.interpreted_question || undefined
             };
 
         } catch (error) {
             console.error("Classification Service Error:", error);
             return {
                 archetype_id: archetypes[0]?.id || 'career_decisions',
-                confidence: 0
+                confidence: 0,
+                needs_clarification: true,
+                clarification_prompt: 'Bir hata oluştu. Lütfen tekrar deneyin.'
             };
         }
     }
 }
-

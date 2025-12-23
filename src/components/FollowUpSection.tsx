@@ -120,16 +120,16 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
         );
     };
 
-    // Fake Blurred Card (static text, fully blurred)
-    const FakeBlurredCard = ({ text, intensity = 1 }: { text: string; intensity?: number }) => (
+    // Fake Blurred Card (static text, lightly blurred - text visible but not readable)
+    const FakeBlurredCard = ({ text }: { text: string }) => (
         <div
             className="p-4 rounded-2xl relative overflow-hidden"
             style={{
                 backgroundColor: 'var(--bg-tertiary)',
-                opacity: 0.8 - (intensity * 0.15)
+                opacity: 0.7
             }}
         >
-            <div className="flex items-center gap-2 mb-3 blur-sm">
+            <div className="flex items-center gap-2 mb-3" style={{ filter: 'blur(3px)' }}>
                 <div
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
                     style={{ backgroundColor: 'var(--border-secondary)' }}
@@ -140,8 +140,8 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 <span className="text-lg opacity-50">😊</span>
             </div>
             <p
-                className="text-sm leading-relaxed select-none blur-sm"
-                style={{ color: 'var(--text-secondary)' }}
+                className="text-sm leading-relaxed select-none"
+                style={{ color: 'var(--text-secondary)', filter: 'blur(3px)' }}
             >
                 {text}
             </p>
@@ -242,14 +242,11 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                             <SkeletonCard />
                         )}
 
-                        {/* Card 2: Fake blurred */}
-                        <FakeBlurredCard text={fakeTexts[0]} intensity={1} />
-
-                        {/* Card 3: Fake more blurred */}
-                        <FakeBlurredCard text={fakeTexts[1]} intensity={2} />
+                        {/* Card 2: Lightly blurred - text visible but not readable */}
+                        <FakeBlurredCard text={fakeTexts[0]} />
 
                         {/* Gradient overlay at bottom */}
-                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent z-20 pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--bg-primary)] to-transparent z-20 pointer-events-none" />
 
                         {/* Lock Icon Overlay - centered on cards */}
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">

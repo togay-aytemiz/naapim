@@ -33,12 +33,15 @@ function App() {
 
   const handleQuestionsComplete = async (
     answers: Record<string, string>,
-    archetypeId: string
+    archetypeId: string,
+    _selectedFieldKeys?: string[],
+    effectiveQuestion?: string
   ) => {
-    const userInput = location.state?.userInput;
+    // Use effectiveQuestion (from clarification) or fallback to original userInput
+    const userInput = effectiveQuestion || location.state?.userInput;
 
     if (!userInput) {
-      console.error('No user input found in state');
+      console.error('No user input found');
       return;
     }
 

@@ -1,0 +1,173 @@
+{
+    "category_sets": [
+        {
+            "id": "core_v1",
+            "label": "Ortak çekirdek",
+            "category_ids": [
+                "urgency",
+                "risk_preference",
+                "budget_flexibility",
+                "support_system",
+                "priority_goal",
+                "constraint_blocker"
+            ]
+        },
+        {
+            "id": "career_v1",
+            "label": "Kariyer özel",
+            "category_ids": [
+                "job_stage",
+                "role_satisfaction",
+                "market_confidence",
+                "risk_tolerance_work"
+            ]
+        },
+        {
+            "id": "parenting_v1",
+            "label": "Ebeveynlik özel",
+            "category_ids": [
+                "child_age_stage",
+                "care_context",
+                "child_temperament",
+                "family_capacity"
+            ]
+        },
+        {
+            "id": "relationship_v1",
+            "label": "İlişki özel",
+            "category_ids": [
+                "relationship_stage",
+                "communication_style",
+                "commitment_level"
+            ]
+        },
+        {
+            "id": "financial_v1",
+            "label": "Finansal özel",
+            "category_ids": [
+                "income_stability",
+                "debt_level",
+                "savings_goal"
+            ]
+        },
+        {
+            "id": "health_v1",
+            "label": "Sağlık özel",
+            "category_ids": [
+                "health_status",
+                "lifestyle_activity",
+                "mental_state",
+                "treatment_preference"
+            ]
+        },
+        {
+            "id": "education_v1",
+            "label": "Eğitim özel",
+            "category_ids": [
+                "current_level",
+                "learning_style",
+                "time_commitment",
+                "career_goal_edu"
+            ]
+        },
+        {
+            "id": "lifestyle_v1",
+            "label": "Yaşam tarzı özel",
+            "category_ids": [
+                "location_preference",
+                "social_needs",
+                "daily_routine",
+                "change_readiness"
+            ]
+        },
+        {
+            "id": "purchase_v1",
+            "label": "Satın alma özel",
+            "category_ids": [
+                "purchase_type",
+                "usage_frequency",
+                "resale_value"
+            ]
+        },
+        {
+            "id": "purchase_details_v1",
+            "label": "Satın alma detayları",
+            "category_ids": [
+                "product_features",
+                "hidden_costs",
+                "durability_factors",
+                "aesthetic_values"
+            ]
+        },
+        {
+            "id": "career_details_v1",
+            "label": "Kariyer detayları",
+            "category_ids": [
+                "culture_preference",
+                "growth_type",
+                "burnout_level",
+                "relocation_readiness"
+            ]
+        },
+        {
+            "id": "financial_details_v1",
+            "label": "Finansal detaylar",
+            "category_ids": [
+                "asset_preference",
+                "liquidity_needs",
+                "management_style",
+                "debt_strategy"
+            ]
+        },
+        {
+            "id": "relationship_details_v1",
+            "label": "İlişki detayları",
+            "category_ids": [
+                "future_goals",
+                "conflict_style",
+                "love_language",
+                "living_arrangement"
+            ]
+        },
+        {
+            "id": "parenting_details_v1",
+            "label": "Ebeveynlik detayları",
+            "category_ids": [
+                "edu_philosophy",
+                "screen_rules",
+                "support_network",
+                "activity_focus"
+            ]
+        },
+        {
+            "id": "health_details_v1",
+            "label": "Sağlık detayları",
+            "category_ids": [
+                "fitness_nutrition",
+                "habit_quality",
+                "mental_triggers",
+                "physical_limit"
+            ]
+        },
+        {
+            "id": "education_details_v1",
+            "label": "Eğitim detayları",
+            "category_ids": [
+                "learning_mode",
+                "credential_type",
+                "return_on_invest",
+                "study_field"
+            ]
+        },
+        {
+            "id": "lifestyle_details_v1",
+            "label": "Yaşam tarzı detayları",
+            "category_ids": [
+                "environment_pref",
+                "climate_needs",
+                "community_level",
+                "pace_of_life"
+            ]
+        }
+    ]
+}

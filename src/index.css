@@ -1,0 +1,488 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* ========================================
+   DESIGN TOKENS
+   ======================================== */
+
+:root {
+  /* Base color palette */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  /* New Coral Accent Scale (replacing Teal) */
+  --accent-50: #fff1f0;
+  --accent-100: #ffe4e1;
+  --accent-200: #ffc9c2;
+  --accent-300: #ffa096;
+  --accent-400: #ff6f61;
+  /* Primary Coral */
+  --accent-500: #f05041;
+  --accent-600: #db3022;
+  --accent-700: #b82318;
+  --accent-800: #962017;
+  --accent-900: #7d1f19;
+
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-300: #6ee7b7;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+
+  /* Amber (for cautious sentiment) */
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+
+  /* Orange (for warning sentiment) */
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+
+  /* Red (for negative sentiment) */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+
+  /* Brand colors */
+  --coral-primary: #FF6F61;
+  --charcoal-primary: #2C3539;
+
+  /* ========================================
+     SEMANTIC TOKENS - LIGHT MODE (default)
+     ======================================== */
+
+  /* Backgrounds */
+  --bg-primary: var(--neutral-50);
+  --bg-secondary: #ffffff;
+  --bg-tertiary: var(--neutral-100);
+  --bg-elevated: #ffffff;
+  --bg-hover: var(--neutral-100);
+  --bg-active: var(--neutral-200);
+
+  /* Text */
+  --text-primary: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-tertiary: var(--neutral-500);
+  --text-muted: var(--neutral-400);
+  --text-inverted: #ffffff;
+
+  /* Borders */
+  --border-primary: var(--neutral-200);
+  --border-secondary: var(--neutral-100);
+  --border-hover: var(--neutral-300);
+
+  /* Buttons */
+  --btn-primary-bg: var(--neutral-900);
+  --btn-primary-bg-hover: var(--neutral-800);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: var(--neutral-100);
+  --btn-secondary-bg-hover: var(--neutral-200);
+  --btn-secondary-text: var(--neutral-700);
+  --btn-disabled-bg: var(--neutral-200);
+  --btn-disabled-text: var(--neutral-400);
+
+  /* Focus */
+  --focus-ring: var(--accent-300);
+  --focus-ring-offset: var(--neutral-50);
+
+  /* Accents */
+  --accent-bg: var(--accent-50);
+  --accent-text: var(--accent-900);
+  --accent-border: var(--accent-400);
+
+  /* Success */
+  --success-bg: var(--emerald-50);
+  --success-text: var(--emerald-700);
+  --success-accent: var(--emerald-500);
+}
+
+/* ========================================
+   SEMANTIC TOKENS - DARK MODE
+   ======================================== */
+
+.dark {
+  /* Backgrounds */
+  --bg-primary: var(--neutral-950);
+  --bg-secondary: var(--neutral-900);
+  --bg-tertiary: var(--neutral-800);
+  --bg-elevated: var(--neutral-800);
+  --bg-hover: var(--neutral-800);
+  --bg-active: var(--neutral-700);
+
+  /* Text */
+  --text-primary: var(--neutral-100);
+  --text-secondary: var(--neutral-300);
+  --text-tertiary: var(--neutral-400);
+  --text-muted: var(--neutral-500);
+  --text-inverted: var(--neutral-900);
+
+  /* Borders */
+  --border-primary: var(--neutral-700);
+  --border-secondary: var(--neutral-800);
+  --border-hover: var(--neutral-600);
+
+  /* Buttons */
+  --btn-primary-bg: var(--neutral-100);
+  --btn-primary-bg-hover: var(--neutral-200);
+  --btn-primary-text: var(--neutral-900);
+  --btn-secondary-bg: var(--neutral-800);
+  --btn-secondary-bg-hover: var(--neutral-700);
+  --btn-secondary-text: var(--neutral-200);
+  --btn-disabled-bg: var(--neutral-800);
+  --btn-disabled-text: var(--neutral-600);
+
+  /* Focus */
+  --focus-ring: var(--accent-500);
+  --focus-ring-offset: var(--neutral-900);
+
+  /* Accents */
+  --accent-bg: rgba(255, 111, 97, 0.15);
+  --accent-text: var(--accent-300);
+  --accent-border: var(--accent-500);
+
+  /* Success */
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --success-text: var(--emerald-400);
+  --success-accent: var(--emerald-500);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background-color: var(--accent-100);
+  color: var(--accent-900);
+}
+
+.dark ::selection {
+  background-color: var(--accent-600);
+  color: white;
+}
+
+/* ========================================
+   COMPONENT STYLES
+   ======================================== */
+
+.input-field {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem;
+  font-size: 1.125rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  transition: all 0.25s ease;
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.input-field:hover {
+  border-color: var(--border-hover);
+}
+
+.input-field:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+  outline: none;
+}
+
+.btn-primary {
+  padding: 1rem 2rem;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 1rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--btn-primary-bg-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  background-color: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-bg-hover);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-text {
+  padding: 0.5rem 0.75rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.btn-text:hover {
+  color: var(--text-secondary);
+  background-color: var(--bg-hover);
+}
+
+.option-button {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem;
+  text-align: left;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.option-button:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-hover);
+}
+
+.option-button.selected {
+  border-color: var(--accent-border);
+  background-color: var(--accent-bg);
+  color: var(--accent-text);
+}
+
+.card-subtle {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-secondary);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-primary), transparent);
+  margin: 2.5rem 0;
+}
+
+.text-helper {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+.text-micro {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseSoft {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 2s ease-in-out infinite;
+}
+
+@keyframes pulseSubtle {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--emerald-400);
+  }
+
+  50% {
+    box-shadow: 0 0 16px var(--emerald-400);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.5s ease-in-out infinite;
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.blur-overlay {
+  position: relative;
+}
+
+.blur-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--bg-primary));
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.max-w-content {
+  max-width: 640px;
+}
+
+.duration-250 {
+  transition-duration: 250ms;
+}
+
+.duration-400 {
+  transition-duration: 400ms;
+}

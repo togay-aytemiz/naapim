@@ -1,0 +1,424 @@
+{
+    "fields": [
+        {
+            "key": "urgency_level",
+            "label": "Bu karar ne kadar acil?",
+            "type": "single_select",
+            "option_set_id": "urgency_level_v1"
+        },
+        {
+            "key": "risk_tolerance_general",
+            "label": "Genel olarak risk almaya ne kadar açıksın?",
+            "type": "single_select",
+            "option_set_id": "risk_level_general_v1"
+        },
+        {
+            "key": "budget_range",
+            "label": "Bu karar için bütçen ne kadar esnek?",
+            "type": "single_select",
+            "option_set_id": "budget_flexibility_v1"
+        },
+        {
+            "key": "support_level_general",
+            "label": "Bu kararında seni destekleyecek insanlar var mı?",
+            "type": "single_select",
+            "option_set_id": "support_level_general_v1"
+        },
+        {
+            "key": "main_priority",
+            "label": "Bu kararda en önemli önceliğin ne?",
+            "type": "single_select",
+            "option_set_id": "priority_v1"
+        },
+        {
+            "key": "main_blocker",
+            "label": "Seni en çok engelleyen şey ne?",
+            "type": "single_select",
+            "option_set_id": "blocker_v1"
+        },
+        {
+            "key": "job_stage",
+            "label": "Kariyerinde hangi aşamadasın?",
+            "type": "single_select",
+            "option_set_id": "job_stage_v1"
+        },
+        {
+            "key": "years_in_role",
+            "label": "Bu pozisyonda kaç yıldır çalışıyorsun?",
+            "type": "single_select",
+            "option_set_id": "years_range_v1"
+        },
+        {
+            "key": "satisfaction_level",
+            "label": "Mevcut işinden ne kadar memnunsun?",
+            "type": "single_select",
+            "option_set_id": "satisfaction_v1"
+        },
+        {
+            "key": "market_outlook",
+            "label": "Sektöründe iş bulmak ne kadar kolay?",
+            "type": "single_select",
+            "option_set_id": "market_confidence_v1"
+        },
+        {
+            "key": "risk_tolerance_career",
+            "label": "Kariyerinde risk almaya ne kadar açıksın?",
+            "type": "single_select",
+            "option_set_id": "risk_level_career_v1"
+        },
+        {
+            "key": "child_age_early",
+            "label": "Çocuğun gelişimi ne aşamada? (0-6 yaş)",
+            "type": "single_select",
+            "option_set_id": "child_age_early_v1"
+        },
+        {
+            "key": "child_age_school",
+            "label": "Çocuğun hangi okul döneminde? (7+ yaş)",
+            "type": "single_select",
+            "option_set_id": "child_age_school_v1"
+        },
+        {
+            "key": "care_situation",
+            "label": "Çocuk bakımı durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "care_context_v1"
+        },
+        {
+            "key": "temperament_type",
+            "label": "Çocuğunun genel mizacı nasıl?",
+            "type": "single_select",
+            "option_set_id": "temperament_v1"
+        },
+        {
+            "key": "support_level_family",
+            "label": "Ailenden ne kadar destek alabiliyorsun?",
+            "type": "single_select",
+            "option_set_id": "support_level_family_v1"
+        },
+        {
+            "key": "relationship_duration",
+            "label": "İlişkiniz ne kadar süredir devam ediyor?",
+            "type": "single_select",
+            "option_set_id": "duration_v1"
+        },
+        {
+            "key": "comm_preference",
+            "label": "İletişim tarzınız nasıl?",
+            "type": "single_select",
+            "option_set_id": "communication_v1"
+        },
+        {
+            "key": "commitment_type",
+            "label": "İlişkinizin bağlılık seviyesi ne?",
+            "type": "single_select",
+            "option_set_id": "commitment_v1"
+        },
+        {
+            "key": "income_type",
+            "label": "Gelir durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "income_stability_v1"
+        },
+        {
+            "key": "debt_status",
+            "label": "Borç durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "debt_level_v1"
+        },
+        {
+            "key": "savings_target",
+            "label": "Tasarruf hedefin ne?",
+            "type": "single_select",
+            "option_set_id": "savings_goal_v1"
+        },
+        {
+            "key": "current_health",
+            "label": "Genel sağlık durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "health_status_v1"
+        },
+        {
+            "key": "activity_level",
+            "label": "Fiziksel aktivite seviyeni nasıl tanımlarsın?",
+            "type": "single_select",
+            "option_set_id": "activity_level_v1"
+        },
+        {
+            "key": "mental_wellbeing",
+            "label": "Ruhsal durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "mental_state_v1"
+        },
+        {
+            "key": "treatment_approach",
+            "label": "Tedavi yaklaşımı tercihin ne?",
+            "type": "single_select",
+            "option_set_id": "treatment_pref_v1"
+        },
+        {
+            "key": "education_level",
+            "label": "Mevcut eğitim seviyeni nasıl tanımlarsın?",
+            "type": "single_select",
+            "option_set_id": "edu_level_v1"
+        },
+        {
+            "key": "learning_preference",
+            "label": "Nasıl öğrenmeyi tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "learning_style_v1"
+        },
+        {
+            "key": "available_time",
+            "label": "Eğitim için ayırabileceğin zaman ne kadar?",
+            "type": "single_select",
+            "option_set_id": "time_avail_v1"
+        },
+        {
+            "key": "edu_career_goal",
+            "label": "Bu eğitimle ne hedefliyorsun?",
+            "type": "single_select",
+            "option_set_id": "edu_goal_v1"
+        },
+        {
+            "key": "location_type",
+            "label": "Yaşamak istediğin yer tipi ne?",
+            "type": "single_select",
+            "option_set_id": "location_type_v1"
+        },
+        {
+            "key": "social_preference",
+            "label": "Sosyal yaşam tercihin ne?",
+            "type": "single_select",
+            "option_set_id": "social_pref_v1"
+        },
+        {
+            "key": "routine_flexibility",
+            "label": "Günlük rutinlerin ne kadar esnek?",
+            "type": "single_select",
+            "option_set_id": "routine_flex_v1"
+        },
+        {
+            "key": "adaptation_speed",
+            "label": "Değişime ne kadar hızlı uyum sağlarsın?",
+            "type": "single_select",
+            "option_set_id": "adaptation_v1"
+        },
+        {
+            "key": "item_category",
+            "label": "Ne tür bir ürün düşünüyorsun?",
+            "type": "single_select",
+            "option_set_id": "item_type_v1"
+        },
+        {
+            "key": "usage_pattern",
+            "label": "Bu ürünü ne sıklıkla kullanacaksın?",
+            "type": "single_select",
+            "option_set_id": "usage_freq_v1"
+        },
+        {
+            "key": "brand_preference",
+            "label": "Marka konusundaki tutumun ne?",
+            "type": "single_select",
+            "option_set_id": "brand_pref_v1"
+        },
+        {
+            "key": "resale_importance",
+            "label": "Yeniden satış değeri senin için önemli mi?",
+            "type": "single_select",
+            "option_set_id": "resale_v1"
+        },
+        {
+            "key": "tech_level",
+            "label": "Teknolojik donanım/özellikler ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "tech_level_v1"
+        },
+        {
+            "key": "maintenance_cost",
+            "label": "Bakım/işletim maliyetleri (yakıt, servis) ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "maintenance_cost_v1"
+        },
+        {
+            "key": "lifespan_priority",
+            "label": "Uzun ömürlülük/dayanıklılık önceliğin nedir?",
+            "type": "single_select",
+            "option_set_id": "lifespan_v1"
+        },
+        {
+            "key": "design_importance",
+            "label": "Görünüm, tasarım ve estetik ne kadar belirleyici?",
+            "type": "single_select",
+            "option_set_id": "design_v1"
+        },
+        {
+            "key": "company_culture_pref",
+            "label": "Nasıl bir çalışma ortamı arıyorsun?",
+            "type": "single_select",
+            "option_set_id": "culture_v1"
+        },
+        {
+            "key": "career_growth_type",
+            "label": "Kariyerinde ne tür bir gelişim hedefliyorsun?",
+            "type": "single_select",
+            "option_set_id": "growth_v1"
+        },
+        {
+            "key": "current_burnout",
+            "label": "Şu anki psikolojik durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "burnout_v1"
+        },
+        {
+            "key": "relocation_willingness",
+            "label": "İş için yer değiştirmeye (taşınmaya) sıcak bakıyor musun?",
+            "type": "single_select",
+            "option_set_id": "relocation_v1"
+        },
+        {
+            "key": "investment_preference",
+            "label": "Hangi yatırım araçlarına daha yakınsın?",
+            "type": "single_select",
+            "option_set_id": "asset_class_v1"
+        },
+        {
+            "key": "liquidity_need",
+            "label": "Bu paraya ne zaman ihtiyacın olabilir?",
+            "type": "single_select",
+            "option_set_id": "liquidity_v1"
+        },
+        {
+            "key": "management_style_invest",
+            "label": "Yatırımlarını ne sıklıkla takip edebilirsin?",
+            "type": "single_select",
+            "option_set_id": "management_v1"
+        },
+        {
+            "key": "debt_strategy_pref",
+            "label": "Borç yönetimine yaklaşımın nedir?",
+            "type": "single_select",
+            "option_set_id": "debt_strategy_v1"
+        },
+        {
+            "key": "future_alignment",
+            "label": "Gelecek hedefleriniz ne kadar örtüşüyor? (Evlilik, çocuk vb.)",
+            "type": "single_select",
+            "option_set_id": "future_goals_v1"
+        },
+        {
+            "key": "conflict_resolution",
+            "label": "Tartışmalarda nasıl bir tutum sergiliyorsunuz?",
+            "type": "single_select",
+            "option_set_id": "conflict_v1"
+        },
+        {
+            "key": "love_language_primary",
+            "label": "Senin için en önemli sevgi dili hangisi?",
+            "type": "single_select",
+            "option_set_id": "love_lang_v1"
+        },
+        {
+            "key": "cohabitation_pref",
+            "label": "Birlikte yaşama konusundaki yaklaşımın nedir?",
+            "type": "single_select",
+            "option_set_id": "cohabitation_v1"
+        },
+        {
+            "key": "education_philosophy",
+            "label": "Eğitim konusunda hangi yaklaşıma daha yakınsın?",
+            "type": "single_select",
+            "option_set_id": "edu_philo_v1"
+        },
+        {
+            "key": "digital_policy",
+            "label": "Çocuğun ekran/tablet kullanımı konusundaki görüşün?",
+            "type": "single_select",
+            "option_set_id": "digital_rules_v1"
+        },
+        {
+            "key": "village_support",
+            "label": "Çocuk bakımında destek alabileceğin kişiler var mı?",
+            "type": "single_select",
+            "option_set_id": "support_net_v1"
+        },
+        {
+            "key": "extracurricular_focus",
+            "label": "Çocuğunun hangi alana yönelmesini önemsiyorsun?",
+            "type": "single_select",
+            "option_set_id": "activity_focus_v1"
+        },
+        {
+            "key": "diet_exercise_pref",
+            "label": "Beslenme ve hareket düzenin nasıl?",
+            "type": "single_select",
+            "option_set_id": "fitness_v1"
+        },
+        {
+            "key": "sleep_quality_index",
+            "label": "Uyku ve dinlenme kaliteni nasıl tanımlarsın?",
+            "type": "single_select",
+            "option_set_id": "sleep_v1"
+        },
+        {
+            "key": "stress_source",
+            "label": "Seni en çok ne strese sokuyor (veya rahatlatıyor)?",
+            "type": "single_select",
+            "option_set_id": "stress_v1"
+        },
+        {
+            "key": "health_concerns",
+            "label": "Fiziksel bir engel veya kronik bir durum var mı?",
+            "type": "single_select",
+            "option_set_id": "health_cond_v1"
+        },
+        {
+            "key": "learning_format_pref",
+            "label": "Nasıl bir öğrenme yöntemini tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "learn_mode_v1"
+        },
+        {
+            "key": "credential_value_pref",
+            "label": "Sertifika veya diploma senin için ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "credential_v1"
+        },
+        {
+            "key": "education_roi_focus",
+            "label": "Eğitimden temel beklentin nedir?",
+            "type": "single_select",
+            "option_set_id": "edu_roi_v1"
+        },
+        {
+            "key": "subject_area_interest",
+            "label": "Hangi alanda uzmanlaşmak istiyorsun?",
+            "type": "single_select",
+            "option_set_id": "subject_v1"
+        },
+        {
+            "key": "living_environment_pref",
+            "label": "Nasıl bir çevrede yaşamak istiyorsun?",
+            "type": "single_select",
+            "option_set_id": "env_pref_v1"
+        },
+        {
+            "key": "climate_preference",
+            "label": "İklim ve hava durumu tercihin nedir?",
+            "type": "single_select",
+            "option_set_id": "climate_v1"
+        },
+        {
+            "key": "community_importance",
+            "label": "Sosyal çevre ve topluluk senin için ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "community_v1"
+        },
+        {
+            "key": "life_pace_pref",
+            "label": "Hayatın akış hızı beklentin nedir?",
+            "type": "single_select",
+            "option_set_id": "pace_v1"
+        }
+    ]
+}

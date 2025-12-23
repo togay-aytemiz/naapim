@@ -1,0 +1,1564 @@
+{
+    "option_sets": [
+        {
+            "id": "urgency_level_v1",
+            "options": [
+                {
+                    "id": "urgent",
+                    "label": "Acil"
+                },
+                {
+                    "id": "this_week",
+                    "label": "Bu hafta"
+                },
+                {
+                    "id": "this_month",
+                    "label": "Bu ay"
+                },
+                {
+                    "id": "not_urgent",
+                    "label": "Acelesi yok"
+                }
+            ]
+        },
+        {
+            "id": "risk_level_general_v1",
+            "description": "Genel risk algısı - tüm arketipler için",
+            "options": [
+                {
+                    "id": "very_low",
+                    "label": "Çok düşük risk isterim"
+                },
+                {
+                    "id": "low",
+                    "label": "Düşük risk tercih ederim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta seviye risk alabilirim"
+                },
+                {
+                    "id": "high",
+                    "label": "Yüksek risk alabilirim"
+                }
+            ]
+        },
+        {
+            "id": "risk_level_career_v1",
+            "description": "Kariyer özel risk algısı - career_decisions arketipi için",
+            "options": [
+                {
+                    "id": "very_low",
+                    "label": "Kariyerimde risk almak istemem"
+                },
+                {
+                    "id": "low",
+                    "label": "Sınırlı kariyer riski alabilirim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Hesaplı kariyer riskleri alabilirim"
+                },
+                {
+                    "id": "high",
+                    "label": "Büyük kariyer riskleri alabilirim"
+                }
+            ]
+        },
+        {
+            "id": "budget_flexibility_v1",
+            "options": [
+                {
+                    "id": "very_tight",
+                    "label": "Çok sınırlı"
+                },
+                {
+                    "id": "limited",
+                    "label": "Biraz esnek"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta düzeyde esnek"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Oldukça esnek"
+                }
+            ]
+        },
+        {
+            "id": "support_level_general_v1",
+            "description": "Genel destek sistemi - tüm arketipler için",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Hiç destek yok"
+                },
+                {
+                    "id": "limited",
+                    "label": "Sınırlı destek var"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta düzeyde destek var"
+                },
+                {
+                    "id": "strong",
+                    "label": "Güçlü destek var"
+                }
+            ]
+        },
+        {
+            "id": "support_level_family_v1",
+            "description": "Aile desteği - parenting_decisions arketipi için",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Aileden destek alamıyorum"
+                },
+                {
+                    "id": "limited",
+                    "label": "Ara sıra aile desteği"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Düzenli aile desteği"
+                },
+                {
+                    "id": "strong",
+                    "label": "Tam zamanlı aile desteği"
+                }
+            ]
+        },
+        {
+            "id": "priority_v1",
+            "options": [
+                {
+                    "id": "financial",
+                    "label": "Finansal güvenlik"
+                },
+                {
+                    "id": "happiness",
+                    "label": "Mutluluk/huzur"
+                },
+                {
+                    "id": "growth",
+                    "label": "Kişisel gelişim"
+                },
+                {
+                    "id": "family",
+                    "label": "Aile/ilişkiler"
+                },
+                {
+                    "id": "health",
+                    "label": "Sağlık"
+                }
+            ]
+        },
+        {
+            "id": "blocker_v1",
+            "options": [
+                {
+                    "id": "money",
+                    "label": "Para/bütçe"
+                },
+                {
+                    "id": "time",
+                    "label": "Zaman"
+                },
+                {
+                    "id": "fear",
+                    "label": "Korku/belirsizlik"
+                },
+                {
+                    "id": "others",
+                    "label": "Başkalarının görüşleri"
+                },
+                {
+                    "id": "skills",
+                    "label": "Beceri/deneyim eksikliği"
+                }
+            ]
+        },
+        {
+            "id": "job_stage_v1",
+            "options": [
+                {
+                    "id": "entry",
+                    "label": "Kariyere yeni başladım"
+                },
+                {
+                    "id": "mid",
+                    "label": "Orta seviye (3-7 yıl)"
+                },
+                {
+                    "id": "senior",
+                    "label": "Kıdemli (8+ yıl)"
+                },
+                {
+                    "id": "executive",
+                    "label": "Yönetici/C-level"
+                }
+            ]
+        },
+        {
+            "id": "years_range_v1",
+            "options": [
+                {
+                    "id": "less_1",
+                    "label": "1 yıldan az"
+                },
+                {
+                    "id": "1_3",
+                    "label": "1-3 yıl"
+                },
+                {
+                    "id": "3_5",
+                    "label": "3-5 yıl"
+                },
+                {
+                    "id": "5_plus",
+                    "label": "5 yıldan fazla"
+                }
+            ]
+        },
+        {
+            "id": "satisfaction_v1",
+            "options": [
+                {
+                    "id": "very_unhappy",
+                    "label": "Çok mutsuzum"
+                },
+                {
+                    "id": "unhappy",
+                    "label": "Memnun değilim"
+                },
+                {
+                    "id": "neutral",
+                    "label": "Ne iyi ne kötü"
+                },
+                {
+                    "id": "happy",
+                    "label": "Memnunum"
+                },
+                {
+                    "id": "very_happy",
+                    "label": "Çok memnunum"
+                }
+            ]
+        },
+        {
+            "id": "market_confidence_v1",
+            "options": [
+                {
+                    "id": "very_hard",
+                    "label": "Çok zor"
+                },
+                {
+                    "id": "hard",
+                    "label": "Zor"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "easy",
+                    "label": "Kolay"
+                },
+                {
+                    "id": "very_easy",
+                    "label": "Çok kolay"
+                }
+            ]
+        },
+        {
+            "id": "child_age_early_v1",
+            "description": "0-6 yaş arası gelişim dönemleri",
+            "options": [
+                {
+                    "id": "baby",
+                    "label": "Bebek (0-12 ay)"
+                },
+                {
+                    "id": "toddler",
+                    "label": "Yürümeye Başlayan (1-3 yaş)"
+                },
+                {
+                    "id": "preschool",
+                    "label": "Okul Öncesi (3-6 yaş)"
+                }
+            ]
+        },
+        {
+            "id": "child_age_school_v1",
+            "description": "7+ yaş okul ve ergenlik dönemleri (cinsiyet detaylı)",
+            "options": [
+                {
+                    "id": "primary",
+                    "label": "İlkokul Çocuğu (7-10 yaş)"
+                },
+                {
+                    "id": "middle",
+                    "label": "Ortaokul Çocuğu (11-13 yaş)"
+                },
+                {
+                    "id": "teen_girl",
+                    "label": "Genç Kız (14-18 yaş)"
+                },
+                {
+                    "id": "teen_boy",
+                    "label": "Genç Erkek (14-18 yaş)"
+                },
+                {
+                    "id": "adult_child",
+                    "label": "Yetişkin Çocuk (18+)"
+                }
+            ]
+        },
+        {
+            "id": "care_context_v1",
+            "options": [
+                {
+                    "id": "home_parent",
+                    "label": "Evde bakıyorum"
+                },
+                {
+                    "id": "daycare",
+                    "label": "Kreş/bakıcı"
+                },
+                {
+                    "id": "family_help",
+                    "label": "Aile yardımı"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık düzen"
+                }
+            ]
+        },
+        {
+            "id": "temperament_v1",
+            "options": [
+                {
+                    "id": "easy",
+                    "label": "Sakin/uyumlu"
+                },
+                {
+                    "id": "active",
+                    "label": "Hareketli/enerjik"
+                },
+                {
+                    "id": "sensitive",
+                    "label": "Hassas/duygusal"
+                },
+                {
+                    "id": "challenging",
+                    "label": "Zorlayıcı/inatçı"
+                }
+            ]
+        },
+        {
+            "id": "duration_v1",
+            "options": [
+                {
+                    "id": "less_1",
+                    "label": "1 yıldan az"
+                },
+                {
+                    "id": "1_3",
+                    "label": "1-3 yıl"
+                },
+                {
+                    "id": "3_7",
+                    "label": "3-7 yıl"
+                },
+                {
+                    "id": "7_plus",
+                    "label": "7 yıldan fazla"
+                }
+            ]
+        },
+        {
+            "id": "communication_v1",
+            "options": [
+                {
+                    "id": "open",
+                    "label": "Açık ve doğrudan"
+                },
+                {
+                    "id": "careful",
+                    "label": "Dikkatli ve düşünerek"
+                },
+                {
+                    "id": "avoidant",
+                    "label": "Çatışmadan kaçınan"
+                },
+                {
+                    "id": "struggling",
+                    "label": "İletişim sorunu yaşıyoruz"
+                }
+            ]
+        },
+        {
+            "id": "commitment_v1",
+            "options": [
+                {
+                    "id": "dating",
+                    "label": "Yeni tanışıyoruz"
+                },
+                {
+                    "id": "serious",
+                    "label": "Ciddi ilişki"
+                },
+                {
+                    "id": "engaged",
+                    "label": "Nişanlı/evlilik planı"
+                },
+                {
+                    "id": "married",
+                    "label": "Evli"
+                }
+            ]
+        },
+        {
+            "id": "income_stability_v1",
+            "options": [
+                {
+                    "id": "unstable",
+                    "label": "Düzensiz gelir"
+                },
+                {
+                    "id": "variable",
+                    "label": "Değişken ama düzenli"
+                },
+                {
+                    "id": "stable",
+                    "label": "İstikrarlı maaş"
+                },
+                {
+                    "id": "multiple",
+                    "label": "Birden fazla gelir kaynağı"
+                }
+            ]
+        },
+        {
+            "id": "debt_level_v1",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Borç yok"
+                },
+                {
+                    "id": "manageable",
+                    "label": "Yönetilebilir borç"
+                },
+                {
+                    "id": "significant",
+                    "label": "Önemli miktarda borç"
+                },
+                {
+                    "id": "overwhelming",
+                    "label": "Ağır borç yükü"
+                }
+            ]
+        },
+        {
+            "id": "savings_goal_v1",
+            "options": [
+                {
+                    "id": "emergency",
+                    "label": "Acil durum fonu"
+                },
+                {
+                    "id": "short_term",
+                    "label": "Kısa vadeli hedef"
+                },
+                {
+                    "id": "long_term",
+                    "label": "Uzun vadeli yatırım"
+                },
+                {
+                    "id": "retirement",
+                    "label": "Emeklilik"
+                }
+            ]
+        },
+        {
+            "id": "health_status_v1",
+            "description": "Genel sağlık durumu - health_wellness arketipi için",
+            "options": [
+                {
+                    "id": "excellent",
+                    "label": "Çok iyi, sorunum yok"
+                },
+                {
+                    "id": "good",
+                    "label": "İyi, küçük şikayetlerim var"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta, bazı sağlık sorunlarım var"
+                },
+                {
+                    "id": "poor",
+                    "label": "Kötü, ciddi sağlık sorunlarım var"
+                }
+            ]
+        },
+        {
+            "id": "activity_level_v1",
+            "description": "Fiziksel aktivite seviyesi",
+            "options": [
+                {
+                    "id": "sedentary",
+                    "label": "Hareketsiz yaşam"
+                },
+                {
+                    "id": "light",
+                    "label": "Hafif aktivite (yürüyüş vb.)"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta düzey (haftada 2-3 spor)"
+                },
+                {
+                    "id": "active",
+                    "label": "Aktif (düzenli spor)"
+                },
+                {
+                    "id": "very_active",
+                    "label": "Çok aktif (günlük yoğun aktivite)"
+                }
+            ]
+        },
+        {
+            "id": "mental_state_v1",
+            "description": "Ruhsal durum değerlendirmesi",
+            "options": [
+                {
+                    "id": "great",
+                    "label": "Çok iyi, enerjik hissediyorum"
+                },
+                {
+                    "id": "okay",
+                    "label": "İdare eder, inişler çıkışlar var"
+                },
+                {
+                    "id": "stressed",
+                    "label": "Stresli, yorgun"
+                },
+                {
+                    "id": "struggling",
+                    "label": "Zorlanıyorum, destek lazım"
+                }
+            ]
+        },
+        {
+            "id": "treatment_pref_v1",
+            "description": "Tedavi yaklaşımı tercihi",
+            "options": [
+                {
+                    "id": "natural",
+                    "label": "Doğal/alternatif yöntemler"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Her ikisini birlikte"
+                },
+                {
+                    "id": "conventional",
+                    "label": "Modern tıp/ilaç tedavisi"
+                },
+                {
+                    "id": "open",
+                    "label": "Doktorun önerdiği her şey"
+                }
+            ]
+        },
+        {
+            "id": "edu_level_v1",
+            "description": "Mevcut eğitim seviyesi",
+            "options": [
+                {
+                    "id": "high_school",
+                    "label": "Lise veya dengi"
+                },
+                {
+                    "id": "bachelor",
+                    "label": "Üniversite (lisans)"
+                },
+                {
+                    "id": "master",
+                    "label": "Yüksek lisans"
+                },
+                {
+                    "id": "phd",
+                    "label": "Doktora"
+                },
+                {
+                    "id": "self_taught",
+                    "label": "Kendi kendine öğrenen"
+                }
+            ]
+        },
+        {
+            "id": "learning_style_v1",
+            "description": "Öğrenme tarzı tercihi",
+            "options": [
+                {
+                    "id": "online_self",
+                    "label": "Online, kendi hızımda"
+                },
+                {
+                    "id": "online_live",
+                    "label": "Online, canlı dersler"
+                },
+                {
+                    "id": "in_person",
+                    "label": "Yüz yüze eğitim"
+                },
+                {
+                    "id": "hybrid",
+                    "label": "Karma (online + yüz yüze)"
+                },
+                {
+                    "id": "intensive",
+                    "label": "Yoğun bootcamp"
+                }
+            ]
+        },
+        {
+            "id": "time_avail_v1",
+            "description": "Eğitim için ayırabileceği zaman",
+            "options": [
+                {
+                    "id": "few_hours_week",
+                    "label": "Haftada birkaç saat"
+                },
+                {
+                    "id": "part_time",
+                    "label": "Yarı zamanlı (10-20 saat/hafta)"
+                },
+                {
+                    "id": "full_time",
+                    "label": "Tam zamanlı"
+                },
+                {
+                    "id": "intensive_period",
+                    "label": "Kısa süreli yoğun dönem"
+                }
+            ]
+        },
+        {
+            "id": "edu_goal_v1",
+            "description": "Eğitim kariyer hedefi",
+            "options": [
+                {
+                    "id": "career_change",
+                    "label": "Kariyer değişikliği"
+                },
+                {
+                    "id": "promotion",
+                    "label": "Mevcut işte yükselme"
+                },
+                {
+                    "id": "skill_update",
+                    "label": "Yetkinlik güncelleme"
+                },
+                {
+                    "id": "personal_growth",
+                    "label": "Kişisel gelişim"
+                },
+                {
+                    "id": "credential",
+                    "label": "Sertifika/diploma alma"
+                }
+            ]
+        },
+        {
+            "id": "location_type_v1",
+            "description": "Yaşam lokasyonu tercihi",
+            "options": [
+                {
+                    "id": "big_city",
+                    "label": "Büyük şehir merkezi"
+                },
+                {
+                    "id": "suburb",
+                    "label": "Şehir kenarı/banliyö"
+                },
+                {
+                    "id": "small_town",
+                    "label": "Küçük şehir/kasaba"
+                },
+                {
+                    "id": "rural",
+                    "label": "Kırsal/köy"
+                },
+                {
+                    "id": "abroad",
+                    "label": "Yurt dışı"
+                }
+            ]
+        },
+        {
+            "id": "social_pref_v1",
+            "description": "Sosyal yaşam tercihi",
+            "options": [
+                {
+                    "id": "very_social",
+                    "label": "Çok sosyal, sürekli etkinlik"
+                },
+                {
+                    "id": "moderate_social",
+                    "label": "Dengeli, haftada birkaç etkinlik"
+                },
+                {
+                    "id": "selective",
+                    "label": "Seçici, yakın arkadaşlarla"
+                },
+                {
+                    "id": "introvert",
+                    "label": "Yalnızlığı tercih ederim"
+                }
+            ]
+        },
+        {
+            "id": "routine_flex_v1",
+            "description": "Günlük rutin esnekliği",
+            "options": [
+                {
+                    "id": "very_flexible",
+                    "label": "Çok esnek, plansız yaşarım"
+                },
+                {
+                    "id": "somewhat_flexible",
+                    "label": "Orta, genel çerçeve var"
+                },
+                {
+                    "id": "structured",
+                    "label": "Düzenli, sabit rutinler"
+                },
+                {
+                    "id": "very_structured",
+                    "label": "Çok düzenli, dakik plan"
+                }
+            ]
+        },
+        {
+            "id": "adaptation_v1",
+            "description": "Değişime uyum hızı",
+            "options": [
+                {
+                    "id": "very_fast",
+                    "label": "Çok hızlı, hemen adapte olurum"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta, biraz zaman lazım"
+                },
+                {
+                    "id": "slow",
+                    "label": "Yavaş, uzun süre alır"
+                },
+                {
+                    "id": "resistant",
+                    "label": "Değişimden hoşlanmam"
+                }
+            ]
+        },
+        {
+            "id": "item_type_v1",
+            "description": "Satın alınacak ürün kategorisi",
+            "options": [
+                {
+                    "id": "vehicle",
+                    "label": "Araç (araba, motor vb.)"
+                },
+                {
+                    "id": "property",
+                    "label": "Gayrimenkul (ev, daire)"
+                },
+                {
+                    "id": "electronics",
+                    "label": "Elektronik (telefon, bilgisayar)"
+                },
+                {
+                    "id": "appliance",
+                    "label": "Beyaz eşya/mobilya"
+                },
+                {
+                    "id": "other",
+                    "label": "Diğer büyük harcama"
+                }
+            ]
+        },
+        {
+            "id": "usage_freq_v1",
+            "description": "Ürün kullanım sıklığı",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün kullanacağım"
+                },
+                {
+                    "id": "weekly",
+                    "label": "Haftada birkaç kez"
+                },
+                {
+                    "id": "monthly",
+                    "label": "Ayda birkaç kez"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Nadiren, gerektiğinde"
+                }
+            ]
+        },
+        {
+            "id": "brand_pref_v1",
+            "description": "Marka tercihi",
+            "options": [
+                {
+                    "id": "brand_loyal",
+                    "label": "Belirli markalara bağlıyım"
+                },
+                {
+                    "id": "quality_focus",
+                    "label": "Kaliteye bakarım, marka önemli değil"
+                },
+                {
+                    "id": "price_focus",
+                    "label": "Fiyat/performans en önemli"
+                },
+                {
+                    "id": "research_based",
+                    "label": "Araştırma yapar, en iyisini seçerim"
+                }
+            ]
+        },
+        {
+            "id": "resale_v1",
+            "description": "Yeniden satış değeri önemi",
+            "options": [
+                {
+                    "id": "very_important",
+                    "label": "Çok önemli, ileride satarım"
+                },
+                {
+                    "id": "somewhat",
+                    "label": "Biraz önemli, düşünürüm"
+                },
+                {
+                    "id": "not_important",
+                    "label": "Önemli değil, kullandıkça kullanırım"
+                },
+                {
+                    "id": "never_sell",
+                    "label": "Hiç satmam, sonuna kadar kullanırım"
+                }
+            ]
+        },
+        {
+            "id": "tech_level_v1",
+            "description": "Teknolojik donanım beklentisi",
+            "options": [
+                {
+                    "id": "cutting_edge",
+                    "label": "En son teknoloji olmalı"
+                },
+                {
+                    "id": "modern_standard",
+                    "label": "Güncel standart donanım yeterli"
+                },
+                {
+                    "id": "basic",
+                    "label": "Sadece temel özellikler olsun"
+                },
+                {
+                    "id": "low_tech",
+                    "label": "Teknoloji önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "maintenance_cost_v1",
+            "description": "Maliyet hassasiyeti (bakım/yakıt)",
+            "options": [
+                {
+                    "id": "very_important",
+                    "label": "Çok önemli, en ekenomik olanı seçerim"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli, performans da önemli"
+                },
+                {
+                    "id": "not_concern",
+                    "label": "Önemli değil, keyif/performans öncelikli"
+                }
+            ]
+        },
+        {
+            "id": "lifespan_v1",
+            "description": "Kullanım ömrü beklentisi",
+            "options": [
+                {
+                    "id": "lifetime",
+                    "label": "Evladiyelik olsun (10+ yıl)"
+                },
+                {
+                    "id": "long_term",
+                    "label": "Uzun soluklu (5-10 yıl)"
+                },
+                {
+                    "id": "medium_term",
+                    "label": "Orta vade (3-5 yıl)"
+                },
+                {
+                    "id": "temporary",
+                    "label": "Geçici çözüm (1-2 yıl)"
+                }
+            ]
+        },
+        {
+            "id": "design_v1",
+            "description": "Estetik önem düzeyi",
+            "options": [
+                {
+                    "id": "critical",
+                    "label": "Kritik, çok şık olmalı"
+                },
+                {
+                    "id": "important",
+                    "label": "Önemli, göze hitap etmeli"
+                },
+                {
+                    "id": "minor",
+                    "label": "İkincil planda"
+                },
+                {
+                    "id": "ignore",
+                    "label": "Hiç önemli değil, işleve bakarım"
+                }
+            ]
+        },
+        {
+            "id": "culture_v1",
+            "description": "Şirket kültürü tercihi",
+            "options": [
+                {
+                    "id": "startup_flex",
+                    "label": "Startup / Esnek ve dinamik"
+                },
+                {
+                    "id": "corporate_structured",
+                    "label": "Kurumsal / Yapılı ve düzenli"
+                },
+                {
+                    "id": "remote_async",
+                    "label": "Tamamen uzaktan (Remote) / Asenkron"
+                },
+                {
+                    "id": "hybrid_balanced",
+                    "label": "Hibrit / Dengeli sosyal ortam"
+                }
+            ]
+        },
+        {
+            "id": "growth_v1",
+            "description": "Kariyer gelişim hedefi",
+            "options": [
+                {
+                    "id": "managerial_track",
+                    "label": "Yöneticilik / Liderlik yolu"
+                },
+                {
+                    "id": "specialist_deep",
+                    "label": "Uzmanlaşma / Teknik derinleşme"
+                },
+                {
+                    "id": "entrepreneurial",
+                    "label": "Girişimcilik / Kendi işini kurma"
+                },
+                {
+                    "id": "stability_steady",
+                    "label": "İstikrar / Mevcut pozisyonu koruma"
+                }
+            ]
+        },
+        {
+            "id": "burnout_v1",
+            "description": "Tükenmişlik seviyesi",
+            "options": [
+                {
+                    "id": "burnt_out",
+                    "label": "Çok yorgunum, acil değişiklik lazım"
+                },
+                {
+                    "id": "bored_stagnant",
+                    "label": "Sıkıldım, yeni heyecan arıyorum"
+                },
+                {
+                    "id": "stressed_managable",
+                    "label": "Stresli ama idare edilebilir"
+                },
+                {
+                    "id": "content_seeking_more",
+                    "label": "Memnunum ama daha iyisi olabilir"
+                }
+            ]
+        },
+        {
+            "id": "relocation_v1",
+            "description": "Taşınma istekliliği",
+            "options": [
+                {
+                    "id": "willing_global",
+                    "label": "Evet, yurt dışı dahil her yer olur"
+                },
+                {
+                    "id": "willing_domestic",
+                    "label": "Evet, ülke içinde taşınabilirim"
+                },
+                {
+                    "id": "reluctant",
+                    "label": "Zorunda kalırsam düşünürüm"
+                },
+                {
+                    "id": "unwilling",
+                    "label": "Hayır, kesinlikle taşınamam"
+                }
+            ]
+        },
+        {
+            "id": "asset_class_v1",
+            "description": "Yatırım varlık tercihi",
+            "options": [
+                {
+                    "id": "crypto_high_risk",
+                    "label": "Kripto / Yüksek riskli varlıklar"
+                },
+                {
+                    "id": "stocks_etfs",
+                    "label": "Borsa / Hisse senetleri"
+                },
+                {
+                    "id": "real_estate",
+                    "label": "Gayrimenkul / Arsa"
+                },
+                {
+                    "id": "conservative_gold_deposit",
+                    "label": "Altın / Mevduat / Düşük risk"
+                }
+            ]
+        },
+        {
+            "id": "liquidity_v1",
+            "description": "Nakit ihtiyacı süresi",
+            "options": [
+                {
+                    "id": "immediate",
+                    "label": "Çok yakında (0-6 ay)"
+                },
+                {
+                    "id": "short_term",
+                    "label": "Kısa vade (6-12 ay)"
+                },
+                {
+                    "id": "medium_term",
+                    "label": "Orta vade (1-3 yıl)"
+                },
+                {
+                    "id": "long_term_locked",
+                    "label": "Uzun vade (3+ yıl dokunmam)"
+                }
+            ]
+        },
+        {
+            "id": "management_v1",
+            "description": "Yatırım yönetim tarzı",
+            "options": [
+                {
+                    "id": "active_trader",
+                    "label": "Aktif takip ederim, al-sat yaparım"
+                },
+                {
+                    "id": "periodic_check",
+                    "label": "Ayda bir bakıp düzenlerim"
+                },
+                {
+                    "id": "passive_autopilot",
+                    "label": "Unutmak istiyorum (Otomatik/Pasif)"
+                }
+            ]
+        },
+        {
+            "id": "debt_strategy_v1",
+            "description": "Borç stratejisi",
+            "options": [
+                {
+                    "id": "aggressive_payoff",
+                    "label": "Hemen kapatmak önceliğim"
+                },
+                {
+                    "id": "leverage_invest",
+                    "label": "Düşük faizse borcu tutup yatırıma yönelirim"
+                },
+                {
+                    "id": "minimum_payment",
+                    "label": "Sadece asgarileri ödeyip akışına bırakırım"
+                }
+            ]
+        },
+        {
+            "id": "future_goals_v1",
+            "description": "Gelecek planları uyumu",
+            "options": [
+                {
+                    "id": "aligned",
+                    "label": "Tamamen aynı şeyleri istiyoruz"
+                },
+                {
+                    "id": "minor_diff",
+                    "label": "Ufak farklar var ama anlaşıyoruz"
+                },
+                {
+                    "id": "major_diff",
+                    "label": "Gelecek beklentilerimiz çok farklı"
+                },
+                {
+                    "id": "uncertain",
+                    "label": "Henüz bunları konuşmadık"
+                }
+            ]
+        },
+        {
+            "id": "conflict_v1",
+            "description": "Çatışma stili",
+            "options": [
+                {
+                    "id": "calm_discussion",
+                    "label": "Sakin konuşur, çözüme odaklanırız"
+                },
+                {
+                    "id": "avoidant",
+                    "label": "Tartışmaktan kaçınır, erteleriz"
+                },
+                {
+                    "id": "heated",
+                    "label": "Sık sık yüksek sesle tartışırız"
+                },
+                {
+                    "id": "silent_treatment",
+                    "label": "Küsüp sessiz kalmayı tercih ederiz"
+                }
+            ]
+        },
+        {
+            "id": "love_lang_v1",
+            "description": "Sevgi dili tercihi",
+            "options": [
+                {
+                    "id": "words",
+                    "label": "Onaylayıcı kelimeler / İltifat"
+                },
+                {
+                    "id": "acts",
+                    "label": "Hizmet eylemleri / Yardım etme"
+                },
+                {
+                    "id": "gifts",
+                    "label": "Hediyeler / Jestler"
+                },
+                {
+                    "id": "quality_time",
+                    "label": "Nitelikli zaman geçirme"
+                },
+                {
+                    "id": "touch",
+                    "label": "Fiziksel temas"
+                }
+            ]
+        },
+        {
+            "id": "cohabitation_v1",
+            "description": "Birlikte yaşama tercihi",
+            "options": [
+                {
+                    "id": "eager",
+                    "label": "Hemen eve çıkmak istiyorum"
+                },
+                {
+                    "id": "wait_marriage",
+                    "label": "Evlenmeden birlikte yaşanmaz"
+                },
+                {
+                    "id": "trial_run",
+                    "label": "Deneme amaçlı bir süre olabilir"
+                },
+                {
+                    "id": "separate",
+                    "label": "Ayrı evlerde kalmak daha iyi"
+                }
+            ]
+        },
+        {
+            "id": "edu_philo_v1",
+            "description": "Eğitim felsefesi",
+            "options": [
+                {
+                    "id": "academic_strict",
+                    "label": "Disiplinli, akademik odaklı"
+                },
+                {
+                    "id": "montessori_free",
+                    "label": "Özgür, çocuk odaklı (Montessori vb.)"
+                },
+                {
+                    "id": "balanced_traditional",
+                    "label": "Geleneksel ve dengeli"
+                },
+                {
+                    "id": "alternative",
+                    "label": "Alternatif / Ev okulu / Doğal eğitim"
+                }
+            ]
+        },
+        {
+            "id": "digital_rules_v1",
+            "description": "Ekran kullanımı kuralı",
+            "options": [
+                {
+                    "id": "strict_limit",
+                    "label": "Çok katı sınırlar (günde <1 saat)"
+                },
+                {
+                    "id": "supervised",
+                    "label": "Kontrollü ama esnek"
+                },
+                {
+                    "id": "free_usage",
+                    "label": "Serbest, istediği kadar kullanabilir"
+                },
+                {
+                    "id": "no_screen",
+                    "label": "Ekran tamamen yasak"
+                }
+            ]
+        },
+        {
+            "id": "support_net_v1",
+            "description": "Çocuk bakım desteği",
+            "options": [
+                {
+                    "id": "grandparents",
+                    "label": "Anneanne/Babaanne desteği var"
+                },
+                {
+                    "id": "nanny_paid",
+                    "label": "Bakıcı / Profesyonel yardım"
+                },
+                {
+                    "id": "village_community",
+                    "label": "Komşular/Arkadaşlar (Köy usulü)"
+                },
+                {
+                    "id": "solo_parenting",
+                    "label": "Tek başınayız, destek yok"
+                }
+            ]
+        },
+        {
+            "id": "activity_focus_v1",
+            "description": "Çocuk aktivite odağı",
+            "options": [
+                {
+                    "id": "sports_active",
+                    "label": "Spor ve fiziksel aktivite"
+                },
+                {
+                    "id": "arts_music",
+                    "label": "Sanat, müzik ve yaratıcılık"
+                },
+                {
+                    "id": "academic_stem",
+                    "label": "Bilim, kodlama ve zeka oyunları"
+                },
+                {
+                    "id": "social_skills",
+                    "label": "Sosyal beceriler ve oyun grupları"
+                }
+            ]
+        },
+        {
+            "id": "fitness_v1",
+            "description": "Beslenme ve egzersiz düzeni",
+            "options": [
+                {
+                    "id": "athlete",
+                    "label": "Sporcu disiplinindeyim, çok dikkat ederim"
+                },
+                {
+                    "id": "active_healthy",
+                    "label": "Aktifim, dengeli beslenirim"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Arada yürüyüş, arada kaçamak"
+                },
+                {
+                    "id": "sedentary",
+                    "label": "Hareketsizim, düzene ihtiyacım var"
+                }
+            ]
+        },
+        {
+            "id": "sleep_v1",
+            "description": "Uyku kalitesi",
+            "options": [
+                {
+                    "id": "insomniac",
+                    "label": "Çok kötü, zor uyuyor/uyanıyorum"
+                },
+                {
+                    "id": "irregular",
+                    "label": "Düzensiz, bazen iyi bazen kötü"
+                },
+                {
+                    "id": "average",
+                    "label": "Ortalama, günde 6-7 saat"
+                },
+                {
+                    "id": "good_sleeper",
+                    "label": "Mükemmel, yastığa koyunca uyurum"
+                }
+            ]
+        },
+        {
+            "id": "stress_v1",
+            "description": "Stres kaynağı",
+            "options": [
+                {
+                    "id": "work_pressure",
+                    "label": "İş/Okul yoğunluğu ve baskısı"
+                },
+                {
+                    "id": "financial_anxiety",
+                    "label": "Maddi kaygılar"
+                },
+                {
+                    "id": "family_social",
+                    "label": "Aile veya sosyal ilişkiler"
+                },
+                {
+                    "id": "internal_existential",
+                    "label": "Gelecek kaygısı / İçsel nedenler"
+                }
+            ]
+        },
+        {
+            "id": "health_cond_v1",
+            "description": "Fiziksel durum",
+            "options": [
+                {
+                    "id": "chronic_condition",
+                    "label": "Kronik bir rahatsızlığım var"
+                },
+                {
+                    "id": "recovering",
+                    "label": "Bir sakatlıktan/hastalıktan dönüyorum"
+                },
+                {
+                    "id": "healthy_fit",
+                    "label": "Turp gibiyim, hiçbir sorunum yok"
+                },
+                {
+                    "id": "low_energy",
+                    "label": "Hasta değilim ama enerjim düşük"
+                }
+            ]
+        },
+        {
+            "id": "learn_mode_v1",
+            "description": "Öğrenme tercihi",
+            "options": [
+                {
+                    "id": "video_online",
+                    "label": "Online video/kurs (Udemy, Youtube)"
+                },
+                {
+                    "id": "classroom",
+                    "label": "Sınıf ortamı / Yüz yüze"
+                },
+                {
+                    "id": "books_reading",
+                    "label": "Kitap okuyarak / Yazılı kaynaklardan"
+                },
+                {
+                    "id": "hands_on",
+                    "label": "Yaparak öğrenme / Proje bazlı"
+                }
+            ]
+        },
+        {
+            "id": "credential_v1",
+            "description": "Sertifika önemi",
+            "options": [
+                {
+                    "id": "degree_must",
+                    "label": "Diploma / Resmi belge şart"
+                },
+                {
+                    "id": "cert_bonus",
+                    "label": "Sertifika olsa iyi olur"
+                },
+                {
+                    "id": "portfolio_only",
+                    "label": "Sadece yeteneğe/portfolyoya bakarım"
+                },
+                {
+                    "id": "knowledge_first",
+                    "label": "Kağıt önemsiz, bilgiyi alayım yeter"
+                }
+            ]
+        },
+        {
+            "id": "edu_roi_v1",
+            "description": "Eğitim getirisi beklentisi",
+            "options": [
+                {
+                    "id": "salary_bump",
+                    "label": "Maaş artışı / Terfi"
+                },
+                {
+                    "id": "field_change",
+                    "label": "Sektör değiştirmek"
+                },
+                {
+                    "id": "hobby_passion",
+                    "label": "Kişisel merak / Hobi"
+                },
+                {
+                    "id": "networking",
+                    "label": "Çevre edinmek / Network"
+                }
+            ]
+        },
+        {
+            "id": "subject_v1",
+            "description": "Konu alanı",
+            "options": [
+                {
+                    "id": "tech_code",
+                    "label": "Teknoloji, Yazılım, Veri"
+                },
+                {
+                    "id": "business_mgmt",
+                    "label": "İşletme, Pazarlama, Finans"
+                },
+                {
+                    "id": "creative_arts",
+                    "label": "Tasarım, Sanat, İçerik"
+                },
+                {
+                    "id": "science_health",
+                    "label": "Bilim, Sağlık, Mühendislik"
+                }
+            ]
+        },
+        {
+            "id": "env_pref_v1",
+            "description": "Yaşam çevresi tercihi",
+            "options": [
+                {
+                    "id": "metropolis",
+                    "label": "Büyükşehir merkezi (Kaos ve enerji)"
+                },
+                {
+                    "id": "suburb_quiet",
+                    "label": "Sakin bir semt / Banliyö"
+                },
+                {
+                    "id": "nature_rural",
+                    "label": "Doğa içinde / Köy / Kasaba"
+                },
+                {
+                    "id": "nomad_travel",
+                    "label": "Sürekli seyahat / Dijital göçebe"
+                }
+            ]
+        },
+        {
+            "id": "climate_v1",
+            "description": "İklim tercihi",
+            "options": [
+                {
+                    "id": "sunny_warm",
+                    "label": "Hep sıcak ve güneşli olsun"
+                },
+                {
+                    "id": "four_seasons",
+                    "label": "Dört mevsimi de yaşayayım"
+                },
+                {
+                    "id": "cool_rainy",
+                    "label": "Serin, yağmurlu, gri"
+                },
+                {
+                    "id": "no_pref",
+                    "label": "Fark etmez, iç mekan insanıyım"
+                }
+            ]
+        },
+        {
+            "id": "community_v1",
+            "description": "Topluluk önemi",
+            "options": [
+                {
+                    "id": "social_butterfly",
+                    "label": "Çok önemli, kalabalık severim"
+                },
+                {
+                    "id": "close_circle",
+                    "label": "Az ama öz dostlarım olsun yeter"
+                },
+                {
+                    "id": "loner",
+                    "label": "Yalnızlığı ve sessizliği tercih ederim"
+                },
+                {
+                    "id": "expats",
+                    "label": "Yabancılarla/Farklı kültürlerle olmak"
+                }
+            ]
+        },
+        {
+            "id": "pace_v1",
+            "description": "Yaşam hızı",
+            "options": [
+                {
+                    "id": "hustle_fast",
+                    "label": "Hızlı, rekabetçi, kariyer odaklı"
+                },
+                {
+                    "id": "balanced_flow",
+                    "label": "Dengeli, ne çok hızlı ne çok yavaş"
+                },
+                {
+                    "id": "slow_living",
+                    "label": "Yavaş yaşam (Slow living), anın tadı"
+                },
+                {
+                    "id": "structured",
+                    "label": "Planlı, programlı ve öngörülebilir"
+                }
+            ]
+        }
+    ],
+    "_meta": {
+        "versioning": "Option set ID'leri _v1 suffix ile versiyonlanır. Runtime'da ID'ler sabit kabul edilir.",
+        "separation_policy": "Paylaşılan kavramlar (risk, support vb.) için domain-specific option set'ler oluşturulur ki ileride davranışlar ayrışabilsin."
+    }
+}

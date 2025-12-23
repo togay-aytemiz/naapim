@@ -1,0 +1,393 @@
+{
+    "archetypes": [
+        {
+            "id": "career_decisions",
+            "label": "Kariyer ve iş",
+            "default_followup_days": 30,
+            "category_set_ids": [
+                "core_v1",
+                "career_v1",
+                "career_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "İş hayatı, kariyer değişikliği, istifa, terfi, yeni iş kurma veya mesleki gelişim ile ilgili kararlar.",
+                "positive_examples": [
+                    "İşten ayrılıp kendi şirketimi kurmalı mıyım?",
+                    "Mevcut işimde kalıp terfi mi beklemeliyim yoksa başka bir şirkete mi geçmeliyim?",
+                    "Yazılım alanına geçiş yapmak için hangi eğitimi almalıyım?",
+                    "Maaş zammı istemeli miyim yoksa sessiz mi kalmalıyım?",
+                    "İstanbul'dan taşınıp uzaktan çalışabileceğim bir iş bulmalı mıyım?"
+                ],
+                "negative_examples": [
+                    "Eşimle ayrılmalı mıyım?",
+                    "Hangi evi satın almalıyım?",
+                    "Çocuğumu hangi okula göndermeliyim?"
+                ],
+                "keywords": [
+                    "iş",
+                    "kariyer",
+                    "istifa",
+                    "terfi",
+                    "maaş",
+                    "ofis",
+                    "yönetici",
+                    "meslek",
+                    "girişim",
+                    "şirket",
+                    "mülakat",
+                    "özgeçmiş",
+                    "sektör"
+                ],
+                "exclusions": [
+                    "hobi",
+                    "gönüllü işler (kariyer hedefi değilse)",
+                    "ev işleri"
+                ]
+            }
+        },
+        {
+            "id": "parenting_decisions",
+            "label": "Ebeveynlik ve çocuk",
+            "default_followup_days": 14,
+            "category_set_ids": [
+                "core_v1",
+                "parenting_v1",
+                "parenting_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Çocuk yetiştirme, ebeveynlik tarzı, çocukların eğitimi veya aile içi ebeveyn-çocuk ilişkileri ile ilgili kararlar.",
+                "positive_examples": [
+                    "Çocuğumu özel okula mı yoksa devlet okuluna mı göndermeliyim?",
+                    "Ergenlik çağındaki çocuğumla iletişimimi nasıl düzeltirim?",
+                    "İkinci çocuğu yapmalı mıyız?",
+                    "Çocuğuma bu yaşta telefon almalı mıyım?",
+                    "Bakıcı değiştirmeli miyiz?"
+                ],
+                "negative_examples": [
+                    "Hangi arabayı almalıyım?",
+                    "Eşimle ilişkimiz nereye gidiyor?",
+                    "Hangi yatırımı yapmalıyım?"
+                ],
+                "keywords": [
+                    "çocuk",
+                    "bebek",
+                    "okul",
+                    "eğitim",
+                    "bakıcı",
+                    "ergen",
+                    "disiplin",
+                    "oyun",
+                    "kreş",
+                    "ebeveyn",
+                    "anne",
+                    "baba"
+                ],
+                "exclusions": [
+                    "eş ilişkileri (çocuk odağı yoksa)",
+                    "evcil hayvanlar"
+                ]
+            }
+        },
+        {
+            "id": "relationship_decisions",
+            "label": "İlişki kararları",
+            "default_followup_days": 21,
+            "category_set_ids": [
+                "core_v1",
+                "relationship_v1",
+                "relationship_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Romantik ilişkiler, evlilik, ayrılık, arkadaşlık veya aile bireyleriyle (eş, partner vb.) olan ilişkilerle ilgili kararlar.",
+                "positive_examples": [
+                    "Sevgilimden ayrılmalı mıyım?",
+                    "Evlenme teklifi etmeli miyim?",
+                    "Eşimle terapiye gitmeli miyiz?",
+                    "Uzun mesafeli ilişkiye devam etmeli miyim?",
+                    "Eski sevgilime dönmeli miyim?"
+                ],
+                "negative_examples": [
+                    "İş yerindeki yöneticimle nasıl konuşmalıyım?",
+                    "Hangi hisse senedini almalıyım?",
+                    "Çocuğumun dersleri kötü."
+                ],
+                "keywords": [
+                    "sevgili",
+                    "eş",
+                    "partner",
+                    "evlilik",
+                    "boşanma",
+                    "ayrılık",
+                    "flört",
+                    "aşk",
+                    "güven",
+                    "aldatma",
+                    "iletişim"
+                ],
+                "exclusions": [
+                    "iş arkadaşları (profesyonel)",
+                    "ebeveyn-çocuk (parenting_decisions)"
+                ]
+            }
+        },
+        {
+            "id": "money_finance",
+            "label": "Finansal kararlar",
+            "default_followup_days": 30,
+            "category_set_ids": [
+                "core_v1",
+                "financial_v1",
+                "financial_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Para yönetimi, yatırım, harcama, bütçe yapma, borçlanma veya büyük satın alımlarla ilgili kararlar.",
+                "positive_examples": [
+                    "Şimdi ev almalı mıyım yoksa kirada mı oturmalıyım?",
+                    "Elimdeki parayı faize mi yatırmalıyım yoksa döviz mi almalıyım?",
+                    "Kredi çekip borçlarımı kapatmalı mıyım?",
+                    "Emeklilik için bireysel emeklilik sistemine girmeli miyim?",
+                    "Araba modelimi yükseltmeli miyim?"
+                ],
+                "negative_examples": [
+                    "Hangi mesleği seçmeliyim?",
+                    "Sevgilimle tatile nereye gitsek?",
+                    "Çocuğumun ödevine yardım etmeli miyim?"
+                ],
+                "keywords": [
+                    "para",
+                    "yatırım",
+                    "borç",
+                    "kredi",
+                    "ev",
+                    "araba",
+                    "satın alım",
+                    "bütçe",
+                    "tasarruf",
+                    "harcama",
+                    "döviz",
+                    "altın"
+                ],
+                "exclusions": [
+                    "kariyer maaş pazarlığı (career_decisions)",
+                    "ucuz tatil planı (eğlence)"
+                ]
+            }
+        },
+        {
+            "id": "health_wellness",
+            "label": "Sağlık ve yaşam",
+            "default_followup_days": 14,
+            "category_set_ids": [
+                "core_v1",
+                "health_v1",
+                "health_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Sağlık, beslenme, egzersiz, tedavi seçenekleri, diyet veya genel yaşam kalitesi ile ilgili kararlar.",
+                "positive_examples": [
+                    "Ameliyat mı olmalıyım yoksa alternatif tedavi mi denemeliyim?",
+                    "Diyete başlamalı mıyım?",
+                    "Spor salonuna mı yazılmalıyım yoksa evde mi antrenman yapmalıyım?",
+                    "Sigara bırakmak için ilaç kullanmalı mıyım?",
+                    "Psikolojik destek almalı mıyım?"
+                ],
+                "negative_examples": [
+                    "Hangi arabayı almalıyım?",
+                    "İş değiştirmeli miyim?",
+                    "Çocuğumu hangi okula göndermeliyim?"
+                ],
+                "keywords": [
+                    "sağlık",
+                    "diyet",
+                    "spor",
+                    "egzersiz",
+                    "ameliyat",
+                    "tedavi",
+                    "doktor",
+                    "hastane",
+                    "beslenme",
+                    "kilo",
+                    "uyku",
+                    "stres",
+                    "terapi",
+                    "psikolog"
+                ],
+                "exclusions": [
+                    "estetik (güzellik odaklı)",
+                    "spor hobi düzeyinde (yaşam tarzı)"
+                ]
+            }
+        },
+        {
+            "id": "education_learning",
+            "label": "Eğitim ve öğrenim",
+            "default_followup_days": 21,
+            "category_set_ids": [
+                "core_v1",
+                "education_v1",
+                "education_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Eğitim, kurs, sertifika, üniversite seçimi, yüksek lisans veya kişisel gelişim eğitimleri ile ilgili kararlar.",
+                "positive_examples": [
+                    "Yüksek lisans yapmalı mıyım?",
+                    "Hangi programlama kursuna yazılmalıyım?",
+                    "MBA yapmaya değer mi?",
+                    "Yabancı dil kursuna devam etmeli miyim?",
+                    "Online mı yoksa yüz yüze eğitim mi tercih etmeliyim?"
+                ],
+                "negative_examples": [
+                    "Çocuğumun okulu (parenting)",
+                    "Hangi şirkette çalışayım?",
+                    "Ev satın almalı mıyım?"
+                ],
+                "keywords": [
+                    "eğitim",
+                    "kurs",
+                    "sertifika",
+                    "üniversite",
+                    "master",
+                    "yüksek lisans",
+                    "MBA",
+                    "öğrenmek",
+                    "bootcamp",
+                    "online eğitim",
+                    "dil kursu"
+                ],
+                "exclusions": [
+                    "çocuk eğitimi (parenting_decisions)",
+                    "hobi amaçlı kurslar (lifestyle)"
+                ]
+            }
+        },
+        {
+            "id": "lifestyle_change",
+            "label": "Yaşam tarzı değişikliği",
+            "default_followup_days": 30,
+            "category_set_ids": [
+                "core_v1",
+                "lifestyle_v1",
+                "lifestyle_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Şehir değişikliği, taşınma, hobi seçimi, yaşam düzeni, günlük rutinler veya genel yaşam kalitesi ile ilgili kararlar.",
+                "positive_examples": [
+                    "İstanbul'dan başka şehre taşınmalı mıyım?",
+                    "Yurtdışında yaşamayı denemeli miyim?",
+                    "Kırsal bir yere taşınıp uzaktan çalışmalı mıyım?",
+                    "Yeni bir hobi edinmeli miyim?",
+                    "Sabah rutinlerimi değiştirmeli miyim?"
+                ],
+                "negative_examples": [
+                    "Hangi evi almalıyım? (major_purchase)",
+                    "İş değiştirmeli miyim? (career)",
+                    "Evlenmeli miyim? (relationship)"
+                ],
+                "keywords": [
+                    "taşınmak",
+                    "şehir",
+                    "yaşam tarzı",
+                    "hobi",
+                    "rutin",
+                    "yurt dışı",
+                    "köy",
+                    "deniz kenarı",
+                    "minimalist",
+                    "dijital detoks"
+                ],
+                "exclusions": [
+                    "ev satın alma (major_purchase)",
+                    "kariyer odaklı taşınma (career)"
+                ]
+            }
+        },
+        {
+            "id": "major_purchase",
+            "label": "Büyük satın alımlar",
+            "default_followup_days": 21,
+            "category_set_ids": [
+                "core_v1",
+                "purchase_v1",
+                "purchase_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Ev, araba, teknoloji ürünleri veya diğer büyük harcamalarla ilgili spesifik satın alma kararları.",
+                "positive_examples": [
+                    "Bu arabayı almalı mıyım?",
+                    "Yeni iPhone mı yoksa Samsung mu?",
+                    "MacBook Pro almaya değer mi?",
+                    "Bu daireyi satın almalı mıyım?",
+                    "Elektrikli araba mı yoksa benzinli mi?"
+                ],
+                "negative_examples": [
+                    "Ev mi kirada mı oturmalıyım? (finance)",
+                    "Yatırım yapmalı mıyım? (finance)",
+                    "İş kurmalı mıyım? (career)"
+                ],
+                "keywords": [
+                    "satın almak",
+                    "araba",
+                    "ev",
+                    "telefon",
+                    "laptop",
+                    "bilgisayar",
+                    "mobilya",
+                    "beyaz eşya",
+                    "model",
+                    "marka"
+                ],
+                "exclusions": [
+                    "yatırım amaçlı alım (finance)",
+                    "iş için gerekli ekipman (career)"
+                ]
+            }
+        },
+        {
+            "id": "blocked_topics",
+            "label": "Engelli konu",
+            "default_followup_days": 0,
+            "category_set_ids": [],
+            "routing_hints": {
+                "definition": "Finansal yatırım tavsiyeleri, tıbbi/sağlık danışmanlığı, ilaç kullanımı, hukuki danışmanlık gibi profesyonel uzmanlık gerektiren ve riskli olabilecek konular.",
+                "positive_examples": [
+                    "Altın mı alsam dolar mı?",
+                    "Borsa'ya yatırım yapmalı mıyım?",
+                    "Bitcoin almalı mıyım?",
+                    "Hangi hisseye yatırım yapayım?",
+                    "Şu ilacı kullanmalı mıyım?",
+                    "Antidepresan kullanmaya devam mı etmeliyim?",
+                    "Ameliyat olmam gerekiyor mu?",
+                    "Şu hastalık için hangi tedavi?",
+                    "Dava açmalı mıyım?",
+                    "Boşanma davası nasıl açılır?",
+                    "Miras hakkım ne kadar?"
+                ],
+                "negative_examples": [
+                    "Ev almak için tasarruf nasıl yaparım?",
+                    "Sağlıklı yaşam için ne yapmalıyım?",
+                    "İşimden memnun değilim ne yapmalıyım?"
+                ],
+                "keywords": [
+                    "altın al",
+                    "dolar al",
+                    "borsa",
+                    "hisse",
+                    "kripto",
+                    "bitcoin",
+                    "yatırım tavsiye",
+                    "ilaç",
+                    "tedavi",
+                    "ameliyat",
+                    "doktor",
+                    "hastalık",
+                    "antidepresan",
+                    "dava",
+                    "avukat",
+                    "miras",
+                    "mahkeme"
+                ],
+                "exclusions": []
+            }
+        }
+    ]
+}

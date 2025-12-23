@@ -1,0 +1,486 @@
+{
+    "categories": [
+        {
+            "id": "urgency",
+            "label": "Zaman baskısı",
+            "field_keys": [
+                "urgency_level"
+            ]
+        },
+        {
+            "id": "risk_preference",
+            "label": "Risk tercihi",
+            "field_keys": [
+                "risk_tolerance_general"
+            ]
+        },
+        {
+            "id": "budget_flexibility",
+            "label": "Bütçe esnekliği",
+            "field_keys": [
+                "budget_range"
+            ]
+        },
+        {
+            "id": "support_system",
+            "label": "Destek sistemi",
+            "field_keys": [
+                "support_level_general"
+            ]
+        },
+        {
+            "id": "priority_goal",
+            "label": "Öncelikli hedef",
+            "field_keys": [
+                "main_priority"
+            ]
+        },
+        {
+            "id": "constraint_blocker",
+            "label": "Engeller",
+            "field_keys": [
+                "main_blocker"
+            ]
+        },
+        {
+            "id": "job_stage",
+            "label": "Kariyer aşaması",
+            "description": "field_keys sırası UI gösterim sırasını belirler",
+            "field_keys": [
+                "job_stage",
+                "years_in_role"
+            ]
+        },
+        {
+            "id": "role_satisfaction",
+            "label": "İş memnuniyeti",
+            "field_keys": [
+                "satisfaction_level"
+            ]
+        },
+        {
+            "id": "market_confidence",
+            "label": "Piyasa güveni",
+            "field_keys": [
+                "market_outlook"
+            ]
+        },
+        {
+            "id": "risk_tolerance_work",
+            "label": "İş riski toleransı",
+            "field_keys": [
+                "risk_tolerance_career"
+            ]
+        },
+        {
+            "id": "child_age_stage",
+            "label": "Çocuk Gelişim Dönemi",
+            "field_keys": [
+                "child_age_early",
+                "child_age_school"
+            ]
+        },
+        {
+            "id": "care_context",
+            "label": "Bakım bağlamı",
+            "field_keys": [
+                "care_situation"
+            ]
+        },
+        {
+            "id": "child_temperament",
+            "label": "Çocuk mizacı",
+            "field_keys": [
+                "temperament_type"
+            ]
+        },
+        {
+            "id": "family_capacity",
+            "label": "Aile kapasitesi",
+            "field_keys": [
+                "support_level_family"
+            ]
+        },
+        {
+            "id": "relationship_stage",
+            "label": "İlişki aşaması",
+            "field_keys": [
+                "relationship_duration"
+            ]
+        },
+        {
+            "id": "communication_style",
+            "label": "İletişim tarzı",
+            "field_keys": [
+                "comm_preference"
+            ]
+        },
+        {
+            "id": "commitment_level",
+            "label": "Bağlılık seviyesi",
+            "field_keys": [
+                "commitment_type"
+            ]
+        },
+        {
+            "id": "income_stability",
+            "label": "Gelir istikrarı",
+            "field_keys": [
+                "income_type"
+            ]
+        },
+        {
+            "id": "debt_level",
+            "label": "Borç durumu",
+            "field_keys": [
+                "debt_status"
+            ]
+        },
+        {
+            "id": "savings_goal",
+            "label": "Tasarruf hedefi",
+            "field_keys": [
+                "savings_target"
+            ]
+        },
+        {
+            "id": "health_status",
+            "label": "Sağlık durumu",
+            "field_keys": [
+                "current_health"
+            ]
+        },
+        {
+            "id": "lifestyle_activity",
+            "label": "Yaşam tarzı aktivitesi",
+            "field_keys": [
+                "activity_level"
+            ]
+        },
+        {
+            "id": "mental_state",
+            "label": "Ruhsal durum",
+            "field_keys": [
+                "mental_wellbeing"
+            ]
+        },
+        {
+            "id": "treatment_preference",
+            "label": "Tedavi tercihi",
+            "field_keys": [
+                "treatment_approach"
+            ]
+        },
+        {
+            "id": "current_level",
+            "label": "Mevcut eğitim seviyesi",
+            "field_keys": [
+                "education_level"
+            ]
+        },
+        {
+            "id": "learning_style",
+            "label": "Öğrenme tarzı",
+            "field_keys": [
+                "learning_preference"
+            ]
+        },
+        {
+            "id": "time_commitment",
+            "label": "Zaman taahhüdü",
+            "field_keys": [
+                "available_time"
+            ]
+        },
+        {
+            "id": "career_goal_edu",
+            "label": "Kariyer hedefi",
+            "field_keys": [
+                "edu_career_goal"
+            ]
+        },
+        {
+            "id": "location_preference",
+            "label": "Lokasyon tercihi",
+            "field_keys": [
+                "location_type"
+            ]
+        },
+        {
+            "id": "social_needs",
+            "label": "Sosyal ihtiyaçlar",
+            "field_keys": [
+                "social_preference"
+            ]
+        },
+        {
+            "id": "daily_routine",
+            "label": "Günlük rutin",
+            "field_keys": [
+                "routine_flexibility"
+            ]
+        },
+        {
+            "id": "change_readiness",
+            "label": "Değişime hazırlık",
+            "field_keys": [
+                "adaptation_speed"
+            ]
+        },
+        {
+            "id": "purchase_type",
+            "label": "Satın alma türü",
+            "field_keys": [
+                "item_category"
+            ]
+        },
+        {
+            "id": "usage_frequency",
+            "label": "Kullanım sıklığı",
+            "field_keys": [
+                "usage_pattern"
+            ]
+        },
+        {
+            "id": "brand_loyalty",
+            "label": "Marka bağlılığı",
+            "field_keys": [
+                "brand_preference"
+            ]
+        },
+        {
+            "id": "resale_value",
+            "label": "Yeniden satış değeri",
+            "field_keys": [
+                "resale_importance"
+            ]
+        },
+        {
+            "id": "product_features",
+            "label": "Ürün özellikleri",
+            "field_keys": [
+                "tech_level"
+            ]
+        },
+        {
+            "id": "hidden_costs",
+            "label": "Gizli maliyetler",
+            "field_keys": [
+                "maintenance_cost"
+            ]
+        },
+        {
+            "id": "durability_factors",
+            "label": "Dayanıklılık faktörleri",
+            "field_keys": [
+                "lifespan_priority"
+            ]
+        },
+        {
+            "id": "aesthetic_values",
+            "label": "Estetik değerler",
+            "field_keys": [
+                "design_importance"
+            ]
+        },
+        {
+            "id": "culture_preference",
+            "label": "Şirket kültürü",
+            "field_keys": [
+                "company_culture_pref"
+            ]
+        },
+        {
+            "id": "growth_type",
+            "label": "Büyüme hedefi",
+            "field_keys": [
+                "career_growth_type"
+            ]
+        },
+        {
+            "id": "burnout_level",
+            "label": "Tükenmişlik durumu",
+            "field_keys": [
+                "current_burnout"
+            ]
+        },
+        {
+            "id": "relocation_readiness",
+            "label": "Taşınma durumu",
+            "field_keys": [
+                "relocation_willingness"
+            ]
+        },
+        {
+            "id": "asset_preference",
+            "label": "Varlık tercihi",
+            "field_keys": [
+                "investment_preference"
+            ]
+        },
+        {
+            "id": "liquidity_needs",
+            "label": "Nakit ihtiyacı",
+            "field_keys": [
+                "liquidity_need"
+            ]
+        },
+        {
+            "id": "management_style",
+            "label": "Yönetim tarzı",
+            "field_keys": [
+                "management_style_invest"
+            ]
+        },
+        {
+            "id": "debt_strategy",
+            "label": "Borç stratejisi",
+            "field_keys": [
+                "debt_strategy_pref"
+            ]
+        },
+        {
+            "id": "future_goals",
+            "label": "Gelecek hedefleri",
+            "field_keys": [
+                "future_alignment"
+            ]
+        },
+        {
+            "id": "conflict_style",
+            "label": "Çatışma stili",
+            "field_keys": [
+                "conflict_resolution"
+            ]
+        },
+        {
+            "id": "love_language",
+            "label": "Sevgi dili",
+            "field_keys": [
+                "love_language_primary"
+            ]
+        },
+        {
+            "id": "living_arrangement",
+            "label": "Yaşam düzeni",
+            "field_keys": [
+                "cohabitation_pref"
+            ]
+        },
+        {
+            "id": "edu_philosophy",
+            "label": "Eğitim felsefesi",
+            "field_keys": [
+                "education_philosophy"
+            ]
+        },
+        {
+            "id": "screen_rules",
+            "label": "Ekran kuralları",
+            "field_keys": [
+                "digital_policy"
+            ]
+        },
+        {
+            "id": "support_network",
+            "label": "Destek ağı",
+            "field_keys": [
+                "village_support"
+            ]
+        },
+        {
+            "id": "activity_focus",
+            "label": "Aktivite odağı",
+            "field_keys": [
+                "extracurricular_focus"
+            ]
+        },
+        {
+            "id": "fitness_nutrition",
+            "label": "Beslenme ve Hareket",
+            "field_keys": [
+                "diet_exercise_pref"
+            ]
+        },
+        {
+            "id": "habit_quality",
+            "label": "Uyku ve Dinlenme",
+            "field_keys": [
+                "sleep_quality_index"
+            ]
+        },
+        {
+            "id": "mental_triggers",
+            "label": "Stres ve Zihin",
+            "field_keys": [
+                "stress_source"
+            ]
+        },
+        {
+            "id": "physical_limit",
+            "label": "Fiziksel Durum",
+            "field_keys": [
+                "health_concerns"
+            ]
+        },
+        {
+            "id": "learning_mode",
+            "label": "Öğrenme Formatı",
+            "field_keys": [
+                "learning_format_pref"
+            ]
+        },
+        {
+            "id": "credential_type",
+            "label": "Sertifikasyon",
+            "field_keys": [
+                "credential_value_pref"
+            ]
+        },
+        {
+            "id": "return_on_invest",
+            "label": "Eğitim Getirisi",
+            "field_keys": [
+                "education_roi_focus"
+            ]
+        },
+        {
+            "id": "study_field",
+            "label": "Alan Seçimi",
+            "field_keys": [
+                "subject_area_interest"
+            ]
+        },
+        {
+            "id": "environment_pref",
+            "label": "Yaşam Çevresi",
+            "field_keys": [
+                "living_environment_pref"
+            ]
+        },
+        {
+            "id": "climate_needs",
+            "label": "İklim Tercihi",
+            "field_keys": [
+                "climate_preference"
+            ]
+        },
+        {
+            "id": "community_level",
+            "label": "Sosyal Çevre",
+            "field_keys": [
+                "community_importance"
+            ]
+        },
+        {
+            "id": "pace_of_life",
+            "label": "Yaşam Temposu",
+            "field_keys": [
+                "life_pace_pref"
+            ]
+        }
+    ],
+    "_meta": {
+        "field_order_contract": "field_keys dizisi UI'da soruların gösterim sırasını belirler. Bu sıra binding contract olarak kabul edilir ve UI/backend birebir uymalıdır."
+    }
+}

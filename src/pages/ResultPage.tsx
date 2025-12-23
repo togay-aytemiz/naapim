@@ -1,0 +1,356 @@
+
+import React, { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { FollowUpSection } from '../components/FollowUpSection';
+import { RecoveryCode } from '../components/RecoveryCode';
+import { ReminderOptIn } from '../components/ReminderOptIn';
+import { AnalysisService, type AnalysisResult } from '../services/analysis';
+import { saveAnalysis } from '../services/saveAnalysis';
+import { submitSession } from '../services/session';
+import type { Archetype } from '../types/registry';
+
+// @ts-ignore
+import archetypesData from '../../config/registry/archetypes.json';
+
+export const ResultPage = () => {
+    const { code } = useParams<{ code: string }>();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Load archetypes
+    const archetypes: Archetype[] = (archetypesData as any).archetypes;
+
+    // State passed from App.tsx navigation
+    const userInput = location.state?.userInput as string | undefined;
+    const answers = location.state?.answers as Record<string, string> | undefined;
+    const archetypeId = location.state?.archetypeId as string | undefined;
+    const sessionId = location.state?.sessionId as string | undefined;
+
+    // Get followup days from archetype
+    const followupDays = useMemo(() => {
+        if (archetypeId) {
+            const archetype = archetypes.find(a => a.id === archetypeId);
+            return archetype?.default_followup_days || 14;
+        }
+        return 14;
+    }, [archetypeId, archetypes]);
+
+    const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [reminderAlreadySet, setReminderAlreadySet] = useState(false);
+    const [showReminderOptIn, setShowReminderOptIn] = useState(true);
+
+    // Prevent double API call in React StrictMode
+    const hasCalledAnalysis = React.useRef(false);
+
+    useEffect(() => {
+        // Guard against double execution (React StrictMode in dev)
+        if (hasCalledAnalysis.current) return;
+
+        const performParallelWork = async () => {
+            // Case 1: Viewing existing session (code exists and is NOT 'creating')
+            // ALWAYS fetch from DB - even if state exists (could be stale on refresh)
+            if (code && code !== 'creating') {
+                hasCalledAnalysis.current = true;
+                setIsLoading(true);
+
+                try {
+                    const { fetchAnalysisByCode } = await import('../services/fetchAnalysis');
+                    const result = await fetchAnalysisByCode(code);
+
+                    if (result && result.analysis) {
+                        setAnalysis(result.analysis as AnalysisResult);
+                    } else {
+                        console.error('No analysis found in DB for code:', code);
+                    }
+                } catch (error) {
+                    console.error('Error fetching saved analysis:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+            // Case 2: Creating new session (code IS 'creating')
+            else if (code === 'creating' && userInput && answers && archetypeId) {
+                hasCalledAnalysis.current = true;
+                setIsLoading(true);
+
+                // Start Analysis Generation
+                const analysisPromise = AnalysisService.generateAnalysis(userInput, answers, archetypeId);
+
+                // Start Session Creation
+                const sessionPromise = submitSession({
+                    user_question: userInput,
+                    archetype_id: archetypeId,
+                    answers: answers
+                });
+
+                try {
+                    // Wait for both
+                    const [analysisResult, sessionResult] = await Promise.all([
+                        analysisPromise,
+                        sessionPromise
+                    ]);
+
+                    setAnalysis(analysisResult);
+
+                    const finalSessionId = sessionResult?.session_id;
+                    const finalCode = sessionResult?.code;
+
+                    // Update URL now that we have a real code
+                    if (finalCode) {
+                        navigate(`/result/${finalCode}`, {
+                            replace: true,
+                            state: { ...location.state, sessionId: finalSessionId }
+                        });
+                    }
+
+                    // Save analysis to database
+                    if (finalSessionId && finalCode) {
+                        await saveAnalysis({
+                            session_id: finalSessionId,
+                            code: finalCode,
+                            analysis: analysisResult
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error generating result:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            } else {
+                // No valid code - stop loading
+                setIsLoading(false);
+            }
+        };
+        performParallelWork();
+    }, [code, userInput, answers, archetypeId, sessionId, navigate, location.state]);
+
+    const handleReminderSet = (_email: string) => {
+        setReminderAlreadySet(true);
+    };
+
+    const handleBackToHome = () => {
+        navigate('/');
+    };
+
+    // Rotating loading messages
+    const loadingMessages = [
+        "Analiz ediliyor...",
+        "Durumun değerlendiriliyor...",
+        "Önerilen adımlar belirleniyor...",
+        "Çıkarımlar yapılıyor...",
+        "Plan hazırlanıyor...",
+        "Son detaylar ekleniyor..."
+    ];
+
+    const [loadingMessageIndex, setLoadingMessageIndex] = React.useState(0);
+
+    React.useEffect(() => {
+        if (!isLoading) return;
+        const interval = setInterval(() => {
+            setLoadingMessageIndex(prev => (prev + 1) % loadingMessages.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, [isLoading, loadingMessages.length]);
+
+    // Full-page loading state
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5">
+                <div className="text-center space-y-8 max-w-sm">
+                    {/* Animated spinner */}
+                    <div className="relative mx-auto w-16 h-16">
+                        <div
+                            className="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
+                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--coral-primary)' }}
+                        />
+                        <div
+                            className="absolute inset-2 rounded-full border-4 border-t-transparent animate-spin"
+                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--charcoal-primary)', animationDirection: 'reverse', animationDuration: '1.5s' }}
+                        />
+                    </div>
+
+                    {/* Rotating message */}
+                    <div className="h-8 overflow-hidden">
+                        <p
+                            className="text-lg font-medium animate-in fade-in slide-in-from-bottom-2 duration-500"
+                            style={{ color: 'var(--text-primary)' }}
+                            key={loadingMessageIndex}
+                        >
+                            {loadingMessages[loadingMessageIndex]}
+                        </p>
+                    </div>
+
+                    {/* User question reminder */}
+                    {userInput && (
+                        <div
+                            className="p-4 rounded-xl"
+                            style={{ backgroundColor: 'var(--bg-secondary)' }}
+                        >
+                            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Sorunu analiz ediyoruz:</p>
+                            <p className="font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>"{userInput}"</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col items-center pb-16 pt-8">
+            <div className="w-full max-w-lg space-y-12">
+                {/* User's decision context */}
+                {userInput && (
+                    <div className="pt-4 text-center px-5">
+                        <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>Düşündüğün konu</p>
+                        <p className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>"{userInput}"</p>
+                    </div>
+                )}
+
+                {/* Analysis Result Section */}
+                <div className="px-5">
+                    {analysis ? (
+                        <div
+                            className="rounded-2xl p-6 shadow-sm"
+                            style={{
+                                backgroundColor: 'var(--bg-elevated)',
+                                border: '1px solid var(--border-secondary)'
+                            }}
+                        >
+
+                            {/* Title */}
+                            <h1
+                                className="text-2xl font-semibold text-center mb-6"
+                                style={{ color: 'var(--text-primary)' }}
+                            >
+                                {analysis.title}
+                            </h1>
+
+                            {/* Recommendation */}
+                            {(() => {
+                                // Sentiment-based colors
+                                const sentimentStyles: Record<string, { bg: string; border: string; text: string }> = {
+                                    positive: { bg: 'var(--emerald-50)', border: 'var(--emerald-300)', text: 'var(--emerald-700)' },
+                                    cautious: { bg: 'var(--amber-50)', border: 'var(--amber-300)', text: 'var(--amber-700)' },
+                                    warning: { bg: 'var(--orange-50)', border: 'var(--orange-300)', text: 'var(--orange-700)' },
+                                    negative: { bg: 'var(--red-50)', border: 'var(--red-300)', text: 'var(--red-700)' },
+                                    neutral: { bg: 'var(--neutral-100)', border: 'var(--neutral-300)', text: 'var(--neutral-700)' }
+                                };
+                                const style = sentimentStyles[analysis.sentiment] || sentimentStyles.neutral;
+                                return (
+                                    <div
+                                        className="p-4 rounded-xl mb-6"
+                                        style={{
+                                            backgroundColor: style.bg,
+                                            border: `1px solid ${style.border}`
+                                        }}
+                                    >
+                                        <p
+                                            className="font-medium text-center"
+                                            style={{ color: style.text }}
+                                        >
+                                            {analysis.recommendation}
+                                        </p>
+                                    </div>
+                                );
+                            })()}
+
+                            {/* Scroll to next section button - moved above NEDEN */}
+                            <button
+                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="mb-6 w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                                style={{
+                                    backgroundColor: 'var(--bg-tertiary)',
+                                    color: 'var(--text-secondary)'
+                                }}
+                            >
+                                Başkaları neler yapıyor? Öğren
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                            </button>
+
+                            {/* Reasoning - Single bullet */}
+                            <div className="mb-8">
+                                <h3
+                                    className="text-sm font-semibold uppercase tracking-wider mb-2"
+                                    style={{ color: 'var(--text-muted)' }}
+                                >
+                                    NEDEN?
+                                </h3>
+                                <p
+                                    className="leading-relaxed"
+                                    style={{ color: 'var(--text-secondary)' }}
+                                >
+                                    {analysis.reasoning}
+                                </p>
+                            </div>
+
+                            {/* Steps - Max 5 */}
+                            <div>
+                                <h3
+                                    className="text-sm font-semibold uppercase tracking-wider mb-4"
+                                    style={{ color: 'var(--text-muted)' }}
+                                >
+                                    ÖNERİLEN ADIMLAR
+                                </h3>
+                                <ul className="space-y-3">
+                                    {analysis.steps.slice(0, 5).map((step, idx) => (
+                                        <li key={idx} className="flex items-start gap-3">
+                                            <span
+                                                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
+                                                style={{
+                                                    backgroundColor: 'var(--accent-100)',
+                                                    color: 'var(--accent-600)'
+                                                }}
+                                            >
+                                                {idx + 1}
+                                            </span>
+                                            <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="text-center py-10 rounded-xl"
+                            style={{ backgroundColor: 'var(--bg-secondary)' }}
+                        >
+                            <p style={{ color: 'var(--text-muted)' }}>Analiz verilerine ulaşılamadı. (Sayfa yenilenmiş olabilir)</p>
+                        </div>
+                    )}
+                </div>
+
+                <div className="divider mx-5 opacity-50" />
+
+                <FollowUpSection followupDays={followupDays} />
+
+                <div className="divider mx-5 opacity-50" />
+
+                <RecoveryCode
+                    onReminderSet={handleReminderSet}
+                    initialCode={code}
+                    onStartInteraction={() => setShowReminderOptIn(false)}
+                />
+
+                {!reminderAlreadySet && showReminderOptIn && (
+                    <>
+                        <div className="divider mx-5 opacity-50" />
+                        <ReminderOptIn />
+                    </>
+                )}
+
+                {/* Start over button */}
+                <div className="text-center pt-8 px-5">
+                    <button
+                        onClick={handleBackToHome}
+                        className="btn-text text-neutral-400 hover:text-neutral-600"
+                    >
+                        Yeni bir karar için baştan başla
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};

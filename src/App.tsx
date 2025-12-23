@@ -4,6 +4,7 @@ import { HomeScreen } from './components/HomeScreen';
 import { QuestionFlow } from './components/QuestionFlow';
 import { ResultPage } from './pages/ResultPage';
 import { ReturnFlow } from './pages/ReturnFlow';
+import { ScrollToTop } from './components/ScrollToTop';
 // type Archetype import removed
 
 // @ts-ignore
@@ -58,6 +59,7 @@ function App() {
 
   return (
     <Layout isHomePage={isHomePage}>
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"

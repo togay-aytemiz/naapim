@@ -156,6 +156,11 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         setSelectedOptionId(null);
     }, [questions]);
 
+    // Scroll to top when question changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [currentIndex]);
+
     const currentQuestion = questions[currentIndex];
     const progressPercent = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 

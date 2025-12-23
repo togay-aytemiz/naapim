@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Check, Clock, X, ChevronDown, ChevronUp, Pencil, ThumbsUp, ThumbsDown } from 'lucide-react';
 import type { AnalysisResult, Sentiment } from '../services/analysis';
@@ -16,6 +16,9 @@ interface Outcome {
     outcome_text?: string;
     feeling?: FeelingType;
     created_at: string;
+    // Vote data from server
+    vote_counts?: { up: number; down: number };
+    user_vote?: 'up' | 'down' | null;
 }
 
 interface SessionData {
@@ -74,16 +77,39 @@ const moderationMessages = [
     "Neredeyse bitti..."
 ];
 
-// Story Card Component with local feedback state
-// Story Card Component with local feedback state
-const StoryCard = ({ story, sessionId }: { story: Outcome; sessionId: string }) => {
-    const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+// Story Card Component with local feedback state and vote counts
+const StoryCard = ({ story, sessionId }: {
+    story: Outcome;
+    sessionId: string;
+}) => {
+    // Use vote data from story (from server), with local state for optimistic updates
+    const [feedback, setFeedback] = useState<'up' | 'down' | null>(story.user_vote || null);
+    const [counts, setCounts] = useState<{ up: number; down: number }>(story.vote_counts || { up: 0, down: 0 });
 
     const handleVote = (type: 'up' | 'down') => {
         // Toggle off if clicking same button
         if (feedback === type) {
             setFeedback(null);
+            // Decrement count optimistically
+            setCounts(prev => ({
+                ...prev,
+                [type]: Math.max(0, prev[type] - 1)
+            }));
             return;
+        }
+
+        // If switching vote, decrement old and increment new
+        if (feedback) {
+            setCounts(prev => ({
+                up: type === 'up' ? prev.up + 1 : Math.max(0, prev.up - 1),
+                down: type === 'down' ? prev.down + 1 : Math.max(0, prev.down - 1)
+            }));
+        } else {
+            // New vote, just increment
+            setCounts(prev => ({
+                ...prev,
+                [type]: prev[type] + 1
+            }));
         }
 
         // Optimistic update
@@ -159,22 +185,36 @@ const StoryCard = ({ story, sessionId }: { story: Outcome; sessionId: string }) 
             <div className="flex items-center justify-between mt-3">
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>— Anonim kullanıcı</p>
 
-                {/* Feedback Buttons */}
-                <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                    <button
-                        onClick={() => handleVote('up')}
-                        className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'up' ? 'bg-green-100 text-green-600 scale-110' : 'text-gray-400 hover:text-green-600 hover:bg-green-50'}`}
-                        title="Faydalı"
-                    >
-                        <ThumbsUp className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                        onClick={() => handleVote('down')}
-                        className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'down' ? 'bg-red-100 text-red-600 scale-110' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}
-                        title="Faydasız"
-                    >
-                        <ThumbsDown className="w-3.5 h-3.5" />
-                    </button>
+                {/* Feedback Buttons - Reddit Style */}
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => handleVote('up')}
+                            className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'up' ? 'bg-green-100 text-green-600 scale-110' : 'text-gray-400 hover:text-green-600 hover:bg-green-50'}`}
+                            title="Faydalı"
+                        >
+                            <ThumbsUp className="w-3.5 h-3.5" />
+                        </button>
+                        {counts.up > 0 && (
+                            <span className={`text-xs font-medium ${feedback === 'up' ? 'text-green-600' : 'text-gray-400'}`}>
+                                {counts.up}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => handleVote('down')}
+                            className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'down' ? 'bg-red-100 text-red-600 scale-110' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}
+                            title="Faydasız"
+                        >
+                            <ThumbsDown className="w-3.5 h-3.5" />
+                        </button>
+                        {counts.down > 0 && (
+                            <span className={`text-xs font-medium ${feedback === 'down' ? 'text-red-500' : 'text-gray-400'}`}>
+                                {counts.down}
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,6 +242,7 @@ export const ReturnFlow: React.FC = () => {
     const [outcomeType, setOutcomeType] = useState<OutcomeType>(null);
     const [outcomeText, setOutcomeText] = useState('');
     const [feeling, setFeeling] = useState<FeelingType | null>(null);
+    const [keptDecision, setKeptDecision] = useState(false); // Track if user chose 'aynı karardayım'
 
     // UI state
     const [showDetails, setShowDetails] = useState(false);
@@ -210,6 +251,9 @@ export const ReturnFlow: React.FC = () => {
     const [moderationError, setModerationError] = useState<string | null>(null);
     const [moderationMessageIndex, setModerationMessageIndex] = useState(0);
     const [communityStories, setCommunityStories] = useState<Outcome[]>([]);
+    const [storiesLoading, setStoriesLoading] = useState(false);
+    const [hasMoreStories, setHasMoreStories] = useState(false);
+    const [storiesOffset, setStoriesOffset] = useState(0);
 
     // Auto-fetch if code in URL or passed from HomeScreen
     useEffect(() => {
@@ -217,6 +261,11 @@ export const ReturnFlow: React.FC = () => {
             fetchSession(initialCode);
         }
     }, []);
+
+    // Scroll to top when step changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [step]);
 
     // Rotating moderation messages
     useEffect(() => {
@@ -284,12 +333,14 @@ export const ReturnFlow: React.FC = () => {
     const handleKeepDecision = () => {
         if (sessionData?.previous_outcomes?.[0]) {
             setOutcomeType(sessionData.previous_outcomes[0].outcome_type);
+            setKeptDecision(true); // Track that user chose to keep decision
             setStep('ask-feeling');
         }
     };
 
     // Handle "Change" - user wants to update their decision
     const handleChangeDecision = () => {
+        setKeptDecision(false); // Reset since user is changing decision
         setStep('choose-outcome');
     };
 
@@ -394,11 +445,15 @@ export const ReturnFlow: React.FC = () => {
         }
     };
 
-    // Fetch community stories from DB - matches based on user's question + context
-    const fetchCommunityStories = async () => {
+    // Fetch community stories from DB - includes vote counts and user votes
+    const fetchCommunityStories = async (loadMore = false) => {
         if (!sessionData) return;
 
+        const offset = loadMore ? storiesOffset : 0;
+
         try {
+            setStoriesLoading(true);
+
             // Build context from session responses for semantic matching
             const context = sessionData.answers
                 ? Object.entries(sessionData.answers)
@@ -414,21 +469,56 @@ export const ReturnFlow: React.FC = () => {
                 },
                 body: JSON.stringify({
                     archetype_id: sessionData.archetype_id,
-                    limit: 10,
+                    limit: loadMore ? 5 : 10, // Initial load: 10, subsequent: 5
+                    offset,
+                    session_id: sessionData.session_id, // For user's own votes
                     exclude_session_id: sessionData.session_id,
-                    user_question: sessionData.user_question,  // For semantic matching
-                    context: context  // User's answers for better matching
+                    user_question: sessionData.user_question,
+                    context
                 })
             });
 
             const data = await response.json();
             if (data.stories) {
-                setCommunityStories(data.stories);
+                if (loadMore) {
+                    // Append to existing stories
+                    setCommunityStories(prev => [...prev, ...data.stories]);
+                } else {
+                    // Replace stories
+                    setCommunityStories(data.stories);
+                }
+
+                // Update pagination state
+                if (data.pagination) {
+                    setHasMoreStories(data.pagination.has_more);
+                    setStoriesOffset(data.pagination.next_offset || offset + data.stories.length);
+                }
             }
         } catch (err) {
             console.error('Error fetching community stories:', err);
+        } finally {
+            setStoriesLoading(false);
         }
     };
+
+    // Infinite scroll - using IntersectionObserver
+    const loadMoreRef = useCallback((node: HTMLDivElement | null) => {
+        if (!node || storiesLoading || !hasMoreStories) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMoreStories && !storiesLoading) {
+                    fetchCommunityStories(true);
+                }
+            },
+            { rootMargin: '200px' } // Start loading 200px before reaching bottom
+        );
+
+        observer.observe(node);
+
+        // Cleanup on next render
+        return () => observer.disconnect();
+    }, [hasMoreStories, storiesLoading]);
 
     // Get sentiment style
     const getSentimentStyle = (sentiment: Sentiment | undefined) => {
@@ -753,7 +843,11 @@ export const ReturnFlow: React.FC = () => {
                         {/* Back button */}
                         {!loading && (
                             <div className="text-center">
-                                <button onClick={() => setStep('choose-outcome')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                <button
+                                    onClick={() => setStep(keptDecision ? 'returning-user' : 'choose-outcome')}
+                                    className="text-sm hover:underline"
+                                    style={{ color: 'var(--text-muted)' }}
+                                >
                                     ← Geri dön
                                 </button>
                             </div>
@@ -929,7 +1023,6 @@ export const ReturnFlow: React.FC = () => {
                                 <div className="space-y-4">
                                     {communityStories
                                         .filter(story => story.feeling && story.outcome_text)
-                                        .slice(0, 5)
                                         .map(story => (
                                             <StoryCard
                                                 key={story.id}
@@ -937,6 +1030,20 @@ export const ReturnFlow: React.FC = () => {
                                                 sessionId={sessionData?.session_id || ''}
                                             />
                                         ))}
+                                    {/* Infinite scroll sentinel - auto-loads when visible */}
+                                    {hasMoreStories && (
+                                        <div
+                                            ref={loadMoreRef}
+                                            className="py-4 flex items-center justify-center"
+                                        >
+                                            {storiesLoading && (
+                                                <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+                                                    <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+                                                    Yükleniyor...
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}

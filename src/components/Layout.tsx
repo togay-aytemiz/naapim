@@ -82,8 +82,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
 
     return (
         <div
-            className={`min-h-screen ${!isHomePage ? 'bg-[var(--bg-primary)]' : ''}`}
-            style={backgroundStyle}
+            className={`min-h-screen min-h-dvh flex flex-col ${!isHomePage ? 'bg-[var(--bg-primary)]' : ''}`}
+            style={{
+                ...backgroundStyle,
+                // iOS safe area insets
+                paddingTop: 'env(safe-area-inset-top, 0)',
+                paddingLeft: 'env(safe-area-inset-left, 0)',
+                paddingRight: 'env(safe-area-inset-right, 0)',
+            }}
         >
             {/* Exit Confirmation Modal */}
             {showExitConfirm && (
@@ -162,7 +168,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
                     </button>
                 </header>
             )}
-            {children}
+            <main className="flex-grow" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}>
+                {children}
+            </main>
         </div>
     );
 };

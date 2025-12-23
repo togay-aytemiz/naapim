@@ -33,6 +33,63 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
     }
 }
 
+// Helper to enrich stories with vote data
+async function enrichStoriesWithVotes(
+    supabase: any,
+    stories: any[],
+    sessionId?: string
+): Promise<any[]> {
+    if (stories.length === 0) return stories
+
+    const outcomeIds = stories.map(s => s.id)
+
+    // Fetch all votes for these outcomes in one query
+    const { data: votes, error: votesError } = await supabase
+        .from('outcome_votes')
+        .select('outcome_id, vote_type, session_id')
+        .in('outcome_id', outcomeIds)
+
+    if (votesError) {
+        console.error('Error fetching votes:', votesError)
+        // Return stories without vote data
+        return stories.map(s => ({
+            ...s,
+            vote_counts: { up: 0, down: 0 },
+            user_vote: null
+        }))
+    }
+
+    // Build vote counts map and user votes map
+    const voteCounts: Record<string, { up: number; down: number }> = {}
+    const userVotes: Record<string, string> = {}
+
+    for (const id of outcomeIds) {
+        voteCounts[id] = { up: 0, down: 0 }
+    }
+
+    for (const vote of votes || []) {
+        if (!voteCounts[vote.outcome_id]) {
+            voteCounts[vote.outcome_id] = { up: 0, down: 0 }
+        }
+        if (vote.vote_type === 'up') {
+            voteCounts[vote.outcome_id].up++
+        } else if (vote.vote_type === 'down') {
+            voteCounts[vote.outcome_id].down++
+        }
+        // Track user's own votes
+        if (sessionId && vote.session_id === sessionId) {
+            userVotes[vote.outcome_id] = vote.vote_type
+        }
+    }
+
+    // Enrich stories with vote data
+    return stories.map(s => ({
+        ...s,
+        vote_counts: voteCounts[s.id] || { up: 0, down: 0 },
+        user_vote: userVotes[s.id] || null
+    }))
+}
+
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders })
@@ -42,9 +99,11 @@ serve(async (req) => {
         const {
             archetype_id,
             limit = 10,
+            offset = 0,           // NEW: Pagination offset
             exclude_session_id,
-            user_question,  // NEW: For semantic matching
-            context         // NEW: Question + answers for better matching
+            session_id,           // NEW: User's session for fetching their votes
+            user_question,
+            context
         } = await req.json()
 
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -52,14 +111,14 @@ serve(async (req) => {
         const supabase = createClient(supabaseUrl, supabaseKey)
 
         let stories: any[] = []
+        let totalCount = 0
 
         // Try semantic matching first if user_question provided
-        if (user_question) {
+        if (user_question && offset === 0) {
             const textToEmbed = context ? `${user_question} | ${context}` : user_question
             const embedding = await generateEmbedding(textToEmbed)
 
             if (embedding) {
-                // Use vector similarity search with RPC function
                 const { data: semanticResults, error: rpcError } = await supabase.rpc(
                     'match_outcomes_by_embedding',
                     {
@@ -78,7 +137,27 @@ serve(async (req) => {
 
         // Fallback to archetype matching if semantic search returned nothing
         if (stories.length === 0) {
-            console.log('📋 Falling back to archetype matching')
+            console.log('📋 Falling back to archetype matching, offset:', offset)
+
+            // First get total count for pagination
+            let countQuery = supabase
+                .from('outcomes')
+                .select('id', { count: 'exact', head: true })
+                .not('outcome_text', 'is', null)
+                .not('outcome_text', 'eq', '')
+                .not('feeling', 'is', null)
+
+            if (archetype_id) {
+                countQuery = countQuery.eq('archetype_id', archetype_id)
+            }
+            if (exclude_session_id) {
+                countQuery = countQuery.neq('session_id', exclude_session_id)
+            }
+
+            const { count } = await countQuery
+            totalCount = count || 0
+
+            // Then fetch with pagination
             let query = supabase
                 .from('outcomes')
                 .select('id, outcome_type, outcome_text, feeling, related_question, is_generated, created_at')
@@ -87,7 +166,7 @@ serve(async (req) => {
                 .not('feeling', 'is', null)
                 .order('is_generated', { ascending: true })
                 .order('created_at', { ascending: false })
-                .limit(limit)
+                .range(offset, offset + limit - 1)
 
             if (archetype_id) {
                 query = query.eq('archetype_id', archetype_id)
@@ -112,14 +191,29 @@ serve(async (req) => {
             }))
         }
 
-        const realCount = stories.filter(s => !s.is_generated).length
-        const generatedCount = stories.filter(s => s.is_generated).length
+        // Enrich stories with vote counts and user's votes
+        const enrichedStories = await enrichStoriesWithVotes(
+            supabase,
+            stories,
+            session_id || exclude_session_id
+        )
+
+        const realCount = enrichedStories.filter(s => !s.is_generated).length
+        const generatedCount = enrichedStories.filter(s => s.is_generated).length
+        const hasMore = offset + enrichedStories.length < totalCount
 
         return new Response(
             JSON.stringify({
-                stories,
+                stories: enrichedStories,
+                pagination: {
+                    offset,
+                    limit,
+                    total: totalCount,
+                    has_more: hasMore,
+                    next_offset: hasMore ? offset + limit : null
+                },
                 stats: {
-                    total: stories.length,
+                    total: enrichedStories.length,
                     real_users: realCount,
                     generated: generatedCount
                 }
@@ -130,8 +224,9 @@ serve(async (req) => {
     } catch (err) {
         console.error('Error:', err)
         return new Response(
-            JSON.stringify({ error: 'Internal server error', stories: [] }),
+            JSON.stringify({ error: 'Internal server error', stories: [], pagination: null }),
             { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
     }
 })
+

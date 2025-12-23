@@ -4,7 +4,7 @@ import { HomeScreen } from './components/HomeScreen';
 import { QuestionFlow } from './components/QuestionFlow';
 import { ResultPage } from './pages/ResultPage';
 import { ReturnFlow } from './pages/ReturnFlow';
-import type { Archetype } from './types/registry';
+// type Archetype import removed
 
 // @ts-ignore
 import registryData from '../config/registry/archetypes.json';
@@ -14,8 +14,7 @@ function App() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
-  // Cast the imported JSON to the expected type
-  const archetypes = (registryData as { archetypes: Archetype[] }).archetypes;
+
 
   const handleContinue = async (input: string) => {
     // Navigate immediately to questions with user input

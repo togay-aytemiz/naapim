@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Check, Clock, X, ChevronDown, ChevronUp, Pencil, Smile, Meh, Frown, HelpCircle } from 'lucide-react';
+import { Check, Clock, X, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
 import type { AnalysisResult, Sentiment } from '../services/analysis';
 import { RegistryLoader } from '../services/registryLoader';
 import { saveOutcome, type FeelingType } from '../services/saveOutcome';
@@ -76,7 +76,7 @@ const moderationMessages = [
 export const ReturnFlow: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [searchParams, setSearchParams] = React.useState(() => new URLSearchParams(window.location.search));
+    const [searchParams] = React.useState(() => new URLSearchParams(window.location.search));
 
     // Get code from URL query param or location state
     const urlCode = searchParams.get('code') || '';
@@ -280,8 +280,8 @@ export const ReturnFlow: React.FC = () => {
 
         try {
             // Build context from session responses for semantic matching
-            const context = sessionData.responses
-                ? Object.entries(sessionData.responses)
+            const context = sessionData.answers
+                ? Object.entries(sessionData.answers)
                     .map(([key, value]) => `${key}: ${value}`)
                     .join(', ')
                 : '';

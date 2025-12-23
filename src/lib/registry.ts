@@ -85,7 +85,7 @@ export function getOptionSetById(id: string): OptionSet | undefined {
 
 export function getOptionsForField(fieldKey: string): OptionSet | undefined {
     const field = getFieldByKey(fieldKey)
-    if (!field) return undefined
+    if (!field || !field.option_set_id) return undefined
 
     return getOptionSetById(field.option_set_id)
 }

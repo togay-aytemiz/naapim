@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FollowUpSection } from '../components/FollowUpSection';
 import { RecoveryCode } from '../components/RecoveryCode';
@@ -7,10 +7,10 @@ import { ReminderOptIn } from '../components/ReminderOptIn';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
-import type { Archetype } from '../types/registry';
+
 
 // @ts-ignore
-import archetypesData from '../../config/registry/archetypes.json';
+// import archetypesData from '../../config/registry/archetypes.json';
 
 export const ResultPage = () => {
     const { code } = useParams<{ code: string }>();
@@ -18,7 +18,7 @@ export const ResultPage = () => {
     const location = useLocation();
 
     // Load archetypes
-    const archetypes: Archetype[] = (archetypesData as any).archetypes;
+    // const archetypes: Archetype[] = (archetypesData as any).archetypes;
 
     // State passed from App.tsx navigation
     const userInput = location.state?.userInput as string | undefined;
@@ -26,14 +26,7 @@ export const ResultPage = () => {
     const archetypeId = location.state?.archetypeId as string | undefined;
     const sessionId = location.state?.sessionId as string | undefined;
 
-    // Get followup days from archetype
-    const followupDays = useMemo(() => {
-        if (archetypeId) {
-            const archetype = archetypes.find(a => a.id === archetypeId);
-            return archetype?.default_followup_days || 14;
-        }
-        return 14;
-    }, [archetypeId, archetypes]);
+
 
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);

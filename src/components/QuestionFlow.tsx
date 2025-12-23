@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { RegistryLoader, type QuestionDefinition } from '../services/registryLoader';
+import { RegistryLoader } from '../services/registryLoader';
 import { ClassificationService } from '../services/classification';
 import { QuestionSelectionService } from '../services/questionSelection';
 // @ts-ignore

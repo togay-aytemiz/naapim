@@ -14,4 +14,6 @@ export const supabase = createClient(
     supabaseAnonKey || ''
 )
 
+export const SUPABASE_FUNCTIONS_URL = `${supabaseUrl}/functions/v1`
+
 

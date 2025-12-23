@@ -11,6 +11,9 @@ import fieldsData from '../../config/registry/fields.json';
 // @ts-ignore
 import optionSetsData from '../../config/registry/option_sets.json';
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 interface Field {
     key: string;
     label: string;
@@ -48,7 +51,6 @@ export class QuestionSelectionService {
 
         const allFieldKeys: string[] = [];
 
-        // Gather all field keys from category sets
         for (const setId of archetype.category_set_ids) {
             const categorySet = this.categorySets.find(cs => cs.id === setId);
             if (!categorySet) continue;
@@ -60,7 +62,6 @@ export class QuestionSelectionService {
             }
         }
 
-        // Get full field objects with options
         const fieldsWithOptions: FieldWithOptions[] = [];
         for (const fieldKey of allFieldKeys) {
             const field = this.fields.find(f => f.key === fieldKey);
@@ -79,16 +80,6 @@ export class QuestionSelectionService {
     }
 
     /**
-     * Create a compact representation of fields for the LLM prompt
-     */
-    private static formatFieldsForPrompt(fields: FieldWithOptions[]): string {
-        return fields.map(f => {
-            const optionLabels = f.options.map(o => o.label).join(' | ');
-            return `- ${f.key}: "${f.label}" [${optionLabels}]`;
-        }).join('\n');
-    }
-
-    /**
      * Use LLM to select the most relevant 3-5 fields for this specific user question
      */
     static async selectQuestions(
@@ -99,81 +90,54 @@ export class QuestionSelectionService {
         const archetypeLabel = archetype?.label || archetypeId;
         const availableFields = this.getAvailableFieldsForArchetype(archetypeId);
 
+        // If 10 or fewer fields, just use all of them
         if (availableFields.length <= 10) {
-            // If 10 or fewer fields, just use all of them
             return {
                 selectedFieldKeys: availableFields.map(f => f.key),
                 reasoning: 'Using all available fields (10 or fewer)'
             };
         }
 
-        const fieldListForPrompt = this.formatFieldsForPrompt(availableFields);
-
-        const systemPrompt = `You are a question selector for a decision-making app.
-
-User's Decision: "${userQuestion}"
-Category: ${archetypeLabel}
-
-Available Questions (select 5-10 most relevant):
-${fieldListForPrompt}
-
-RULES:
-- Select 5-10 questions that are DIRECTLY relevant to THIS specific decision
-- SKIP obvious/redundant questions (e.g., don't ask "what product?" if user already stated it)
-- SKIP questions where the answer is already clear from the user's question
-- Choose questions that would help personalize advice
-- Return ONLY the field keys
-
-Return JSON:
-{
-  "selectedFieldKeys": ["field_key_1", "field_key_2", "field_key_3"],
-  "reasoning": "Brief 1-line explanation"
-}`;
-
-        const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-        const model = import.meta.env.VITE_OPENAI_MODEL || 'gpt-4o-mini';
-
-        if (!apiKey) {
-            console.warn('No API key, returning first 7 fields');
+        // Check if Supabase is configured
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+            console.warn('Supabase not configured, returning first 7 fields');
             return {
                 selectedFieldKeys: availableFields.slice(0, 7).map(f => f.key),
-                reasoning: 'Fallback: no API key'
+                reasoning: 'Fallback: Supabase not configured'
             };
         }
 
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/select-questions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                 },
                 body: JSON.stringify({
-                    model,
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: 'Select the most relevant questions for this decision.' }
-                    ],
-                    response_format: { type: "json_object" }
+                    user_question: userQuestion,
+                    archetype_label: archetypeLabel,
+                    available_fields: availableFields.map(f => ({
+                        key: f.key,
+                        label: f.label,
+                        options: f.options.map(o => o.label)
+                    }))
                 })
             });
 
             if (!response.ok) {
-                throw new Error(`OpenAI API error: ${response.status}`);
+                throw new Error(`Question selection API error: ${response.status}`);
             }
 
-            const data = await response.json();
-            const content = data.choices[0].message.content;
-            const result = JSON.parse(content) as QuestionSelectionResult;
+            const result = await response.json();
 
             // Validate selected keys exist
-            const validKeys = result.selectedFieldKeys.filter(key =>
+            const validKeys = (result.selectedFieldKeys || []).filter((key: string) =>
                 availableFields.some(f => f.key === key)
             );
 
             // Ensure we have 5-10 questions
             if (validKeys.length < 5) {
-                // Add more from available fields
                 for (const field of availableFields) {
                     if (!validKeys.includes(field.key)) {
                         validKeys.push(field.key);
@@ -181,7 +145,7 @@ Return JSON:
                     }
                 }
             } else if (validKeys.length > 10) {
-                validKeys.length = 10; // Truncate
+                validKeys.length = 10;
             }
 
             return {
@@ -191,7 +155,6 @@ Return JSON:
 
         } catch (error) {
             console.error('Question selection failed:', error);
-            // Fallback: return first 7 fields
             return {
                 selectedFieldKeys: availableFields.slice(0, 7).map(f => f.key),
                 reasoning: 'Fallback due to error'
@@ -199,3 +162,4 @@ Return JSON:
         }
     }
 }
+

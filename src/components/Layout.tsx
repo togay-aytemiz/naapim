@@ -139,7 +139,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
                     >
                         <img
                             src={getLogoSrc()}
-                            alt="Ne Yapsam"
+                            alt="Naapim"
                             className="h-7 md:h-8 w-auto"
                         />
                     </button>

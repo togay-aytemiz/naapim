@@ -40,8 +40,15 @@ serve(async (req) => {
             return 'regret'                       // 15% regret
         }
 
-        // Generate seeded outcomes using LLM
-        const feelings = Array.from({ length: count }, () => getRandomFeeling())
+        // Generate feelings with guaranteed diversity
+        // At least one should not be 'happy' for realism
+        let feelings = Array.from({ length: count }, () => getRandomFeeling())
+
+        // If all are 'happy', force one to be different
+        if (feelings.every(f => f === 'happy') && feelings.length >= 2) {
+            const alternatives = ['neutral', 'uncertain', 'regret']
+            feelings[1] = alternatives[Math.floor(Math.random() * alternatives.length)]
+        }
 
         const feelingDescriptions: Record<string, string> = {
             happy: 'mutlu ve memnun, kararından çok hoşnut',

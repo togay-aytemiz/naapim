@@ -49,28 +49,27 @@ Generate a CONCISE response in strictly valid JSON:
   "recommendation": "1-2 short sentences. Direct advice.",
   "reasoning": "2-3 short sentences max. Reference their specific situation.",
   "steps": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
-  "sentiment": "positive | cautious | warning | negative | neutral",
-  "followup_question": "A natural conversational question to ask the user when they return, asking if they made a decision or took action. This should be specific to their situation."
+  "sentiment": "positive OR cautious OR warning OR negative OR neutral",
+  "followup_question": "A natural conversational question to ask the user when they return"
 }
 
 RULES:
 - title: MUST be specific to the user's situation. Reference the actual topic.
   BAD examples (too generic): "Planla ve Harekete Geç", "Dikkatli Ol", "Karar Ver"
-  GOOD examples (specific): "Kreşe Aşamalı Geçiş Yapın", "İlk Birkaç Hafta Yarım Gün Deneyin", "Yeni İş İçin Risk Analizi Şart", "Ev Taşınmadan Önce Bütçe Oluşturun"
-  The title should tell the user WHAT to do, not just HOW to approach it.
-- Maximum 5 steps, each step 5-10 words only
-- Keep reasoning very brief (2-3 sentences)
+  GOOD examples (specific): "Kreşe Aşamalı Geçiş Yapın", "Yeni İş İçin Teklifi Değerlendir", "Ev Taşınmadan Önce Bütçe Oluşturun"
+- Maximum 5 steps, each 5-10 words
 - Everything in Turkish
-- Focus on actionable, practical advice
-- sentiment: Choose based on overall tone of advice:
-  - "positive" = encouraging, optimistic (e.g., "go for it")
-  - "cautious" = proceed carefully (e.g., "consider first")
-  - "warning" = significant risks (e.g., "think twice")
-  - "negative" = advise against (e.g., "don't do it")
-  - "neutral" = balanced, no strong direction
-- followup_question: MUST be a short, conversational question in Turkish.
-  Example for "Çocuğumu kreşe vereyim mi?": "Kreşe vermeye karar verdin mi? Ya da vermeye başladın mı?"
-  Example for "İşimi değiştireyim mi?": "İşini değiştirmeye karar verdin mi?"
+- sentiment: YOU MUST CHOOSE THE MOST APPROPRIATE ONE:
+  - "positive" = you actively ENCOURAGE them to do it. Use for: good opportunities, low risk, clear benefits
+  - "cautious" = you say "do it but carefully". Use for: some risks but worth considering
+  - "warning" = you have SERIOUS concerns. Use for: significant financial/health/relationship risks
+  - "negative" = you ADVISE AGAINST it. Use for: clearly bad idea, high risk, low reward
+  - "neutral" = truly balanced, no recommendation either way
+  
+  DO NOT always choose "cautious" - read the context and choose appropriately!
+  If the user seems excited and the situation is reasonable, use "positive".
+  
+- followup_question: Short question in Turkish asking if they made a decision.
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {

@@ -225,7 +225,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
             <header className="w-full flex items-center justify-between px-5 md:px-8 py-3 flex-shrink-0">
                 <img
                     src={isDarkMode ? '/logo-beyaz.webp' : '/graphite-logo.webp'}
-                    alt="Ne Yapsam"
+                    alt="Naapim"
                     className="h-7 md:h-8 w-auto"
                 />
 

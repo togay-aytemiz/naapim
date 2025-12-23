@@ -29,8 +29,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     const [isLoading, setIsLoading] = useState<boolean>(!!userInput && !initialArchetypeId);
     const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
-    // Classification effect
-    const hasClassified = useRef(false);
+    // Track which userInput has been classified to prevent duplicates
+    const classifiedInputRef = useRef<string | null>(null);
 
     useEffect(() => {
         // If we have an initial ID, ensure state matches (handle prop updates)
@@ -42,31 +42,44 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }, [initialArchetypeId, initialSelectedFieldKeys]);
 
     useEffect(() => {
-        if (!userInput || initialArchetypeId || hasClassified.current) return;
+        // Guard: Skip if no userInput, already have archetype, or already classified this input
+        if (!userInput || initialArchetypeId || classifiedInputRef.current === userInput) {
+            return;
+        }
+
+        // Mark this input as being classified BEFORE async work
+        classifiedInputRef.current = userInput;
 
         const classify = async () => {
-            hasClassified.current = true;
             setIsLoading(true);
+            console.log('🔍 Starting classification for:', userInput);
             try {
                 // Load archetypes for classification
                 const archetypes = (registryData as { archetypes: Archetype[] }).archetypes;
+                console.log('📋 Loaded archetypes:', archetypes.length);
 
                 // Step 1: Classify
+                console.log('🚀 Calling ClassificationService...');
                 const classificationResult = await ClassificationService.classifyUserQuestion(userInput, archetypes);
+                console.log('✅ Classification result:', classificationResult);
 
                 // Step 2: Select Questions
+                console.log('🚀 Calling QuestionSelectionService...');
                 const selectionResult = await QuestionSelectionService.selectQuestions(
                     userInput,
                     classificationResult.archetype_id
                 );
+                console.log('✅ Selection result:', selectionResult);
 
+                console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys);
                 setArchetypeId(classificationResult.archetype_id);
                 setSelectedFieldKeys(selectionResult.selectedFieldKeys);
             } catch (error) {
-                console.error('Classification failed:', error);
+                console.error('❌ Classification failed:', error);
                 // Fallback to default
                 setArchetypeId('career_decisions');
             } finally {
+                console.log('🏁 Done, setting isLoading to false');
                 setIsLoading(false);
             }
         };

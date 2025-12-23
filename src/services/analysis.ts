@@ -53,6 +53,12 @@ export class AnalysisService {
         }
 
         try {
+            // Debug: Log context being sent
+            console.log('📤 Sending analysis request:');
+            console.log('   Question:', userQuestion);
+            console.log('   Archetype:', archetypeLabel);
+            console.log('   Context:', context || '(empty)');
+
             // Call server-side Edge Function
             const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-analysis`, {
                 method: 'POST',

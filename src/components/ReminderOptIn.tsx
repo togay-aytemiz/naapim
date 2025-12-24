@@ -137,7 +137,9 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
                 {/* Inline email input with button */}
                 <div className="flex gap-2">
                     <input
-                        type="email"
+                        type="text"
+                        inputMode="email"
+                        autoComplete="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="E-posta adresin"

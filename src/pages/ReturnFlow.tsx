@@ -493,7 +493,9 @@ export const ReturnFlow: React.FC = () => {
                                     {/* Email + Button */}
                                     <div className="flex gap-2">
                                         <input
-                                            type="email"
+                                            type="text"
+                                            inputMode="email"
+                                            autoComplete="email"
                                             value={reminderEmail}
                                             onChange={(e) => setReminderEmail(e.target.value)}
                                             placeholder="E-posta adresin"
@@ -1004,7 +1006,9 @@ export const ReturnFlow: React.FC = () => {
                                 {/* Email + Button */}
                                 <div className="flex gap-2">
                                     <input
-                                        type="email"
+                                        type="text"
+                                        inputMode="email"
+                                        autoComplete="email"
                                         value={reminderEmail}
                                         onChange={(e) => setReminderEmail(e.target.value)}
                                         placeholder="E-posta adresin"

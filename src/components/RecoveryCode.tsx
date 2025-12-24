@@ -207,7 +207,9 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                         {/* Email input with inline button */}
                         <div className="flex gap-2">
                             <input
-                                type="email"
+                                type="text"
+                                inputMode="email"
+                                autoComplete="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="E-posta adresin"

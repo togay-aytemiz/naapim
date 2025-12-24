@@ -85,8 +85,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
             className={`min-h-screen min-h-dvh flex flex-col ${!isHomePage ? 'bg-[var(--bg-primary)]' : ''}`}
             style={{
                 ...backgroundStyle,
-                // iOS safe area insets
-                paddingTop: 'env(safe-area-inset-top, 0)',
+                // iOS safe area insets - homepage: no top padding so background extends to status bar
+                paddingTop: isHomePage ? '0' : 'env(safe-area-inset-top, 0)',
                 paddingLeft: 'env(safe-area-inset-left, 0)',
                 paddingRight: 'env(safe-area-inset-right, 0)',
             }}

@@ -319,8 +319,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="pb-5 px-5 flex-shrink-0">
+            {/* Footer - With iOS safe area for Safari URL bar */}
+            <footer
+                className="pb-4 md:pb-5 px-5 flex-shrink-0 -mt-4 md:mt-0"
+                style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0))' }}
+            >
                 <div className="max-w-lg mx-auto text-center">
                     {!showCodeEntry ? (
                         <div className="space-y-1.5">

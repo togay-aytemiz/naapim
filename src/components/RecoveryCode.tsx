@@ -237,7 +237,7 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                     )}
                                 </div>
                                 <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    Geri dönmemi hatırlat
+                                    Kararımı verdikten sonra sonucu paylaşmamı hatırlat
                                 </span>
                             </label>
 

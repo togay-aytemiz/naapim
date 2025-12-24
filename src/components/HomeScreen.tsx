@@ -254,30 +254,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
             {/* Main content */}
             <main className="flex-1 flex flex-col items-center justify-center px-5">
                 <div className="w-full max-w-lg">
-                    {/* Hero text */}
-                    <div className="text-center mb-8">
-                        {/* AI Badge */}
-                        <button
-                            onClick={() => setShowAIModal(true)}
-                            className="animate-shimmer inline-flex items-center gap-1.5 px-3 py-1.5 mb-4 rounded-full transition-all duration-200 hover:scale-105 cursor-pointer"
-                            style={{
-                                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.5)',
-                                border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)'}`,
-                                fontSize: '0.7rem',
-                                fontWeight: 400
-                            }}
-                        >
-                            <Sparkles className="w-3 h-3" fill="currentColor" />
-                            <span>naapim AI neden farklı?</span>
-                        </button>
-
-                        <h1 className={`text-2xl md:text-3xl font-semibold mb-3 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                    {/* Hero text - simplified */}
+                    <div className="text-center mb-6">
+                        <h1 className={`text-2xl md:text-3xl font-semibold mb-2 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
                             Karar vermekte zorlanıyor musun?
                         </h1>
-                        <p className={isDarkMode ? 'text-neutral-200' : 'text-neutral-600'}>
-                            Senin gibi düşünen binlerce kişinin ne yaptığını gör.<br />
-                            Tamamen anonim, hesap gerekmez.
+                        <p className={`text-sm ${isDarkMode ? 'text-neutral-300' : 'text-neutral-500'}`}>
+                            Senin gibi düşünen binlerce kişiden ilham al.
                         </p>
                     </div>
 
@@ -324,18 +307,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                         </div>
                     </form>
 
-                    {/* Social proof */}
+                    {/* Social proof + Value props - combined */}
                     <div
-                        className={`mt-8 text-center transition-all duration-700 ${showSocialProof ? 'opacity-100' : 'opacity-0'
+                        className={`mt-6 text-center transition-all duration-700 ${showSocialProof ? 'opacity-100' : 'opacity-0'
                             }`}
                     >
-                        <p className={`text-sm ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>
-                            Şu anda{' '}
-                            <span className={`font-medium tabular-nums ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                        <p className={`text-sm ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                            <span className={`font-medium tabular-nums ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`}>
                                 {activeCount}
                             </span>{' '}
-                            kişi farklı kararlar üzerinde düşünüyor.
+                            kişi şu an bir karar üzerinde düşünüyor
                         </p>
+
+                        <div
+                            onClick={() => setShowAIModal(true)}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 mt-3 text-xs font-medium rounded-full cursor-pointer transition-colors ${isDarkMode
+                                    ? 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                                }`}
+                        >
+                            <Sparkles className="w-3 h-3" fill="currentColor" />
+                            Nasıl çalışır?
+                        </div>
                     </div>
                 </div>
             </main>

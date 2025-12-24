@@ -32,6 +32,7 @@ export type FlowStep =
     | 'choose-outcome'      // Select decided/thinking/cancelled
     | 'ask-feeling'         // How do you feel about your decision?
     | 'share-outcome'
+    | 'thinking-reminder'   // Prompt reminder for "thinking" users without future reminder
     | 'view-stories';
 
 export type OutcomeType = 'decided' | 'thinking' | 'cancelled' | null;

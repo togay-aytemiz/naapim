@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Check, Clock, X, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import { Check, Clock, X, ChevronDown, ChevronUp, Pencil, Sparkles } from 'lucide-react';
 import type { Sentiment } from '../services/analysis';
 import { RegistryLoader } from '../services/registryLoader';
 import { saveOutcome, type FeelingType } from '../services/saveOutcome';
@@ -185,7 +185,7 @@ export const ReturnFlow: React.FC = () => {
         try {
             setFeeling(f);
 
-            // If "thinking", skip share step and save immediately
+            // If "thinking", save outcome and show reminder encouragement (never show stories)
             if (outcomeType === 'thinking' && sessionData) {
                 setLoading(true);
                 try {
@@ -196,23 +196,17 @@ export const ReturnFlow: React.FC = () => {
                         feeling: f,
                         archetype_id: sessionData.archetype_id
                     });
-                    await fetchCommunityStories();
-                    setStep('view-stories');
                 } catch (err) {
                     console.error('Error saving outcome:', err);
-                    setStep('view-stories');
-                } finally {
-                    setLoading(false);
                 }
+                // Always go to thinking-reminder step (no stories for thinking users)
+                setStep('thinking-reminder');
+                setLoading(false);
             } else {
                 setStep('share-outcome');
             }
         } catch (error) {
             console.error("Unexpected error in feeling selection", error);
-            // Default fallthrough to next step if something weird happens, 
-            // but for 'thinking' mode we don't want to advance if save failed totally? 
-            // Actually, if it failed it's handled in inner catch. 
-            // Outer catch catches sync errors (unlikely).
             if (outcomeType !== 'thinking') {
                 setStep('share-outcome');
             }
@@ -521,9 +515,10 @@ export const ReturnFlow: React.FC = () => {
                                                         reminderEmail,
                                                         sessionData.code,
                                                         sessionData.user_question,
-                                                        undefined,
-                                                        undefined,
-                                                        reminderTime
+                                                        sessionData.session_id,
+                                                        sessionData.analysis?.followup_question,
+                                                        reminderTime,
+                                                        sessionData.previous_outcomes || []
                                                     );
                                                     if (result.success) {
                                                         setReminderSubmitted(true);
@@ -608,15 +603,34 @@ export const ReturnFlow: React.FC = () => {
                             <p className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>"{sessionData.user_question}"</p>
                         </div>
 
-                        {/* Previous Recommendation */}
+                        {/* Previous Recommendation - AI Analysis Card */}
                         {sessionData.analysis && (() => {
                             const style = getSentimentStyle(sessionData.analysis.sentiment);
                             return (
                                 <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: style.bg, border: `1px solid ${style.border}` }}>
                                     <div className="p-5">
-                                        <p className="text-xs font-medium mb-2" style={{ color: style.text, opacity: 0.7 }}>Önerimiz:</p>
-                                        <p className="font-semibold text-lg" style={{ color: style.text }}>{sessionData.analysis.title}</p>
-                                        <p className="mt-2 text-sm" style={{ color: style.text, opacity: 0.9 }}>{sessionData.analysis.recommendation}</p>
+                                        {/* AI Badge */}
+                                        <div className="flex items-center justify-center gap-2 mb-4">
+                                            <span
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                    color: 'var(--coral-primary)',
+                                                    border: '1px solid var(--coral-primary)'
+                                                }}
+                                            >
+                                                <Sparkles className="w-3.5 h-3.5" fill="currentColor" />
+                                                <span>naapim AI</span>
+                                                <span style={{ color: style.text, opacity: 0.5 }}>•</span>
+                                                <span style={{ color: style.text, opacity: 0.7 }}>Kişiselleştirilmiş Analiz</span>
+                                            </span>
+                                        </div>
+
+                                        {/* Title */}
+                                        <p className="font-semibold text-lg text-center mb-3" style={{ color: style.text }}>{sessionData.analysis.title}</p>
+
+                                        {/* Recommendation */}
+                                        <p className="text-sm text-center leading-relaxed" style={{ color: style.text, opacity: 0.9 }}>{sessionData.analysis.recommendation}</p>
                                     </div>
 
                                     {showDetails && (
@@ -628,7 +642,7 @@ export const ReturnFlow: React.FC = () => {
                                             </div>
                                             {sessionData.analysis.steps?.length > 0 && (
                                                 <div>
-                                                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: style.text, opacity: 0.6 }}>Adımlar</p>
+                                                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: style.text, opacity: 0.6 }}>Önerilen Adımlar</p>
                                                     <ul className="space-y-2">
                                                         {sessionData.analysis.steps.slice(0, 5).map((s, i) => (
                                                             <li key={i} className="flex items-start gap-2 text-sm" style={{ color: style.text, opacity: 0.9 }}>
@@ -690,15 +704,33 @@ export const ReturnFlow: React.FC = () => {
                             <p className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>"{sessionData.user_question}"</p>
                         </div>
 
-                        {/* Previous Recommendation */}
+                        {/* Previous Recommendation - AI Analysis Card */}
                         {sessionData.analysis && (() => {
                             const style = getSentimentStyle(sessionData.analysis.sentiment);
                             return (
                                 <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: style.bg, border: `1px solid ${style.border}` }}>
                                     <div className="p-5">
-                                        <p className="text-xs font-medium mb-2" style={{ color: style.text, opacity: 0.7 }}>Önerimiz:</p>
-                                        <p className="font-semibold text-lg" style={{ color: style.text }}>{sessionData.analysis.title}</p>
-                                        <p className="mt-2 text-sm" style={{ color: style.text, opacity: 0.9 }}>{sessionData.analysis.recommendation}</p>
+                                        {/* AI Badge */}
+                                        <div className="flex items-center justify-center gap-2 mb-4">
+                                            <span
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                                                style={{
+                                                    backgroundColor: 'rgba(255, 107, 107, 0.15)',
+                                                    color: 'var(--coral-primary)'
+                                                }}
+                                            >
+                                                <Sparkles className="w-3.5 h-3.5" fill="currentColor" />
+                                                <span>naapim AI</span>
+                                                <span style={{ color: style.text, opacity: 0.5 }}>•</span>
+                                                <span style={{ color: style.text, opacity: 0.7 }}>Kişiselleştirilmiş Analiz</span>
+                                            </span>
+                                        </div>
+
+                                        {/* Title */}
+                                        <p className="font-semibold text-lg text-center mb-3" style={{ color: style.text }}>{sessionData.analysis.title}</p>
+
+                                        {/* Recommendation */}
+                                        <p className="text-sm text-center leading-relaxed" style={{ color: style.text, opacity: 0.9 }}>{sessionData.analysis.recommendation}</p>
                                     </div>
 
                                     {showDetails && (
@@ -710,7 +742,7 @@ export const ReturnFlow: React.FC = () => {
                                             </div>
                                             {sessionData.analysis.steps?.length > 0 && (
                                                 <div>
-                                                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: style.text, opacity: 0.6 }}>Adımlar</p>
+                                                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: style.text, opacity: 0.6 }}>Önerilen Adımlar</p>
                                                     <ul className="space-y-2">
                                                         {sessionData.analysis.steps.slice(0, 5).map((s, i) => (
                                                             <li key={i} className="flex items-start gap-2 text-sm" style={{ color: style.text, opacity: 0.9 }}>
@@ -926,6 +958,143 @@ export const ReturnFlow: React.FC = () => {
                     </div>
                 )}
 
+                {/* Step 5b: Thinking Reminder - Encourage reminder for thinking users */}
+                {step === 'thinking-reminder' && sessionData && (
+                    <div className="space-y-6 animate-in">
+                        <div className="text-center space-y-3">
+                            <div className="text-4xl">💭</div>
+                            <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                Düşünmeye devam et!
+                            </h1>
+                            <p className="text-[var(--text-secondary)]">
+                                Karar verdiğinde hikayeni paylaşmak için geri gel.
+                            </p>
+                        </div>
+
+                        {/* Reminder CTA - only show if no existing reminder */}
+                        {!sessionData.has_reminder && !reminderSubmitted && (
+                            <div className="p-5 rounded-2xl space-y-4" style={{ backgroundColor: 'rgba(255, 107, 107, 0.08)', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                                <p className="text-sm font-medium text-center" style={{ color: 'var(--text-primary)' }}>
+                                    🔔 Unutmamak için hatırlatma kur!
+                                </p>
+                                <p className="text-xs text-center" style={{ color: 'var(--text-secondary)' }}>
+                                    Sana e-posta ile haber verelim, böylece doğru zamanda geri dönebilirsin.
+                                </p>
+
+                                {/* Time Selection Pills */}
+                                <div className="flex justify-center gap-2">
+                                    {[
+                                        { id: 'tomorrow', label: 'Yarın' },
+                                        { id: '1_week', label: '1 Hafta' },
+                                        { id: '2_weeks', label: '2 Hafta' }
+                                    ].map((option) => (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => setReminderTime(option.id as any)}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
+                                                ? 'border-[var(--coral-primary)] bg-[var(--coral-primary)] text-white'
+                                                : 'border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
+                                                }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Email + Button */}
+                                <div className="flex gap-2">
+                                    <input
+                                        type="email"
+                                        value={reminderEmail}
+                                        onChange={(e) => setReminderEmail(e.target.value)}
+                                        placeholder="E-posta adresin"
+                                        className="flex-1 px-4 py-3 rounded-xl text-sm"
+                                        style={{
+                                            backgroundColor: 'var(--bg-secondary)',
+                                            border: '1px solid var(--border-primary)',
+                                            color: 'var(--text-primary)'
+                                        }}
+                                    />
+                                    <button
+                                        onClick={async () => {
+                                            if (!reminderEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reminderEmail)) return;
+                                            setReminderLoading(true);
+                                            setReminderError(null);
+                                            try {
+                                                const { scheduleReminder } = await import('../services/emailService');
+                                                const result = await scheduleReminder(
+                                                    reminderEmail,
+                                                    sessionData.code,
+                                                    sessionData.user_question,
+                                                    sessionData.session_id,
+                                                    sessionData.analysis?.followup_question,
+                                                    reminderTime,
+                                                    sessionData.previous_outcomes || []
+                                                );
+                                                if (result.success) {
+                                                    setReminderSubmitted(true);
+                                                } else {
+                                                    setReminderError('Bir hata oluştu.');
+                                                }
+                                            } catch {
+                                                setReminderError('Bağlantı hatası.');
+                                            } finally {
+                                                setReminderLoading(false);
+                                            }
+                                        }}
+                                        disabled={!reminderEmail || reminderLoading}
+                                        className="px-5 py-3 rounded-xl font-medium text-sm whitespace-nowrap text-white"
+                                        style={{
+                                            backgroundColor: reminderEmail ? 'var(--coral-primary)' : 'var(--btn-disabled-bg)',
+                                            color: reminderEmail ? 'white' : 'var(--btn-disabled-text)',
+                                            opacity: reminderLoading ? 0.7 : 1
+                                        }}
+                                    >
+                                        {reminderLoading ? 'Ayarlanıyor...' : 'Hatırlat'}
+                                    </button>
+                                </div>
+                                {reminderError && <p className="text-xs text-center text-red-500">{reminderError}</p>}
+                            </div>
+                        )}
+
+                        {/* Reminder Success Feedback - after submitting */}
+                        {reminderSubmitted && (
+                            <div
+                                className="animate-in text-center p-5 rounded-2xl space-y-3"
+                                style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}
+                            >
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)' }}>
+                                        <span className="text-xl">🚀</span>
+                                    </div>
+                                    <p className="font-semibold" style={{ color: 'var(--success-text)' }}>Hatırlatma Kuruldu!</p>
+                                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                                        <strong>{reminderEmail}</strong> adresine {reminderTime === 'tomorrow' ? 'yarın' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'} haber vereceğiz.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Already has reminder message */}
+                        {sessionData.has_reminder && !reminderSubmitted && (
+                            <div className="p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                                <span className="text-2xl">✅</span>
+                                <div>
+                                    <p className="font-medium text-sm" style={{ color: 'var(--success-text)' }}>Hatırlatma zaten kurulu!</p>
+                                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Sana e-posta ile haber vereceğiz.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Go to home link */}
+                        <div className="text-center">
+                            <button onClick={() => navigate('/')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                ← Ana sayfaya dön
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Step 6: View Stories */}
                 {step === 'view-stories' && sessionData && (
                     <div className="space-y-6 animate-in">
@@ -1071,9 +1240,11 @@ export const ReturnFlow: React.FC = () => {
                             </>
                         )}
 
-                        <button onClick={() => navigate('/')} className="w-full py-4 rounded-xl font-medium" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
-                            Ana sayfaya dön
-                        </button>
+                        <div className="text-center">
+                            <button onClick={() => navigate('/')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                ← Ana sayfaya dön
+                            </button>
+                        </div>
                     </div>
                 )}
 

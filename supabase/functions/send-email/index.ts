@@ -140,6 +140,7 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
         case 'scheduled_reminder': // Fall through (same as reminder_14day)
         case 'reminder_14day': {
             const headline = data.followup_question || "Kararın ne oldu?";
+            const hasSocialProof = data.social_proof_data && data.social_proof_data.length > 0;
 
             const content = `
                 <h1 class="text-primary" style="font-size: 22px; font-weight: 600; color: #1a1a1a; margin: 0 0 16px 0;">
@@ -157,7 +158,8 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
                     Hikayeni paylaşmak ister misin? Senin deneyimin, benzer durumda olan başkalarına yol gösterebilir.
                 </p>
 
-                <!-- Social Proof Section -->
+                ${hasSocialProof ? `
+                <!-- Social Proof Section - Only shown when we have data -->
                 <div style="margin: 32px 0 32px 0; text-align: center;">
                     <h3 style="color: #1a1a1a; margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Başkaları ne yaşıyor?</h3>
                     <p style="color: #888888; font-size: 12px; margin: 0 0 20px 0;">Benzer kararlar veren insanların deneyimleri</p>
@@ -182,6 +184,7 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
                         </div>
                     </div>
                 </div>
+                ` : ''}
 
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                     <tr>
@@ -315,7 +318,7 @@ Deno.serve(async (req) => {
                     code: data.code,
                     user_question: data.user_question,
                     followup_question: data.followup_question, // Save the custom headline
-                    social_proof_data: data.social_proof_data, // Save social proof
+                    social_proof_data: data.social_proof_data || null, // Only include if explicitly provided
                     status: 'pending'
                 })
 

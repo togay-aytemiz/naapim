@@ -29,7 +29,6 @@ export const ResultPage = () => {
 
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [reminderAlreadySet, setReminderAlreadySet] = useState(false);
     const [showReminderOptIn, setShowReminderOptIn] = useState(true);
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
@@ -150,7 +149,7 @@ export const ResultPage = () => {
     }, [isLoading, analysis, sessionUserInput, sessionArchetypeId, sessionAnswers]);
 
     const handleReminderSet = (_email: string) => {
-        setReminderAlreadySet(true);
+        setShowReminderOptIn(false);
     };
 
     const handleBackToHome = () => {

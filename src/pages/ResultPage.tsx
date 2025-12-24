@@ -33,7 +33,7 @@ export const ResultPage = () => {
     const [showReminderOptIn, setShowReminderOptIn] = useState(true);
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
-    const [showAllSteps, setShowAllSteps] = useState(false);
+    const [showFullAnalysis, setShowFullAnalysis] = useState(false);
 
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
@@ -291,91 +291,108 @@ export const ResultPage = () => {
                                 );
                             })()}
 
-                            {/* Reasoning - Single bullet */}
-                            <div className="mb-6">
-                                <h3
-                                    className="text-sm font-semibold uppercase tracking-wider mb-2"
-                                    style={{ color: 'var(--text-muted)' }}
+                            {/* Collapsible Analysis Details (NEDEN + ADIMLAR) */}
+                            <div className="relative">
+                                {/* Content container with conditional max-height */}
+                                <div
+                                    className="transition-all duration-300 ease-out overflow-hidden"
+                                    style={{
+                                        maxHeight: showFullAnalysis ? '1000px' : '100px'
+                                    }}
                                 >
-                                    NEDEN?
-                                </h3>
-                                <p
-                                    className="leading-relaxed"
-                                    style={{ color: 'var(--text-secondary)' }}
-                                >
-                                    {analysis.reasoning}
-                                </p>
-                            </div>
-
-                            {/* Collapsible Steps Section */}
-                            <div className="mb-4">
-                                <h3
-                                    className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                    style={{ color: 'var(--text-muted)' }}
-                                >
-                                    ÖNERİLEN ADIMLAR
-                                </h3>
-
-                                <div className="relative pb-4">
-                                    <ul className="space-y-3">
-                                        {analysis.steps.slice(0, showAllSteps ? 5 : 2).map((step, idx) => (
-                                            <li
-                                                key={idx}
-                                                className="flex items-start gap-3 transition-all duration-300 ease-out"
-                                                style={{
-                                                    opacity: idx >= 2 ? (showAllSteps ? 1 : 0) : 1,
-                                                    transform: idx >= 2 ? (showAllSteps ? 'translateY(0)' : 'translateY(-8px)') : 'none'
-                                                }}
-                                            >
-                                                <span
-                                                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
-                                                    style={{
-                                                        backgroundColor: 'var(--accent-100)',
-                                                        color: 'var(--accent-600)'
-                                                    }}
-                                                >
-                                                    {idx + 1}
-                                                </span>
-                                                <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    {/* Gradient overlay + Button when collapsed */}
-                                    {analysis.steps.length > 2 && !showAllSteps && (
-                                        <>
-                                            <div
-                                                className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none transition-opacity duration-300"
-                                                style={{
-                                                    background: 'linear-gradient(to top, var(--bg-elevated) 40%, transparent)'
-                                                }}
-                                            />
-                                            <button
-                                                onClick={() => setShowAllSteps(true)}
-                                                className="absolute bottom-0 left-0 right-0 text-center text-[11px] transition-all hover:opacity-70 z-10"
-                                                style={{ color: 'var(--text-primary)', opacity: 0.8 }}
-                                            >
-                                                Diğer adımları gör ↓
-                                            </button>
-                                        </>
-                                    )}
-
-                                    {showAllSteps && analysis.steps.length > 2 && (
-                                        <button
-                                            onClick={() => setShowAllSteps(false)}
-                                            className="w-full text-center text-[11px] pt-2 transition-all hover:opacity-100"
+                                    {/* Reasoning */}
+                                    <div className="mb-5">
+                                        <h3
+                                            className="text-sm font-semibold uppercase tracking-wider mb-2"
                                             style={{ color: 'var(--text-muted)' }}
                                         >
-                                            Kapat ↑
-                                        </button>
-                                    )}
+                                            NEDEN?
+                                        </h3>
+                                        <p
+                                            className="leading-relaxed"
+                                            style={{ color: 'var(--text-secondary)' }}
+                                        >
+                                            {analysis.reasoning}
+                                        </p>
+                                    </div>
+
+                                    {/* Steps */}
+                                    <div>
+                                        <h3
+                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                            style={{ color: 'var(--text-muted)' }}
+                                        >
+                                            ÖNERİLEN ADIMLAR
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {analysis.steps.map((step, idx) => (
+                                                <li key={idx} className="flex items-start gap-3">
+                                                    <span
+                                                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
+                                                        style={{
+                                                            backgroundColor: 'var(--accent-100)',
+                                                            color: 'var(--accent-600)'
+                                                        }}
+                                                    >
+                                                        {idx + 1}
+                                                    </span>
+                                                    <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </div>
+
+                                {/* Gradient overlay + Expand button when collapsed */}
+                                {!showFullAnalysis && (
+                                    <>
+                                        <div
+                                            className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                                            style={{
+                                                background: 'linear-gradient(to top, var(--bg-elevated) 50%, transparent)'
+                                            }}
+                                        />
+                                        <button
+                                            onClick={() => setShowFullAnalysis(true)}
+                                            className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-all hover:opacity-90 z-10 border border-black/5"
+                                            style={{
+                                                backgroundColor: 'var(--bg-tertiary)',
+                                                color: 'var(--text-secondary)',
+                                                fontSize: '11px',
+                                                fontWeight: 500,
+                                                boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
+                                            }}
+                                        >
+                                            <Sparkles className="w-3 h-3" />
+                                            <span>naapim AI analizinin tamamını oku</span>
+                                            <span>↓</span>
+                                        </button>
+                                    </>
+                                )}
+
+                                {/* Collapse button when expanded */}
+                                {showFullAnalysis && (
+                                    <button
+                                        onClick={() => setShowFullAnalysis(false)}
+                                        className="w-full text-center text-[11px] pt-3 transition-all hover:opacity-70"
+                                        style={{ color: 'var(--text-muted)' }}
+                                    >
+                                        Kapat ↑
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* YA DA Divider */}
+                            <div className="relative flex py-8 items-center">
+                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
+                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">YA DA</span>
+                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
                             </div>
 
                             {/* Community Button - At bottom of card */}
                             <button
                                 onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="mt-6 w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                                className="w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
                                 style={{
                                     backgroundColor: 'var(--coral-primary)',
                                     color: 'white',

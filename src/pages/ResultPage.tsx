@@ -291,23 +291,6 @@ export const ResultPage = () => {
                                 );
                             })()}
 
-                            {/* Community Button - Accent Styled */}
-                            <button
-                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="mb-6 w-full py-3.5 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
-                                style={{
-                                    backgroundColor: 'var(--coral-primary)',
-                                    color: 'white',
-                                    boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
-                                }}
-                            >
-                                <Users className="w-4 h-4" />
-                                <span>Başkaları neler yapıyor? Öğren</span>
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </button>
-
                             {/* Reasoning - Single bullet */}
                             <div className="mb-6">
                                 <h3
@@ -333,12 +316,16 @@ export const ResultPage = () => {
                                     ÖNERİLEN ADIMLAR
                                 </h3>
 
-                                <div className="relative pb-6">
+                                <div className="relative pb-4">
                                     <ul className="space-y-3">
                                         {analysis.steps.slice(0, showAllSteps ? 5 : 2).map((step, idx) => (
                                             <li
                                                 key={idx}
-                                                className="flex items-start gap-3"
+                                                className="flex items-start gap-3 transition-all duration-300 ease-out"
+                                                style={{
+                                                    opacity: idx >= 2 ? (showAllSteps ? 1 : 0) : 1,
+                                                    transform: idx >= 2 ? (showAllSteps ? 'translateY(0)' : 'translateY(-8px)') : 'none'
+                                                }}
                                             >
                                                 <span
                                                     className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
@@ -358,14 +345,14 @@ export const ResultPage = () => {
                                     {analysis.steps.length > 2 && !showAllSteps && (
                                         <>
                                             <div
-                                                className="absolute bottom-0 left-0 right-0 h-17 pointer-events-none"
+                                                className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none transition-opacity duration-300"
                                                 style={{
                                                     background: 'linear-gradient(to top, var(--bg-elevated) 40%, transparent)'
                                                 }}
                                             />
                                             <button
                                                 onClick={() => setShowAllSteps(true)}
-                                                className="absolute bottom-0 left-0 right-0 text-center text-[11px]  transition-all hover:opacity-70 z-10"
+                                                className="absolute bottom-0 left-0 right-0 text-center text-[11px] transition-all hover:opacity-70 z-10"
                                                 style={{ color: 'var(--text-primary)', opacity: 0.8 }}
                                             >
                                                 Diğer adımları gör ↓
@@ -376,7 +363,7 @@ export const ResultPage = () => {
                                     {showAllSteps && analysis.steps.length > 2 && (
                                         <button
                                             onClick={() => setShowAllSteps(false)}
-                                            className="w-full text-center text-[11px] pt-3 transition-all hover:opacity-100"
+                                            className="w-full text-center text-[11px] pt-2 transition-all hover:opacity-100"
                                             style={{ color: 'var(--text-muted)' }}
                                         >
                                             Kapat ↑
@@ -385,13 +372,22 @@ export const ResultPage = () => {
                                 </div>
                             </div>
 
-                            {/* Legal Disclaimer - Minimal */}
-                            <p
-                                className="text-xs text-center pt-2"
-                                style={{ color: 'var(--text-muted)' }}
+                            {/* Community Button - At bottom of card */}
+                            <button
+                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="mt-6 w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                                style={{
+                                    backgroundColor: 'var(--coral-primary)',
+                                    color: 'white',
+                                    boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
+                                }}
                             >
-                                naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
-                            </p>
+                                <Users className="w-4 h-4" />
+                                <span>Başkaları neler yapıyor? Öğren</span>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                            </button>
                         </div>
                     ) : (
                         <div
@@ -401,6 +397,14 @@ export const ResultPage = () => {
                             <p style={{ color: 'var(--text-muted)' }}>Analiz verilerine ulaşılamadı. (Sayfa yenilenmiş olabilir)</p>
                         </div>
                     )}
+
+                    {/* Legal Disclaimer - Outside card */}
+                    <p
+                        className="text-xs text-center mt-4 px-5"
+                        style={{ color: 'var(--text-muted)' }}
+                    >
+                        naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
+                    </p>
                 </div>
 
                 <div className="divider mx-5 opacity-50" />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Header } from './Header';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -60,32 +61,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
         setShowExitConfirm(false);
     };
 
-    // Homepage: use background images based on theme
-    // Other pages: use solid background color based on theme
-    const backgroundStyle = isHomePage
-        ? {
-            backgroundImage: `url('${isDarkMode ? '/sarı-mavi-dark.webp' : '/sarı-mavi.webp'}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
-        }
-        : {};
-
-    // Logo rules:
-    // Homepage light: graphite-logo.webp (handled in HomeScreen)
-    // Homepage dark: logo-beyaz.webp (handled in HomeScreen)
-    // Other pages light: logo.webp
-    // Other pages dark: logo-beyaz.webp
-    const getLogoSrc = () => {
-        return isDarkMode ? '/logo-beyaz.webp' : '/logo.webp';
-    };
+    // Logo rules are now handled by the Header component
 
     return (
         <div
             className={`min-h-screen min-h-dvh flex flex-col ${!isHomePage ? 'bg-[var(--bg-primary)]' : ''}`}
             style={{
-                ...backgroundStyle,
                 // iOS safe area insets - homepage: no top padding so background extends to status bar
                 paddingTop: isHomePage ? '0' : 'env(safe-area-inset-top, 0)',
                 paddingLeft: 'env(safe-area-inset-left, 0)',
@@ -137,38 +118,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
                 </div>
             )}
 
-            {/* Header for non-homepage screens */}
-            {!isHomePage && (
-                <header className="w-full flex items-center justify-between px-5 md:px-8 py-3">
-                    <button
-                        onClick={handleLogoClick}
-                        className="focus:outline-none transition-opacity hover:opacity-80"
-                    >
-                        <img
-                            src={getLogoSrc()}
-                            alt="Naapim"
-                            className="h-7 md:h-8 w-auto"
-                        />
-                    </button>
+            <Header
+                isTransparent={isHomePage}
+                isDarkMode={isDarkMode}
+                toggleTheme={toggleTheme}
+                showStatusButton={isHomePage}
+            />
 
-                    <button
-                        onClick={toggleTheme}
-                        className="p-2 rounded-lg transition-colors"
-                        style={{ backgroundColor: 'var(--bg-hover)' }}
-                        aria-label="Tema değiştir"
-                    >
-                        {isDarkMode ? (
-                            <svg className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        ) : (
-                            <svg className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                        )}
-                    </button>
-                </header>
-            )}
             <main className="flex-grow" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}>
                 {children}
             </main>

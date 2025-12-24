@@ -11,28 +11,20 @@ interface HomeScreenProps {
 
 // Full placeholder questions covering all 8 archetypes
 const allPlaceholderQuestions = [
-    // career_decisions
     "iş değiştirsem mi?",
     "terfi beklesem mi, başka yere mi geçsem?",
-    // parenting_decisions
     "çocuğumu hangi okula göndersem?",
     "ikinci çocuğu düşünsem mi?",
-    // relationship_decisions
     "bu ilişkiyi bitirsem mi?",
     "evlenme teklifi etsem mi?",
-    // money_finance
     "yatırım yapsam mı?",
     "ev alsam mı, kirada mı kalsam?",
-    // health_wellness
     "diyete başlasam mı?",
     "spor salonuna mı yazılsam?",
-    // education_learning
     "yüksek lisans yapsam mı?",
     "yazılım kursuna başlasam mı?",
-    // lifestyle_change
     "taşınsam mı?",
     "yurt dışında yaşamayı denesem mi?",
-    // major_purchase
     "bu arabayı alsam mı?",
     "yeni telefon alsam mı?",
 ];
@@ -50,16 +42,13 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 // Shuffle on initial load
 const placeholderQuestions = shuffleArray(allPlaceholderQuestions);
 
-// Random headline variations
-const headlineVariations = [
+const mainHeadlines = [
     "Karar vermekte zorlanıyor musun?",
-    "Aklında bir soru mu var?",
-    "Bir konuda kararsız mısın?",
-    "Kafanı kurcalayan bir şey mi var?",
-    "Bir şeye karar veremiyor musun?",
+    "Ne yapacağını bilmiyor musun?",
+    "Bir türlü emin olamıyor musun?",
+    "Aklın karışık, seçenekler fazla mı?",
+    "Karar aşamasında takılıp kaldın mı?"
 ];
-const randomHeadline = headlineVariations[Math.floor(Math.random() * headlineVariations.length)];
-
 
 // Smart active user count based on time of day
 const getSmartActiveCount = (): number => {
@@ -99,27 +88,20 @@ const getSmartActiveCount = (): number => {
     return Math.max(12, Math.round(baseCount + minuteVariation + randomVariation));
 };
 
-// Code format validation - accepts 8-character alphanumeric codes
-const isValidCode = (code: string): boolean => {
-    const codeRegex = /^[A-Z0-9]{8}$/i;
-    return codeRegex.test(code.trim());
-};
-
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter, isLoading = false }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, isLoading = false }) => {
     const navigate = useNavigate();
     const [input, setInput] = useState('');
-    const [showSocialProof, setShowSocialProof] = useState(false);
     const [activeCount, setActiveCount] = useState(0);
     const [targetCount] = useState(() => getSmartActiveCount());
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showAIModal, setShowAIModal] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Typewriter effect state
     const [questionIndex, setQuestionIndex] = useState(0);
     const [displayedQuestion, setDisplayedQuestion] = useState('');
     const [isTyping, setIsTyping] = useState(true);
     const [charIndex, setCharIndex] = useState(0);
-    const [showCodeEntry, setShowCodeEntry] = useState(false);
-    const [codeInput, setCodeInput] = useState('');
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [showAIModal, setShowAIModal] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
 
     // Sync isDarkMode with document's dark class
     useEffect(() => {
@@ -128,25 +110,36 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
         };
 
         checkDarkMode(); // Check on mount
-
-        // Observe changes to the dark class
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'class') {
-                    checkDarkMode();
-                }
+                if (mutation.attributeName === 'class') checkDarkMode();
             });
         });
-
         observer.observe(document.documentElement, { attributes: true });
-
         return () => observer.disconnect();
     }, []);
 
-    const hasEnoughInput = input.trim().split(/\s+/).filter(w => w.length > 0).length >= 3;
-    const isCodeValid = isValidCode(codeInput);
+    // Count up animation
+    useEffect(() => {
+        const duration = 1500;
+        const steps = 30;
+        const increment = targetCount / steps;
+        let current = 0;
 
-    // Smooth typing/deleting animation - only the question part changes
+        const interval = setInterval(() => {
+            current += increment;
+            if (current >= targetCount) {
+                setActiveCount(targetCount);
+                clearInterval(interval);
+            } else {
+                setActiveCount(Math.floor(current));
+            }
+        }, duration / steps);
+
+        return () => clearInterval(interval);
+    }, [targetCount]);
+
+    // Smooth typing/deleting animation
     useEffect(() => {
         if (input) return;
 
@@ -180,50 +173,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
         }
     }, [input, charIndex, isTyping, questionIndex]);
 
-    // Animate social proof
+    // Ensure auto-focus works on mount
     useEffect(() => {
-        const timer = setTimeout(() => setShowSocialProof(true), 800);
-        return () => clearTimeout(timer);
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
     }, []);
 
-    // Count up animation
+    // Random headline
+    const [headline, setHeadline] = useState(mainHeadlines[0]);
+
     useEffect(() => {
-        if (showSocialProof) {
-            const duration = 1500;
-            const steps = 30;
-            const increment = targetCount / steps;
-            let current = 0;
+        setHeadline(mainHeadlines[Math.floor(Math.random() * mainHeadlines.length)]);
+    }, []);
 
-            const interval = setInterval(() => {
-                current += increment;
-                if (current >= targetCount) {
-                    setActiveCount(targetCount);
-                    clearInterval(interval);
-                } else {
-                    setActiveCount(Math.floor(current));
-                }
-            }, duration / steps);
-
-            return () => clearInterval(interval);
-        }
-    }, [showSocialProof, targetCount]);
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (hasEnoughInput && !isLoading) {
-            onContinue(input);
-        }
-    };
-
-    const handleCodeSubmit = () => {
-        if (isCodeValid && onCodeEnter) {
-            onCodeEnter(codeInput.toUpperCase());
-        }
-    };
-
-    const handleCodeChange = (value: string) => {
-        const formatted = value.toUpperCase().slice(0, 10);
-        setCodeInput(formatted);
+    const handleContinueClick = async () => {
+        if (!input.trim()) return;
+        onContinue(input);
     };
 
     const toggleTheme = () => {
@@ -233,195 +199,95 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
         localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
     };
 
-    // Placeholder: "Acaba" stays, question types/deletes
     const fullPlaceholder = displayedQuestion ? `Acaba ${displayedQuestion}` : 'Acaba ';
 
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
-            {/* Header */}
-            <header className="w-full flex items-center justify-between px-5 md:px-8 py-3 flex-shrink-0">
-                <img
-                    src={isDarkMode ? '/logo-beyaz.webp' : '/graphite-logo.webp'}
-                    alt="Naapim"
-                    className="h-7 md:h-8 w-auto"
-                />
+        <div
+            className={`relative flex min-h-screen w-full flex-col overflow-hidden font-['Manrope'] selection:bg-blue-200 selection:text-blue-900 ${isDarkMode
+                ? 'text-white'
+                : 'text-slate-900'
+                }`}
+            style={{
+                background: isDarkMode
+                    ? 'radial-gradient(ellipse at top right, #263245ff 0%, #050b26ff 50%, #141414ff 100%)'
+                    : 'radial-gradient(ellipse at top left, #faeaacff 0%, #f8fafc 50%, #a7cdfbff 100%)'
+            }}
+        >
+            {/* Main Content */}
+            <main className="flex-grow flex flex-col items-center justify-center w-full px-4 relative z-10 scale-90 md:scale-100 transition-transform duration-500">
+                <div className="w-full max-w-4xl flex flex-col items-center gap-10 text-center animate-fade-in-up">
 
-                <button
-                    onClick={toggleTheme}
-                    className="p-2 rounded-lg transition-colors"
-                    style={{ backgroundColor: 'var(--bg-hover)' }}
-                    aria-label="Tema değiştir"
-                >
-                    {isDarkMode ? (
-                        <svg className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                    ) : (
-                        <svg className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                    )}
-                </button>
-            </header>
-
-            {/* Main content */}
-            <main className="flex-1 flex flex-col items-center justify-center px-5">
-                <div className="w-full max-w-lg">
-                    {/* Hero text - simplified */}
-                    <div className="text-center mb-6">
-                        <h1 className={`text-2xl md:text-3xl font-bold mb-2 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
-                            {randomHeadline}
+                    <div className="flex flex-col gap-6 max-w-3xl">
+                        <h1 className={`text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight ${isDarkMode ? 'text-white drop-shadow-sm' : 'text-slate-900'}`}>
+                            {headline}
                         </h1>
-                        <p className={`text-sm ${isDarkMode ? 'text-neutral-300' : 'text-neutral-500'}`}>
-                            Senin gibi düşünen binlerce kişiden ilham al.
-                        </p>
+                        <h2 className={`text-lg md:text-xl lg:text-2xl font-medium leading-relaxed max-w-2xl mx-auto ${isDarkMode ? 'text-[#94a3b8]' : 'text-slate-600'}`}>
+                            Sadece bir yapay zekaya sormadan, aynı ikilemi yaşamış <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>gerçek insanlarla bağlantı kur.</span>
+                        </h2>
                     </div>
 
-                    {/* Input section */}
-                    <form onSubmit={handleSubmit}>
-                        <div className="relative">
+                    <div className="w-full max-w-2xl flex flex-col gap-6 z-10">
+                        {/* Search Bar Container */}
+                        <label className={`group relative flex w-full items-center p-2 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl ${isDarkMode
+                            ? 'bg-[#0f172a]/60 border border-[#334155]/50 shadow-black/20 hover:shadow-black/30 hover:bg-[#0f172a]/80 focus-within:ring-4 focus-within:ring-[#1e3a8a]/50 focus-within:border-[#3b82f6]/50'
+                            : 'bg-white shadow-blue-900/5 hover:shadow-blue-900/10'
+                            }`}>
+                            <div className={`hidden sm:flex pl-4 items-center justify-center pointer-events-none ${isDarkMode ? 'text-[#64748b]' : 'text-slate-400'}`}>
+                                <span className="material-symbols-outlined text-2xl">search</span>
+                            </div>
                             <input
                                 ref={inputRef}
+                                className={`w-full h-14 md:h-16 rounded-xl border-0 bg-transparent pl-4 ${input.trim() ? 'pr-28 sm:pr-44' : 'pr-4'} focus:ring-0 outline-none text-lg md:text-xl ${isDarkMode
+                                    ? 'text-white placeholder:text-[#64748b]'
+                                    : 'text-slate-900 placeholder:text-slate-400'
+                                    }`}
+                                placeholder={input ? '' : fullPlaceholder}
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder={input ? '' : fullPlaceholder}
-                                className="input-field text-center pr-4"
-                                style={{ paddingRight: hasEnoughInput ? '120px' : '1.5rem' }}
+                                onKeyDown={(e) => e.key === 'Enter' && handleContinueClick()}
                                 autoFocus
                             />
+                            {/* Continue Button embedded in input if has content */}
+                            <div className={`absolute right-2 top-1/2 -translate-y-1/2 transition-all duration-300 ease-out ${input.trim() ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
+                                <button
+                                    onClick={handleContinueClick}
+                                    className="flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 bg-black text-white rounded-xl hover:bg-neutral-800 hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold text-sm md:text-base"
+                                >
+                                    <span className="sm:hidden">Başla</span>
+                                    <span className="hidden sm:inline">Devam Et</span>
+                                    <span className="hidden sm:inline material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                                </button>
+                            </div>
+                        </label>
+
+                        <div className="flex flex-col items-center gap-3">
+                            <div className={`flex items-center gap-2 text-sm md:text-base font-medium ${isDarkMode ? 'text-neutral-400' : 'text-slate-600/80'}`}>
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <p>{activeCount} kişi şu an bir karar üzerinde düşünüyor</p>
+                            </div>
 
                             <button
-                                type="submit"
-                                className={`
-                  absolute right-2 top-1/2 -translate-y-1/2
-                  px-5 py-2.5 text-sm font-medium rounded-xl
-                  transition-all duration-300 ease-out
-                  ${hasEnoughInput || isLoading
-                                        ? 'opacity-100 translate-x-0 pointer-events-auto'
-                                        : 'opacity-0 translate-x-4 pointer-events-none'
-                                    }
-                `}
-                                style={{
-                                    backgroundColor: 'var(--btn-primary-bg)',
-                                    color: 'var(--btn-primary-text)'
-                                }}
-                                disabled={!hasEnoughInput || isLoading}
+                                onClick={() => setShowAIModal(true)}
+                                className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border text-xs md:text-sm font-semibold transition-all cursor-pointer shadow-sm backdrop-blur-sm ${isDarkMode
+                                    ? 'bg-white/10 border-white/20 text-neutral-300 hover:bg-white/20 hover:text-white'
+                                    : 'bg-white/40 border-white/60 text-slate-600 hover:bg-white hover:text-[#2b8cee]'
+                                    }`}
                             >
-                                {isLoading ? (
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        <span>Düşünüyor...</span>
-                                    </div>
-                                ) : (
-                                    'Devam et'
-                                )}
+                                <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                                Nasıl çalışır?
                             </button>
-                        </div>
-                    </form>
-
-                    {/* Social proof + Value props - combined */}
-                    <div
-                        className={`mt-6 text-center transition-all duration-700 ${showSocialProof ? 'opacity-100' : 'opacity-0'
-                            }`}
-                    >
-                        <p className={`text-sm ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                            <span className={`font-medium tabular-nums ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`}>
-                                {activeCount}
-                            </span>{' '}
-                            kişi şu an bir karar üzerinde düşünüyor
-                        </p>
-
-                        <div
-                            onClick={() => setShowAIModal(true)}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 mt-3 text-xs font-medium rounded-full cursor-pointer transition-colors ${isDarkMode
-                                ? 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                                }`}
-                        >
-                            <Sparkles className="w-3 h-3" fill="currentColor" />
-                            Nasıl çalışır?
                         </div>
                     </div>
                 </div>
             </main>
 
-            {/* Footer - With iOS safe area for Safari URL bar */}
-            <footer
-                className="pb-4 md:pb-5 px-5 flex-shrink-0 relative bottom-8 md:bottom-0"
-                style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0))' }}
-            >
-                <div className="max-w-lg mx-auto text-center">
-                    {!showCodeEntry ? (
-                        <div className="space-y-1.5">
-                            {/* Mobile: Navigate to /return, Desktop: Show inline code entry */}
-                            <button
-                                onClick={() => {
-                                    // Check if mobile (< 768px)
-                                    if (window.innerWidth < 768) {
-                                        navigate('/return');
-                                    } else {
-                                        setShowCodeEntry(true);
-                                    }
-                                }}
-                                className="text-sm underline underline-offset-2 transition-colors"
-                                style={{ color: 'var(--text-secondary)' }}
-                            >
-                                Takip kodun mu var?
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="animate-in space-y-2">
-                            <div className="flex gap-2 justify-center">
-                                <input
-                                    type="text"
-                                    value={codeInput}
-                                    onChange={(e) => handleCodeChange(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter' && isCodeValid) {
-                                            handleCodeSubmit();
-                                        }
-                                    }}
-                                    maxLength={8}
-                                    placeholder="XXXXXXXX"
-                                    className="w-36 px-3 py-2 rounded-xl text-center font-mono tracking-wider text-sm uppercase transition-colors"
-                                    style={{
-                                        backgroundColor: 'var(--bg-secondary)',
-                                        border: '1px solid var(--border-primary)',
-                                        color: 'var(--text-primary)'
-                                    }}
-                                />
-                                <button
-                                    onClick={handleCodeSubmit}
-                                    disabled={!isCodeValid}
-                                    className="px-5 py-2 rounded-xl font-medium text-sm transition-all duration-200"
-                                    style={{
-                                        backgroundColor: isCodeValid ? 'var(--btn-primary-bg)' : 'var(--btn-disabled-bg)',
-                                        color: isCodeValid ? 'var(--btn-primary-text)' : 'var(--btn-disabled-text)',
-                                        cursor: isCodeValid ? 'pointer' : 'not-allowed'
-                                    }}
-                                >
-                                    Git
-                                </button>
-                            </div>
-                            <button
-                                onClick={() => {
-                                    setShowCodeEntry(false);
-                                    setCodeInput('');
-                                }}
-                                className="text-xs transition-colors"
-                                style={{ color: 'var(--text-muted)' }}
-                            >
-                                Vazgeç
-                            </button>
-                        </div>
-                    )}
-                </div>
+            {/* Footer */}
+            <footer className="w-full py-6 absolute bottom-0">
+                {/* Privacy & Terms removed as requested */}
             </footer>
 
-            {/* AI Info Modal */}
             <AIInfoModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} />
         </div>
     );
 };
-

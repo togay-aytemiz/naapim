@@ -7,6 +7,30 @@
             "option_set_id": "urgency_level_v1"
         },
         {
+            "key": "partner_alignment",
+            "label": "Eşinle/partnerinle bu konuda aynı fikirde misiniz?",
+            "type": "single_select",
+            "option_set_id": "partner_alignment_v1"
+        },
+        {
+            "key": "family_size_preference",
+            "label": "İdeal aile büyüklüğün ne?",
+            "type": "single_select",
+            "option_set_id": "family_size_pref_v1"
+        },
+        {
+            "key": "age_gap_preference",
+            "label": "Çocuklar arasında kaç yaş fark olmasını istersin?",
+            "type": "single_select",
+            "option_set_id": "age_gap_pref_v1"
+        },
+        {
+            "key": "life_stability_level",
+            "label": "Şu an hayatın ne kadar stabil?",
+            "type": "single_select",
+            "option_set_id": "life_stability_v1"
+        },
+        {
             "key": "decision_readiness",
             "label": "Bu karar konusunda ne aşamadasın?",
             "type": "single_select",
@@ -617,6 +641,72 @@
             "label": "O zamanki sonuç nasıldı?",
             "type": "single_select",
             "option_set_id": "outcome_sentiment_v1"
+        },
+        {
+            "key": "elder_health_status",
+            "label": "Yaşlının genel sağlık durumu nasıl?",
+            "type": "single_select",
+            "option_set_id": "elder_health_status_v1"
+        },
+        {
+            "key": "elder_living_situation",
+            "label": "Şu an nerede/nasıl yaşıyor?",
+            "type": "single_select",
+            "option_set_id": "elder_living_situation_v1"
+        },
+        {
+            "key": "caregiver_burden",
+            "label": "Bakım vermek seni ne kadar yoruyor?",
+            "type": "single_select",
+            "option_set_id": "caregiver_burden_v1"
+        },
+        {
+            "key": "family_involvement",
+            "label": "Aileden bakıma kim katılıyor?",
+            "type": "single_select",
+            "option_set_id": "family_involvement_v1"
+        },
+        {
+            "key": "care_option_preference",
+            "label": "Hangi bakım seçeneğini düşünüyorsun?",
+            "type": "single_select",
+            "option_set_id": "care_option_pref_v1"
+        },
+        {
+            "key": "travel_purpose",
+            "label": "Bu tatilden ne bekliyorsun?",
+            "type": "single_select",
+            "option_set_id": "travel_purpose_v1"
+        },
+        {
+            "key": "travel_companions",
+            "label": "Kiminle seyahat edeceksin?",
+            "type": "single_select",
+            "option_set_id": "travel_companions_v1"
+        },
+        {
+            "key": "travel_budget",
+            "label": "Bu tatil için bütçen ne düzeyde?",
+            "type": "single_select",
+            "option_set_id": "travel_budget_v1"
+        },
+        {
+            "key": "travel_duration",
+            "label": "Ne kadar süre tatil planlıyorsun?",
+            "type": "single_select",
+            "option_set_id": "travel_duration_v1"
+        },
+        {
+            "key": "travel_style",
+            "label": "Tatil tarzın nasıl?",
+            "type": "single_select",
+            "option_set_id": "travel_style_v1"
+        },
+        {
+            "key": "destination_type",
+            "label": "Ne tür bir yer arıyorsun?",
+            "type": "single_select",
+            "option_set_id": "destination_type_v1"
         }
     ]
 }

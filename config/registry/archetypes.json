@@ -43,6 +43,70 @@
                     "gönüllü işler (kariyer hedefi değilse)",
                     "ev işleri"
                 ]
+            },
+            "priority_categories": {
+                "job_change": {
+                    "triggers": [
+                        "iş değiştir",
+                        "istifa",
+                        "ayrıl",
+                        "yeni iş",
+                        "başka şirket"
+                    ],
+                    "prioritize": [
+                        "role_satisfaction",
+                        "market_confidence",
+                        "burnout_level",
+                        "risk_tolerance_work"
+                    ],
+                    "description": "İş değişikliği için memnuniyet ve pazar soruları"
+                },
+                "promotion": {
+                    "triggers": [
+                        "terfi",
+                        "yüksel",
+                        "pozisyon",
+                        "maaş zam"
+                    ],
+                    "prioritize": [
+                        "role_satisfaction",
+                        "competence_readiness",
+                        "work_life_impact",
+                        "growth_type"
+                    ],
+                    "description": "Terfi için yetkinlik ve kariyer hedefi soruları"
+                },
+                "entrepreneurship": {
+                    "triggers": [
+                        "kendi iş",
+                        "girişim",
+                        "startup",
+                        "şirket kur",
+                        "freelance"
+                    ],
+                    "prioritize": [
+                        "risk_tolerance_work",
+                        "budget_flexibility",
+                        "support_system",
+                        "burnout_level"
+                    ],
+                    "description": "Girişimcilik için risk ve finansal hazırlık soruları"
+                },
+                "career_pivot": {
+                    "triggers": [
+                        "sektör değiştir",
+                        "alan değiştir",
+                        "kariyer değişikliği",
+                        "farklı meslek"
+                    ],
+                    "prioritize": [
+                        "competence_readiness",
+                        "learning_style",
+                        "timeline_horizon",
+                        "budget_flexibility"
+                    ],
+                    "description": "Kariyer değişimi için yetkinlik ve öğrenme soruları"
+                }
             }
         },
         {
@@ -86,6 +150,76 @@
                     "eş ilişkileri (çocuk odağı yoksa)",
                     "evcil hayvanlar"
                 ]
+            },
+            "priority_categories": {
+                "new_child": {
+                    "triggers": [
+                        "ikinci çocuk",
+                        "bebek yap",
+                        "hamile",
+                        "kardeş",
+                        "yeni bebek"
+                    ],
+                    "prioritize": [
+                        "life_stage_readiness",
+                        "partner_alignment",
+                        "family_planning",
+                        "life_stability",
+                        "family_capacity",
+                        "support_network",
+                        "budget_flexibility"
+                    ],
+                    "description": "Yeni çocuk kararı için aile kapasitesi, partner uyumu ve hazırlık soruları"
+                },
+                "school_choice": {
+                    "triggers": [
+                        "okul",
+                        "kolej",
+                        "anaokulu",
+                        "kreş",
+                        "hangi okul"
+                    ],
+                    "prioritize": [
+                        "school_criteria",
+                        "budget_flexibility",
+                        "edu_philosophy",
+                        "location_preference"
+                    ],
+                    "description": "Okul seçimi için eğitim felsefesi ve bütçe soruları"
+                },
+                "behavior": {
+                    "triggers": [
+                        "disiplin",
+                        "inat",
+                        "öfke",
+                        "uyku sorunu",
+                        "ekran",
+                        "davranış"
+                    ],
+                    "prioritize": [
+                        "behavioral_context",
+                        "parenting_style",
+                        "screen_management",
+                        "sleep_habits"
+                    ],
+                    "description": "Davranış sorunları için ebeveynlik tarzı soruları"
+                },
+                "childcare": {
+                    "triggers": [
+                        "bakıcı",
+                        "anneanne",
+                        "babaanne",
+                        "kreş",
+                        "kim baksın"
+                    ],
+                    "prioritize": [
+                        "caregiver_context",
+                        "care_context",
+                        "support_network",
+                        "budget_flexibility"
+                    ],
+                    "description": "Bakım düzeni için güven ve destek soruları"
+                }
             }
         },
         {
@@ -128,6 +262,71 @@
                     "iş arkadaşları (profesyonel)",
                     "ebeveyn-çocuk (parenting_decisions)"
                 ]
+            },
+            "priority_categories": {
+                "breakup": {
+                    "triggers": [
+                        "ayrılmak",
+                        "bitmek",
+                        "son vermek",
+                        "boşanma",
+                        "bitirmek"
+                    ],
+                    "prioritize": [
+                        "commitment_level",
+                        "conflict_style",
+                        "emotional_barriers",
+                        "support_system"
+                    ],
+                    "description": "Ayrılık kararı için ilişki derinliği ve destek soruları"
+                },
+                "commitment": {
+                    "triggers": [
+                        "evlilik",
+                        "evlen",
+                        "teklif",
+                        "söz",
+                        "nişan"
+                    ],
+                    "prioritize": [
+                        "future_goals",
+                        "commitment_level",
+                        "living_arrangement",
+                        "life_stage_readiness"
+                    ],
+                    "description": "Bağlanma kararı için gelecek planları soruları"
+                },
+                "trust_issues": {
+                    "triggers": [
+                        "güven",
+                        "aldatma",
+                        "yalan",
+                        "şüphe",
+                        "sadakat"
+                    ],
+                    "prioritize": [
+                        "conflict_style",
+                        "communication_style",
+                        "emotional_barriers",
+                        "relationship_stage"
+                    ],
+                    "description": "Güven sorunları için iletişim ve çatışma soruları"
+                },
+                "long_distance": {
+                    "triggers": [
+                        "uzun mesafe",
+                        "farklı şehir",
+                        "yurt dışı",
+                        "ayrı yaşamak"
+                    ],
+                    "prioritize": [
+                        "commitment_level",
+                        "communication_style",
+                        "future_goals",
+                        "life_stage_readiness"
+                    ],
+                    "description": "Uzak ilişki için bağlılık ve iletişim soruları"
+                }
             }
         },
         {
@@ -171,6 +370,56 @@
                     "kariyer maaş pazarlığı (career_decisions)",
                     "ucuz tatil planı (eğlence)"
                 ]
+            },
+            "priority_categories": {
+                "housing": {
+                    "triggers": [
+                        "ev al",
+                        "kira",
+                        "daire",
+                        "gayrimenkul",
+                        "taşın"
+                    ],
+                    "prioritize": [
+                        "budget_flexibility",
+                        "timeline_horizon",
+                        "debt_level",
+                        "income_stability"
+                    ],
+                    "description": "Konut kararları için bütçe ve gelir soruları"
+                },
+                "debt": {
+                    "triggers": [
+                        "borç",
+                        "kredi",
+                        "taksit",
+                        "kapat",
+                        "ödeme"
+                    ],
+                    "prioritize": [
+                        "debt_level",
+                        "debt_strategy",
+                        "income_stability",
+                        "savings_goal"
+                    ],
+                    "description": "Borç yönetimi için strateji soruları"
+                },
+                "saving": {
+                    "triggers": [
+                        "tasarruf",
+                        "birik",
+                        "emeklilik",
+                        "BES",
+                        "fon"
+                    ],
+                    "prioritize": [
+                        "savings_goal",
+                        "risk_preference",
+                        "timeline_horizon",
+                        "liquidity_needs"
+                    ],
+                    "description": "Tasarruf için vade ve risk soruları"
+                }
             }
         },
         {
@@ -216,6 +465,56 @@
                     "estetik (güzellik odaklı)",
                     "spor hobi düzeyinde (yaşam tarzı)"
                 ]
+            },
+            "priority_categories": {
+                "weight_diet": {
+                    "triggers": [
+                        "kilo",
+                        "diyet",
+                        "zayıfla",
+                        "beslenme",
+                        "obez"
+                    ],
+                    "prioritize": [
+                        "fitness_nutrition",
+                        "mental_state",
+                        "lifestyle_activity",
+                        "daily_availability"
+                    ],
+                    "description": "Kilo/diyet için beslenme ve aktivite soruları"
+                },
+                "mental_health": {
+                    "triggers": [
+                        "depresyon",
+                        "anksiyete",
+                        "stres",
+                        "psikolog",
+                        "terapi"
+                    ],
+                    "prioritize": [
+                        "mental_state",
+                        "emotional_state",
+                        "support_system",
+                        "treatment_preference"
+                    ],
+                    "description": "Ruh sağlığı için duygusal durum ve destek soruları"
+                },
+                "fitness": {
+                    "triggers": [
+                        "spor",
+                        "egzersiz",
+                        "koşu",
+                        "salon",
+                        "antrenman"
+                    ],
+                    "prioritize": [
+                        "lifestyle_activity",
+                        "daily_availability",
+                        "fitness_nutrition",
+                        "physical_limit"
+                    ],
+                    "description": "Fitness için fiziksel durum ve zaman soruları"
+                }
             }
         },
         {
@@ -258,6 +557,55 @@
                     "çocuk eğitimi (parenting_decisions)",
                     "hobi amaçlı kurslar (lifestyle)"
                 ]
+            },
+            "priority_categories": {
+                "degree": {
+                    "triggers": [
+                        "yüksek lisans",
+                        "master",
+                        "MBA",
+                        "doktora",
+                        "üniversite"
+                    ],
+                    "prioritize": [
+                        "current_level",
+                        "career_goal_edu",
+                        "time_commitment",
+                        "return_on_invest"
+                    ],
+                    "description": "Akademik derece için kariyer hedefi ve zaman soruları"
+                },
+                "skill_course": {
+                    "triggers": [
+                        "kurs",
+                        "bootcamp",
+                        "sertifika",
+                        "online eğitim",
+                        "öğren"
+                    ],
+                    "prioritize": [
+                        "learning_style",
+                        "time_commitment",
+                        "credential_type",
+                        "study_field"
+                    ],
+                    "description": "Beceri kursu için öğrenme tarzı soruları"
+                },
+                "language": {
+                    "triggers": [
+                        "dil",
+                        "ingilizce",
+                        "almanca",
+                        "yabancı dil"
+                    ],
+                    "prioritize": [
+                        "learning_style",
+                        "daily_availability",
+                        "timeline_horizon",
+                        "budget_flexibility"
+                    ],
+                    "description": "Dil eğitimi için zaman ve yöntem soruları"
+                }
             }
         },
         {
@@ -299,6 +647,56 @@
                     "ev satın alma (major_purchase)",
                     "kariyer odaklı taşınma (career)"
                 ]
+            },
+            "priority_categories": {
+                "relocation": {
+                    "triggers": [
+                        "taşın",
+                        "şehir",
+                        "yurt dışı",
+                        "göç",
+                        "başka yer"
+                    ],
+                    "prioritize": [
+                        "location_preference",
+                        "environment_pref",
+                        "climate_needs",
+                        "community_level"
+                    ],
+                    "description": "Taşınma için lokasyon ve sosyal çevre soruları"
+                },
+                "hobby": {
+                    "triggers": [
+                        "hobi",
+                        "aktivite",
+                        "uğraş",
+                        "boş zaman",
+                        "yeni şey"
+                    ],
+                    "prioritize": [
+                        "social_needs",
+                        "daily_availability",
+                        "budget_flexibility",
+                        "lifestyle_routine"
+                    ],
+                    "description": "Hobi için zaman ve sosyal tercih soruları"
+                },
+                "routine_change": {
+                    "triggers": [
+                        "rutin",
+                        "alışkanlık",
+                        "düzen",
+                        "sabah",
+                        "akşam"
+                    ],
+                    "prioritize": [
+                        "lifestyle_routine",
+                        "change_readiness",
+                        "daily_availability",
+                        "priority_goal"
+                    ],
+                    "description": "Rutin değişikliği için esneklik ve öncelik soruları"
+                }
             }
         },
         {
@@ -340,6 +738,56 @@
                     "yatırım amaçlı alım (finance)",
                     "iş için gerekli ekipman (career)"
                 ]
+            },
+            "priority_categories": {
+                "vehicle": {
+                    "triggers": [
+                        "araba",
+                        "araç",
+                        "motor",
+                        "elektrikli",
+                        "benzinli"
+                    ],
+                    "prioritize": [
+                        "usage_frequency",
+                        "budget_flexibility",
+                        "resale_value",
+                        "hidden_costs"
+                    ],
+                    "description": "Araç alımı için kullanım ve maliyet soruları"
+                },
+                "tech": {
+                    "triggers": [
+                        "telefon",
+                        "laptop",
+                        "bilgisayar",
+                        "iPhone",
+                        "MacBook",
+                        "Samsung"
+                    ],
+                    "prioritize": [
+                        "product_features",
+                        "usage_frequency",
+                        "durability_factors",
+                        "budget_flexibility"
+                    ],
+                    "description": "Teknoloji alımı için özellik ve kullanım soruları"
+                },
+                "property": {
+                    "triggers": [
+                        "daire",
+                        "ev",
+                        "gayrimenkul",
+                        "kat"
+                    ],
+                    "prioritize": [
+                        "budget_flexibility",
+                        "timeline_horizon",
+                        "resale_value",
+                        "location_preference"
+                    ],
+                    "description": "Gayrimenkul için lokasyon ve bütçe soruları"
+                }
             }
         },
         {
@@ -431,6 +879,242 @@
                     "çekirdek aile/çocuk (parenting)",
                     "sadece iş odaklı çatışma (career)"
                 ]
+            },
+            "priority_categories": {
+                "friendship_conflict": {
+                    "triggers": [
+                        "arkadaş",
+                        "dost",
+                        "küslük",
+                        "barış",
+                        "kavga"
+                    ],
+                    "prioritize": [
+                        "relationship_bonding",
+                        "conflict_style",
+                        "conflict_context",
+                        "resolution_effort"
+                    ],
+                    "description": "Arkadaşlık çatışması için yakınlık ve çözüm soruları"
+                },
+                "family_tension": {
+                    "triggers": [
+                        "akraba",
+                        "aile",
+                        "kuzen",
+                        "kayın",
+                        "geniş aile"
+                    ],
+                    "prioritize": [
+                        "relationship_bonding",
+                        "social_conflict_type",
+                        "social_impact",
+                        "emotional_barriers"
+                    ],
+                    "description": "Aile gerginliği için etki ve engel soruları"
+                },
+                "roommate": {
+                    "triggers": [
+                        "ev arkadaş",
+                        "oda arkadaş",
+                        "birlikte yaşa",
+                        "komşu"
+                    ],
+                    "prioritize": [
+                        "conflict_context",
+                        "communication_style",
+                        "resolution_effort",
+                        "social_impact"
+                    ],
+                    "description": "Ev arkadaşı sorunları için iletişim ve çözüm soruları"
+                }
+            }
+        },
+        {
+            "id": "eldercare_decisions",
+            "label": "Yaşlı Bakımı",
+            "default_followup_days": 21,
+            "category_set_ids": [
+                "core_emotional_v2",
+                "eldercare_v1",
+                "eldercare_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Yaşlanan ebeveynler veya yakınların bakımı, huzurevi, evde bakım veya yaşam düzeni ile ilgili kararlar.",
+                "positive_examples": [
+                    "Annemi huzurevine mi vermeliyim?",
+                    "Babam için evde bakıcı mı tutmalıyım?",
+                    "Yaşlı annemi yanımıza mı alsak?",
+                    "Babamın sağlık kararlarını ben mi vermeliyim?",
+                    "Annem yalnız yaşıyor, ne yapmalıyım?"
+                ],
+                "negative_examples": [
+                    "Çocuğumu hangi okula göndereyim?",
+                    "Eşimden ayrılmalı mıyım?",
+                    "Kendim için terapi almalı mıyım?"
+                ],
+                "keywords": [
+                    "anne",
+                    "baba",
+                    "yaşlı",
+                    "huzurevi",
+                    "bakıcı",
+                    "bakım",
+                    "emekli",
+                    "yaşlanma",
+                    "bunama",
+                    "alzheimer",
+                    "hasta ebeveyn",
+                    "yaşlı bakımı"
+                ],
+                "exclusions": [
+                    "kendi sağlık sorunlarım (health_wellness)",
+                    "çocuk bakımı (parenting)"
+                ]
+            },
+            "priority_categories": {
+                "nursing_home": {
+                    "triggers": [
+                        "huzurevi",
+                        "bakım evi",
+                        "yaşlı yurdu"
+                    ],
+                    "prioritize": [
+                        "elder_health_context",
+                        "caregiver_context",
+                        "care_options",
+                        "budget_flexibility"
+                    ],
+                    "description": "Huzurevi kararı için sağlık ve bütçe soruları"
+                },
+                "home_care": {
+                    "triggers": [
+                        "bakıcı",
+                        "evde bakım",
+                        "yardımcı"
+                    ],
+                    "prioritize": [
+                        "elder_health_context",
+                        "caregiver_context",
+                        "budget_flexibility",
+                        "family_capacity"
+                    ],
+                    "description": "Evde bakım için aile kapasitesi soruları"
+                },
+                "move_in": {
+                    "triggers": [
+                        "yanımıza al",
+                        "bizimle yaşa",
+                        "eve taşın"
+                    ],
+                    "prioritize": [
+                        "elder_health_context",
+                        "family_capacity",
+                        "caregiver_context",
+                        "emotional_barriers"
+                    ],
+                    "description": "Birlikte yaşama için aile kapasitesi soruları"
+                }
+            }
+        },
+        {
+            "id": "travel_vacation",
+            "label": "Tatil ve Seyahat",
+            "default_followup_days": 7,
+            "category_set_ids": [
+                "core_v2",
+                "travel_v1",
+                "travel_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Tatil planlaması, seyahat destinasyonu seçimi, tatil türü veya seyahat organizasyonu ile ilgili kararlar.",
+                "positive_examples": [
+                    "Nereye tatile gitsek?",
+                    "Yurt dışı mı yurt içi mi tatil yapalım?",
+                    "Balayı için hangi ülkeyi seçsek?",
+                    "Çocuklarla tatile nereye gidelim?",
+                    "Her şey dahil mı yoksa kendi başımıza mı gezelim?"
+                ],
+                "negative_examples": [
+                    "Yeni bir şehre taşınmalı mıyım? (lifestyle)",
+                    "Yurt dışına iş için gitmeli miyim? (career)",
+                    "Araba satın almalı mıyım? (major_purchase)"
+                ],
+                "keywords": [
+                    "tatil",
+                    "seyahat",
+                    "gezi",
+                    "otel",
+                    "uçak",
+                    "balayı",
+                    "deniz",
+                    "plaj",
+                    "tur",
+                    "Avrupa",
+                    "yurtdışı",
+                    "resort",
+                    "her şey dahil"
+                ],
+                "exclusions": [
+                    "kalıcı taşınma (lifestyle_change)",
+                    "iş seyahati (career)"
+                ]
+            },
+            "priority_categories": {
+                "destination_choice": {
+                    "triggers": [
+                        "nereye",
+                        "hangi ülke",
+                        "hangi şehir",
+                        "destinasyon"
+                    ],
+                    "prioritize": [
+                        "travel_basics",
+                        "travel_style",
+                        "travel_logistics"
+                    ],
+                    "description": "Destinasyon seçimi için tercih soruları"
+                },
+                "domestic_vs_abroad": {
+                    "triggers": [
+                        "yurt içi",
+                        "yurt dışı",
+                        "Türkiye",
+                        "Avrupa"
+                    ],
+                    "prioritize": [
+                        "travel_logistics",
+                        "budget_flexibility",
+                        "travel_style"
+                    ],
+                    "description": "Yurt içi/dışı karşılaştırması için bütçe soruları"
+                },
+                "family_vacation": {
+                    "triggers": [
+                        "çocukla",
+                        "aileyle",
+                        "çocuksuz"
+                    ],
+                    "prioritize": [
+                        "travel_basics",
+                        "travel_logistics",
+                        "budget_flexibility"
+                    ],
+                    "description": "Aile tatili için lojistik soruları"
+                },
+                "honeymoon": {
+                    "triggers": [
+                        "balayı",
+                        "romantik",
+                        "evlilik"
+                    ],
+                    "prioritize": [
+                        "travel_style",
+                        "travel_basics",
+                        "travel_logistics"
+                    ],
+                    "description": "Balayı için tarz ve atmosfer soruları"
+                }
             }
         }
     ]

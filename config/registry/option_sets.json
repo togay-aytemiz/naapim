@@ -22,6 +22,94 @@
             ]
         },
         {
+            "id": "partner_alignment_v1",
+            "description": "Eş/partner uyumu - aile planlaması için",
+            "options": [
+                {
+                    "id": "fully_aligned",
+                    "label": "Tamamen aynı fikirde, ikimiz de istiyoruz"
+                },
+                {
+                    "id": "mostly_aligned",
+                    "label": "Genel olarak uyumluyuz, detaylar farklı"
+                },
+                {
+                    "id": "uncertain",
+                    "label": "Henüz bu konuyu tam konuşmadık"
+                },
+                {
+                    "id": "different_views",
+                    "label": "Farklı düşünüyoruz, tartışmalı bir konu"
+                }
+            ]
+        },
+        {
+            "id": "family_size_pref_v1",
+            "description": "Aile büyüklüğü tercihi",
+            "options": [
+                {
+                    "id": "one_child",
+                    "label": "Tek çocuk yeterli"
+                },
+                {
+                    "id": "two_children",
+                    "label": "İki çocuk ideal"
+                },
+                {
+                    "id": "more_children",
+                    "label": "Üç veya daha fazla"
+                },
+                {
+                    "id": "unsure",
+                    "label": "Henüz karar vermedim"
+                }
+            ]
+        },
+        {
+            "id": "age_gap_pref_v1",
+            "description": "Çocuklar arası yaş farkı tercihi",
+            "options": [
+                {
+                    "id": "close",
+                    "label": "Yakın yaşlarda olsunlar (1-2 yıl)"
+                },
+                {
+                    "id": "medium",
+                    "label": "Orta mesafe (3-4 yıl)"
+                },
+                {
+                    "id": "far",
+                    "label": "Büyük fark (5+ yıl)"
+                },
+                {
+                    "id": "no_preference",
+                    "label": "Fark etmez, nasıl olursa"
+                }
+            ]
+        },
+        {
+            "id": "life_stability_v1",
+            "description": "Hayat stabilitesi değerlendirmesi",
+            "options": [
+                {
+                    "id": "very_stable",
+                    "label": "Çok stabil - iş, ev, ilişki hepsi yerinde"
+                },
+                {
+                    "id": "mostly_stable",
+                    "label": "Genel olarak stabil, ufak belirsizlikler var"
+                },
+                {
+                    "id": "transitional",
+                    "label": "Geçiş dönemindeyim (iş/ev değişikliği vb.)"
+                },
+                {
+                    "id": "unstable",
+                    "label": "Belirsiz dönemdeyim, çok şey değişiyor"
+                }
+            ]
+        },
+        {
             "id": "decision_readiness_v1",
             "description": "Karar olgunluğu - tüm arketipler için alternatif",
             "options": [
@@ -2275,6 +2363,260 @@
                 {
                     "id": "neutral",
                     "label": "Nötr / Ne iyi ne kötüydü"
+                }
+            ]
+        },
+        {
+            "id": "elder_health_status_v1",
+            "description": "Yaşlının sağlık durumu",
+            "options": [
+                {
+                    "id": "independent",
+                    "label": "Bağımsız yaşayabiliyor, yardıma ihtiyacı yok"
+                },
+                {
+                    "id": "some_help",
+                    "label": "Günlük işlerde biraz yardım lazım"
+                },
+                {
+                    "id": "significant_help",
+                    "label": "Ciddi destek gerekiyor (yemek, ilaç vb.)"
+                },
+                {
+                    "id": "full_care",
+                    "label": "Tam zamanlı bakım gerekiyor"
+                }
+            ]
+        },
+        {
+            "id": "elder_living_situation_v1",
+            "description": "Yaşlının mevcut yaşam düzeni",
+            "options": [
+                {
+                    "id": "alone",
+                    "label": "Yalnız yaşıyor"
+                },
+                {
+                    "id": "with_spouse",
+                    "label": "Eşiyle birlikte yaşıyor"
+                },
+                {
+                    "id": "with_family",
+                    "label": "Aile yanında kalıyor"
+                },
+                {
+                    "id": "care_home",
+                    "label": "Huzurevinde/bakım evinde"
+                }
+            ]
+        },
+        {
+            "id": "caregiver_burden_v1",
+            "description": "Bakım veren kişinin yükü",
+            "options": [
+                {
+                    "id": "manageable",
+                    "label": "İdare edebiliyorum, sorun yok"
+                },
+                {
+                    "id": "tiring",
+                    "label": "Yorucu ama devam edebilirim"
+                },
+                {
+                    "id": "overwhelming",
+                    "label": "Çok yoruldum, tükenmek üzereyim"
+                },
+                {
+                    "id": "impossible",
+                    "label": "Artık başa çıkamıyorum"
+                }
+            ]
+        },
+        {
+            "id": "family_involvement_v1",
+            "description": "Ailenin bakıma katılımı",
+            "options": [
+                {
+                    "id": "shared",
+                    "label": "Herkes paylaşıyor, eşit dağılım"
+                },
+                {
+                    "id": "mostly_me",
+                    "label": "Çoğunlukla ben üstleniyorum"
+                },
+                {
+                    "id": "only_me",
+                    "label": "Tamamen benim üzerimde"
+                },
+                {
+                    "id": "conflict",
+                    "label": "Aile içi tartışma var bu konuda"
+                }
+            ]
+        },
+        {
+            "id": "care_option_pref_v1",
+            "description": "Bakım seçeneği tercihi",
+            "options": [
+                {
+                    "id": "home_care",
+                    "label": "Evde bakıcı tutmak"
+                },
+                {
+                    "id": "move_in",
+                    "label": "Yanımıza almak"
+                },
+                {
+                    "id": "care_facility",
+                    "label": "Huzurevi/bakım merkezi"
+                },
+                {
+                    "id": "undecided",
+                    "label": "Henüz karar vermedim"
+                }
+            ]
+        },
+        {
+            "id": "travel_purpose_v1",
+            "description": "Seyahat amacı",
+            "options": [
+                {
+                    "id": "relaxation",
+                    "label": "Dinlenme ve rahatlama"
+                },
+                {
+                    "id": "adventure",
+                    "label": "Macera ve keşif"
+                },
+                {
+                    "id": "culture",
+                    "label": "Kültür ve tarih"
+                },
+                {
+                    "id": "family_fun",
+                    "label": "Aile eğlencesi"
+                },
+                {
+                    "id": "romantic",
+                    "label": "Romantik kaçamak"
+                }
+            ]
+        },
+        {
+            "id": "travel_companions_v1",
+            "description": "Seyahat arkadaşları",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Tek başıma"
+                },
+                {
+                    "id": "partner",
+                    "label": "Eşim/partnerimle"
+                },
+                {
+                    "id": "family_kids",
+                    "label": "Çocuklarla birlikte"
+                },
+                {
+                    "id": "friends",
+                    "label": "Arkadaşlarla"
+                },
+                {
+                    "id": "group",
+                    "label": "Tur grubuyla"
+                }
+            ]
+        },
+        {
+            "id": "travel_budget_v1",
+            "description": "Seyahat bütçesi",
+            "options": [
+                {
+                    "id": "budget",
+                    "label": "Ekonomik / Bütçe dostu"
+                },
+                {
+                    "id": "mid_range",
+                    "label": "Orta segment"
+                },
+                {
+                    "id": "comfort",
+                    "label": "Konforlu / Lüks olmayan premium"
+                },
+                {
+                    "id": "luxury",
+                    "label": "Lüks / Para önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "travel_duration_v1",
+            "description": "Seyahat süresi",
+            "options": [
+                {
+                    "id": "weekend",
+                    "label": "Hafta sonu (2-3 gün)"
+                },
+                {
+                    "id": "short",
+                    "label": "Kısa tatil (4-7 gün)"
+                },
+                {
+                    "id": "medium",
+                    "label": "Orta (1-2 hafta)"
+                },
+                {
+                    "id": "long",
+                    "label": "Uzun (2+ hafta)"
+                }
+            ]
+        },
+        {
+            "id": "travel_style_v1",
+            "description": "Seyahat tarzı",
+            "options": [
+                {
+                    "id": "all_inclusive",
+                    "label": "Her şey dahil / Organize"
+                },
+                {
+                    "id": "independent",
+                    "label": "Bağımsız / Kendi planımı yaparım"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık / Bazı şeyler organize"
+                },
+                {
+                    "id": "spontaneous",
+                    "label": "Spontan / Akışına bırakırım"
+                }
+            ]
+        },
+        {
+            "id": "destination_type_v1",
+            "description": "Destinasyon tipi",
+            "options": [
+                {
+                    "id": "beach",
+                    "label": "Deniz/plaj"
+                },
+                {
+                    "id": "city",
+                    "label": "Şehir/metropol"
+                },
+                {
+                    "id": "nature",
+                    "label": "Doğa/dağ"
+                },
+                {
+                    "id": "historic",
+                    "label": "Tarihi yerler"
+                },
+                {
+                    "id": "resort",
+                    "label": "Tatil köyü/resort"
                 }
             ]
         }

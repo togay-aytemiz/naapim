@@ -8,6 +8,28 @@
             ]
         },
         {
+            "id": "partner_alignment",
+            "label": "Partner Uyumu",
+            "field_keys": [
+                "partner_alignment"
+            ]
+        },
+        {
+            "id": "family_planning",
+            "label": "Aile Planlaması",
+            "field_keys": [
+                "family_size_preference",
+                "age_gap_preference"
+            ]
+        },
+        {
+            "id": "life_stability",
+            "label": "Hayat Dengesi",
+            "field_keys": [
+                "life_stability_level"
+            ]
+        },
+        {
             "id": "decision_readiness",
             "label": "Karar olgunluğu",
             "field_keys": [
@@ -529,6 +551,13 @@
             ]
         },
         {
+            "id": "resolution_effort",
+            "label": "Çözüm Çabası",
+            "field_keys": [
+                "effort_level"
+            ]
+        },
+        {
             "id": "label_outcome",
             "field_keys": [
                 "desired_outcome"
@@ -658,6 +687,53 @@
             "label": "Duygusal Durum",
             "field_keys": [
                 "stress_source"
+            ]
+        },
+        {
+            "id": "elder_health_context",
+            "label": "Yaşlı Sağlık Durumu",
+            "field_keys": [
+                "elder_health_status",
+                "elder_living_situation"
+            ]
+        },
+        {
+            "id": "caregiver_context",
+            "label": "Bakım Veren Durumu",
+            "field_keys": [
+                "caregiver_burden",
+                "family_involvement"
+            ]
+        },
+        {
+            "id": "care_options",
+            "label": "Bakım Alternatifleri",
+            "field_keys": [
+                "care_option_preference"
+            ]
+        },
+        {
+            "id": "travel_basics",
+            "label": "Seyahat Temelleri",
+            "field_keys": [
+                "travel_purpose",
+                "travel_companions"
+            ]
+        },
+        {
+            "id": "travel_logistics",
+            "label": "Seyahat Lojistik",
+            "field_keys": [
+                "travel_budget",
+                "travel_duration"
+            ]
+        },
+        {
+            "id": "travel_style",
+            "label": "Seyahat Tarzı",
+            "field_keys": [
+                "travel_style",
+                "destination_type"
             ]
         }
     ],

@@ -260,6 +260,41 @@
                 "climate_needs",
                 "community_level"
             ]
+        },
+        {
+            "id": "eldercare_v1",
+            "label": "Yaşlı bakımı ana",
+            "category_ids": [
+                "elder_health_context",
+                "caregiver_context",
+                "care_options"
+            ]
+        },
+        {
+            "id": "eldercare_details_v1",
+            "label": "Yaşlı bakımı detay",
+            "category_ids": [
+                "budget_flexibility",
+                "family_capacity",
+                "emotional_barriers"
+            ]
+        },
+        {
+            "id": "travel_v1",
+            "label": "Seyahat ana",
+            "category_ids": [
+                "travel_basics",
+                "travel_logistics",
+                "travel_style"
+            ]
+        },
+        {
+            "id": "travel_details_v1",
+            "label": "Seyahat detay",
+            "category_ids": [
+                "budget_flexibility",
+                "decision_readiness"
+            ]
         }
     ]
 }

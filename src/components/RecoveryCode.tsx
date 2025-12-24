@@ -174,18 +174,18 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                     </p>
                 </div>
 
-                {/* Actions */}
-                <div className="flex gap-3 justify-center">
-                    <button onClick={handleCopy} className="btn-secondary">
-                        {copied ? '✓ Kopyalandı' : 'Kopyala'}
-                    </button>
-                    <button
-                        onClick={handleSendClick}
-                        className="btn-secondary"
-                    >
-                        E-postana gönder
-                    </button>
-                </div>
+                {/* Actions */}{!sent && (
+                    <div className="flex gap-3 justify-center">
+                        <button onClick={handleCopy} className="btn-secondary">
+                            {copied ? '✓ Kopyalandı' : 'Kopyala'}
+                        </button>
+                        <button
+                            onClick={handleSendClick}
+                            className="btn-secondary"
+                        >
+                            E-postana gönder
+                        </button>
+                    </div>)}
 
                 {/* Send options (expandable) */}
                 {showSendOptions && !sent && (
@@ -215,15 +215,17 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                     opacity: isSending ? 0.7 : 1
                                 }}
                             >
-                                {isSending ? '...' : 'Gönder'}
+                                {isSending ? 'Gönderiliyor...' : 'Gönder'}
                             </button>
                         </div>
 
                         {/* Reminder checkbox with trust messaging */}
                         <div className="space-y-3">
-                            <label className="flex items-center gap-3 cursor-pointer group">
+                            <label
+                                className="flex items-center gap-3 cursor-pointer group"
+                                onClick={() => setSendReminder(!sendReminder)}
+                            >
                                 <div
-                                    onClick={() => setSendReminder(!sendReminder)}
                                     className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
                                     style={{
                                         borderColor: sendReminder ? 'var(--success-accent)' : 'var(--border-hover)',
@@ -279,20 +281,77 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                 {/* Success state */}
                 {sent && (
                     <div
-                        className="animate-in text-center p-4 rounded-xl"
+                        className="animate-in text-center p-4 rounded-xl space-y-3"
                         style={{ backgroundColor: 'var(--success-bg)' }}
                     >
-                        <p className="font-medium" style={{ color: 'var(--success-text)' }}>
-                            ✓ Kod gönderildi!
-                        </p>
-                        {sendReminder && (
-                            <p className="text-sm mt-1" style={{ color: 'var(--success-text)' }}>
-                                Geri dönmeni hatırlatacağız.
+                        <div>
+                            <p className="font-medium" style={{ color: 'var(--success-text)' }}>
+                                ✓ Kod gönderildi!
                             </p>
+                            <p className="text-sm mt-2 leading-relaxed" style={{ color: 'var(--success-text)' }}>
+                                {sendReminder ? (
+                                    <>
+                                        Yarın itibariyle dönüp paylaşabilir ve başkalarının fikirlerini öğrenebilirsin.<br />
+                                        <strong>{reminderTime === 'tomorrow' ? 'Yarın' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'}</strong> sana bunu hatırlatacağız.
+                                    </>
+                                ) : (
+                                    <>
+                                        Yarın itibariyle bu kodla dönüp paylaşabilir ve başkalarının fikirlerini öğrenebilirsin.
+                                    </>
+                                )}
+                            </p>
+                        </div>
+
+                        {/* Late Reminder Option - If they didn't set one initially */}
+                        {!sendReminder && (
+                            <div className="pt-3 mt-3 border-t border-[rgba(0,0,0,0.05)]">
+                                <p className="text-xs mb-2 opacity-80" style={{ color: 'var(--success-text)' }}>
+                                    Fikrini değiştirdin mi? Sana hatırlatabiliriz:
+                                </p>
+                                <div className="flex flex-col gap-2 items-center">
+                                    <div className="flex justify-center gap-2">
+                                        {[
+                                            { id: 'tomorrow', label: 'Yarın' },
+                                            { id: '1_week', label: '1 Hafta' },
+                                            { id: '2_weeks', label: '2 Hafta' }
+                                        ].map((option) => (
+                                            <button
+                                                key={option.id}
+                                                onClick={() => setReminderTime(option.id as any)}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
+                                                    ? 'bg-[var(--success-text)] text-white shadow-md border-transparent scale-105'
+                                                    : 'bg-white/40 border-transparent text-[var(--success-text)] hover:bg-white/60'
+                                                    }`}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setSendReminder(true);
+                                            import('../services/emailService').then(({ scheduleReminder }) => {
+                                                scheduleReminder(
+                                                    email,
+                                                    code,
+                                                    userQuestion || '',
+                                                    undefined,
+                                                    undefined,
+                                                    reminderTime
+                                                ).catch(console.error);
+                                            });
+                                        }}
+                                        className="text-xs underline font-medium mt-1 hover:no-underline"
+                                        style={{ color: 'var(--success-text)' }}
+                                    >
+                                        Hatırlatma Kur
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}
-            </div>
+            </div >
         </>
     );
 };

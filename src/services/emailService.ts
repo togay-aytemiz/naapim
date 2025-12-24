@@ -1,6 +1,7 @@
 // Email Service - Frontend helper for sending emails via Edge Function
 
 const FUNCTIONS_URL = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
+const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 interface SendEmailResponse {
     success: boolean;
@@ -18,6 +19,7 @@ export async function sendCodeEmail(email: string, code: string, userQuestion: s
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ANON_KEY}`,
             },
             body: JSON.stringify({
                 type: 'code_delivery',
@@ -63,6 +65,7 @@ export async function scheduleReminder(
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ANON_KEY}`,
             },
             body: JSON.stringify({
                 type: 'reminder_14day',

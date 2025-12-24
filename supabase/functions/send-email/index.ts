@@ -252,7 +252,11 @@ Deno.serve(async (req) => {
         // If schedule_time is present, we SAVE to DB instead of sending immediately
         if (data.schedule_time) {
             let scheduledAt = new Date();
-            // Default to tomorrow if unknown
+
+            // Set time to 06:30 UTC (09:30 TRT/UTC+3)
+            // We do this first or last, but important is to respect the day addition.
+
+            // Add days based on selection
             if (data.schedule_time === '1_week') {
                 scheduledAt.setDate(scheduledAt.getDate() + 7);
             } else if (data.schedule_time === '2_weeks') {
@@ -261,6 +265,9 @@ Deno.serve(async (req) => {
                 // 'tomorrow' or default
                 scheduledAt.setDate(scheduledAt.getDate() + 1);
             }
+
+            // Force time to 06:30:00.000 UTC
+            scheduledAt.setUTCHours(6, 30, 0, 0);
 
             const { error: scheduleError } = await supabase
                 .from('email_reminders')

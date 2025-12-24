@@ -119,18 +119,23 @@ serve(async (req) => {
             const embedding = await generateEmbedding(textToEmbed)
 
             if (embedding) {
+                // Use improved RPC with similarity threshold and archetype filter
                 const { data: semanticResults, error: rpcError } = await supabase.rpc(
                     'match_outcomes_by_embedding',
                     {
                         query_embedding: embedding,
                         match_count: limit,
-                        exclude_session: exclude_session_id || null
+                        exclude_session: exclude_session_id || null,
+                        in_archetype_id: archetype_id || null,  // Filter by same archetype
+                        min_similarity: 0.70                     // Only return if >= 70% similar
                     }
                 )
 
                 if (!rpcError && semanticResults && semanticResults.length > 0) {
-                    console.log('🎯 Semantic matching found:', semanticResults.length, 'results')
+                    console.log('🎯 Semantic matching found:', semanticResults.length, 'results (min 70% similarity)')
                     stories = semanticResults
+                } else {
+                    console.log('⚠️ No semantic matches above 70% threshold, falling back to archetype')
                 }
             }
         }
@@ -191,6 +196,10 @@ serve(async (req) => {
             }))
         }
 
+        // Determine if this is a "no exact match" situation
+        // Only on first page (offset 0), if semantic search was attempted but found nothing
+        const noExactMatch = offset === 0 && user_question && stories.length === 0
+
         // Enrich stories with vote counts and user's votes
         const enrichedStories = await enrichStoriesWithVotes(
             supabase,
@@ -205,6 +214,7 @@ serve(async (req) => {
         return new Response(
             JSON.stringify({
                 stories: enrichedStories,
+                no_exact_match: noExactMatch,  // NEW: UI can show friendly message
                 pagination: {
                     offset,
                     limit,

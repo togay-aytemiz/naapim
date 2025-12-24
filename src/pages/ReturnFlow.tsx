@@ -51,6 +51,7 @@ export const ReturnFlow: React.FC = () => {
     const [storiesLoading, setStoriesLoading] = useState(false);
     const [hasMoreStories, setHasMoreStories] = useState(false);
     const [storiesOffset, setStoriesOffset] = useState(0);
+    const [noExactMatch, setNoExactMatch] = useState(false);
 
     // Auto-fetch if code in URL or passed from HomeScreen
     useEffect(() => {
@@ -276,6 +277,12 @@ export const ReturnFlow: React.FC = () => {
             });
 
             const data = await response.json();
+
+            // Check if no exact matches (friendly message scenario)
+            if (!loadMore) {
+                setNoExactMatch(data.no_exact_match || false);
+            }
+
             if (data.stories) {
                 if (loadMore) {
                     // Append to existing stories
@@ -809,6 +816,26 @@ export const ReturnFlow: React.FC = () => {
                                 </div>
                             );
                         })()}
+
+                        {/* No exact match message */}
+                        {noExactMatch && (
+                            <div
+                                className="p-5 rounded-2xl text-center space-y-3"
+                                style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}
+                            >
+                                <div className="text-2xl">🌱</div>
+                                <h4 className="font-medium" style={{ color: 'var(--text-primary)' }}>
+                                    Henüz benzer deneyim yok
+                                </h4>
+                                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                    Seninle tam olarak aynı konuda düşünen birileri henüz hikayelerini paylaşmamış.
+                                    Ara sıra uğrayarak yeni hikayeleri görebilirsin!
+                                </p>
+                                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                    ✨ Senin hikayen başkalarına ilham olacak
+                                </p>
+                            </div>
+                        )}
 
                         {/* Others' Experiences with Feelings - Real Data */}
                         {communityStories.filter(s => s.feeling && s.outcome_text).length > 0 && (

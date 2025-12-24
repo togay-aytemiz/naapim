@@ -6,8 +6,14 @@ import { QuestionSelectionService } from '../services/questionSelection';
 import registryData from '../../config/registry/archetypes.json';
 import type { Archetype } from '../types/registry';
 
+// Extracted components
+import { LoadingScreen } from './questionFlow/LoadingScreen';
+import { ClarificationScreen } from './questionFlow/ClarificationScreen';
+import { BlockedTopicsScreen } from './questionFlow/BlockedTopicsScreen';
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 
 interface QuestionFlowProps {
     userInput?: string;
@@ -233,42 +239,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     // Render Loading State
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-700">
-                <div className="text-center space-y-8 max-w-sm">
-                    {/* Animated spinner - Brand Colors */}
-                    <div className="relative mx-auto w-16 h-16">
-                        <div
-                            className="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
-                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--coral-primary)' }}
-                        />
-                        <div
-                            className="absolute inset-2 rounded-full border-4 border-t-transparent animate-spin"
-                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--charcoal-primary)', animationDirection: 'reverse', animationDuration: '1.5s' }}
-                        />
-                    </div>
-
-                    {/* Rotating message */}
-                    <div className="h-8 overflow-hidden">
-                        <p
-                            className="text-lg font-medium animate-in fade-in slide-in-from-bottom-2 duration-500"
-                            style={{ color: 'var(--text-primary)' }}
-                            key={loadingMessageIndex}
-                        >
-                            {[
-                                "İhtiyaçların analiz ediliyor...",
-                                "Sana özel sorular hazırlanıyor...",
-                                "Konu başlıkları belirleniyor...",
-                                "En uygun sorular seçiliyor...",
-                                "Kişiselleştirilmiş akış oluşturuluyor...",
-                                "Neredeyse hazır..."
-                            ][loadingMessageIndex]}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
+        return <LoadingScreen messageIndex={loadingMessageIndex} />;
     }
+
 
     // Clarification needed - elegant UI to ask for more details
     if (needsClarification) {
@@ -277,8 +250,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             // Reset classification state and re-classify with clarified input
             classifiedInputRef.current = null;
             setNeedsClarification(false);
-            // Trigger re-classification by simulating userInput change
-            // We need to classify with the new input
             setIsLoading(true);
             const reclassify = async () => {
                 try {
@@ -286,7 +257,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     const classificationResult = await ClassificationService.classifyUserQuestion(clarifiedInput.trim(), archetypes);
 
                     if (classificationResult.needs_clarification) {
-                        // Still needs clarification - update prompt
                         setNeedsClarification(true);
                         setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen biraz daha detay verin.');
                         setIsLoading(false);
@@ -297,7 +267,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                         clarifiedInput.trim(),
                         classificationResult.archetype_id
                     );
-                    // Update the effective question to the clarified input
                     setEffectiveQuestion(clarifiedInput.trim());
                     setArchetypeId(classificationResult.archetype_id);
                     setSelectedFieldKeys(selectionResult.selectedFieldKeys);
@@ -312,142 +281,19 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         };
 
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-500">
-                <div className="text-center space-y-6 max-w-md w-full">
-                    {/* Thinking Icon */}
-                    <div
-                        className="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)' }}
-                    >
-                        <svg
-                            className="w-8 h-8"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            style={{ color: 'var(--amber-500)' }}
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                            Biraz daha detay verir misin?
-                        </h2>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            {clarificationPrompt}
-                        </p>
-                    </div>
-
-                    {/* Input for clarification */}
-                    <div className="space-y-3 w-full">
-                        <textarea
-                            value={clarifiedInput}
-                            onChange={(e) => setClarifiedInput(e.target.value)}
-                            placeholder="Örneğin: İkinci çocuğu yapmalı mıyız diye düşünüyorum ama emin değilim..."
-                            className="w-full p-4 rounded-xl resize-none"
-                            style={{
-                                backgroundColor: 'var(--bg-secondary)',
-                                border: '1px solid var(--border-primary)',
-                                color: 'var(--text-primary)',
-                                minHeight: '100px'
-                            }}
-                            rows={3}
-                            autoFocus
-                        />
-
-                        <button
-                            onClick={handleClarificationSubmit}
-                            disabled={!clarifiedInput.trim()}
-                            className="w-full py-4 rounded-xl font-medium transition-all duration-200"
-                            style={{
-                                backgroundColor: clarifiedInput.trim() ? 'var(--btn-primary-bg)' : 'var(--btn-disabled-bg)',
-                                color: clarifiedInput.trim() ? 'var(--btn-primary-text)' : 'var(--btn-disabled-text)',
-                                cursor: clarifiedInput.trim() ? 'pointer' : 'not-allowed'
-                            }}
-                        >
-                            Devam Et
-                        </button>
-                    </div>
-
-                    {/* Back button */}
-                    <button
-                        onClick={onBack}
-                        className="text-sm hover:underline"
-                        style={{ color: 'var(--text-muted)' }}
-                    >
-                        ← Geri dön
-                    </button>
-                </div>
-            </div>
+            <ClarificationScreen
+                clarificationPrompt={clarificationPrompt || 'Lütfen kararınızı biraz daha açıklayın.'}
+                clarifiedInput={clarifiedInput}
+                onInputChange={setClarifiedInput}
+                onSubmit={handleClarificationSubmit}
+                onBack={onBack}
+            />
         );
     }
 
     // Blocked topics screen
     if (archetypeId === 'blocked_topics') {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[70vh] px-5 animate-in fade-in duration-500">
-                <div className="text-center space-y-6 max-w-md">
-                    {/* Warning Icon */}
-                    <div
-                        className="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
-                    >
-                        <svg
-                            className="w-8 h-8"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            style={{ color: 'var(--coral-primary)' }}
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h2
-                            className="text-2xl font-bold"
-                            style={{ color: 'var(--text-primary)' }}
-                        >
-                            Bu Konuda Yardımcı Olamıyoruz
-                        </h2>
-                        <p
-                            className="text-base leading-relaxed"
-                            style={{ color: 'var(--text-secondary)' }}
-                        >
-                            Finansal yatırım tavsiyeleri, tıbbi/ilaç danışmanlığı ve hukuki konularda profesyonel uzmanlık gerektiğinden bu alanlarda öneri sunamıyoruz.
-                        </p>
-                    </div>
-
-                    <div
-                        className="p-4 rounded-xl text-left space-y-2"
-                        style={{ backgroundColor: 'var(--bg-secondary)' }}
-                    >
-                        <p className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
-                            Bunun yerine şunları sorabilirsin:
-                        </p>
-                        <ul className="text-sm space-y-1" style={{ color: 'var(--text-secondary)' }}>
-                            <li>• Kariyer ve iş değişikliği kararları</li>
-                            <li>• Ebeveynlik ve çocuk yetiştirme</li>
-                            <li>• İlişki ve sosyal hayat</li>
-                            <li>• Eğitim ve kişisel gelişim</li>
-                            <li>• Yaşam tarzı değişiklikleri</li>
-                        </ul>
-                    </div>
-
-                    <button
-                        onClick={onBack}
-                        className="w-full py-4 rounded-xl font-semibold transition-all hover:opacity-90"
-                        style={{
-                            backgroundColor: 'var(--coral-primary)',
-                            color: 'white'
-                        }}
-                    >
-                        Farklı Bir Konu Dene
-                    </button>
-                </div>
-            </div>
-        );
+        return <BlockedTopicsScreen onBack={onBack} />;
     }
 
     if (!currentQuestion) {

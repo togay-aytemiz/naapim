@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Sparkles, Brain, Users, Shield, Lightbulb, PenLine, MessagesSquare, X } from 'lucide-react';
 
 interface HomeScreenProps {
     onContinue: (input: string) => void;
@@ -104,6 +105,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
     const [showCodeEntry, setShowCodeEntry] = useState(false);
     const [codeInput, setCodeInput] = useState('');
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showAIModal, setShowAIModal] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Sync isDarkMode with document's dark class
@@ -252,6 +254,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                 <div className="w-full max-w-lg">
                     {/* Hero text */}
                     <div className="text-center mb-8">
+                        {/* AI Badge */}
+                        <button
+                            onClick={() => setShowAIModal(true)}
+                            className="animate-shimmer inline-flex items-center gap-1.5 px-3 py-1.5 mb-4 rounded-full transition-all duration-200 hover:scale-105 cursor-pointer"
+                            style={{
+                                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+                                border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)'}`,
+                                fontSize: '0.7rem',
+                                fontWeight: 400
+                            }}
+                        >
+                            <Sparkles className="w-3 h-3" fill="currentColor" />
+                            <span>naapim AI neden farklı?</span>
+                        </button>
+
                         <h1 className={`text-2xl md:text-3xl font-semibold mb-3 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
                             Karar vermekte zorlanıyor musun?
                         </h1>
@@ -386,6 +404,264 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                     )}
                 </div>
             </footer>
+
+            {/* AI Info Modal */}
+            {showAIModal && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+                    onClick={() => setShowAIModal(false)}
+                >
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                        style={{ animation: 'fadeIn 0.3s ease-out' }}
+                    />
+
+                    {/* Modal */}
+                    <div
+                        className="relative w-full max-w-lg rounded-3xl p-6 shadow-2xl my-4 max-h-[90vh] overflow-y-auto"
+                        style={{
+                            backgroundColor: isDarkMode ? 'rgba(23, 23, 23, 0.98)' : 'rgba(255, 255, 255, 0.98)',
+                            border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
+                            animation: 'scaleIn 0.3s ease-out'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close button */}
+                        <button
+                            onClick={() => setShowAIModal(false)}
+                            className="absolute top-4 right-4 p-2 rounded-full transition-all duration-200 hover:scale-110"
+                            style={{
+                                color: 'var(--text-muted)',
+                                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                            }}
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+
+                        {/* Header */}
+                        <div className="flex items-center gap-3 mb-6">
+                            <div
+                                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                style={{ backgroundColor: 'rgba(255, 111, 97, 0.15)' }}
+                            >
+                                <Sparkles className="w-5 h-5" fill="currentColor" style={{ color: 'var(--coral-primary)' }} />
+                            </div>
+                            <h2 className={`text-xl font-bold ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                                naapim AI neden farklı?
+                            </h2>
+                        </div>
+
+                        {/* Feature Cards */}
+                        <div className="space-y-3 mb-6">
+                            {/* Card 1: Personalized Analysis */}
+                            <div
+                                className="p-4 rounded-2xl transition-all duration-500 ease-out"
+                                style={{
+                                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
+                                    border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)'}`,
+                                    animation: 'fadeInUp 0.4s ease-out 0.1s backwards'
+                                }}
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div
+                                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: 'rgba(255, 111, 97, 0.12)' }}
+                                    >
+                                        <Brain className="w-4.5 h-4.5" style={{ color: 'var(--coral-primary)' }} />
+                                    </div>
+                                    <div>
+                                        <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                                            Kişiselleştirilmiş Analiz
+                                        </h3>
+                                        <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                            Kararını, durumuna özel sorularla derinlemesine analiz eder
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Card 2: Community Wisdom */}
+                            <div
+                                className="p-4 rounded-2xl transition-all duration-500 ease-out"
+                                style={{
+                                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
+                                    border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)'}`,
+                                    animation: 'fadeInUp 0.4s ease-out 0.2s backwards'
+                                }}
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div
+                                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: 'rgba(34, 197, 94, 0.12)' }}
+                                    >
+                                        <Users className="w-4.5 h-4.5" style={{ color: '#22c55e' }} />
+                                    </div>
+                                    <div>
+                                        <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                                            Topluluk Bilgeliği
+                                        </h3>
+                                        <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                            Benzer durumdaki insanların ne yaptığını gösterir
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Card 3: Completely Anonymous */}
+                            <div
+                                className="p-4 rounded-2xl transition-all duration-500 ease-out"
+                                style={{
+                                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
+                                    border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)'}`,
+                                    animation: 'fadeInUp 0.4s ease-out 0.3s backwards'
+                                }}
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div
+                                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: 'rgba(251, 191, 36, 0.12)' }}
+                                    >
+                                        <Shield className="w-4.5 h-4.5" style={{ color: '#fbbf24' }} />
+                                    </div>
+                                    <div>
+                                        <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                                            Tamamen Anonim
+                                        </h3>
+                                        <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                            Hesap oluşturmadan, kimliğini paylaşmadan kullanabilirsin
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Card 4: Actionable Insights */}
+                            <div
+                                className="p-4 rounded-2xl transition-all duration-500 ease-out"
+                                style={{
+                                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
+                                    border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)'}`,
+                                    animation: 'fadeInUp 0.4s ease-out 0.4s backwards'
+                                }}
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div
+                                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: 'rgba(99, 102, 241, 0.12)' }}
+                                    >
+                                        <Lightbulb className="w-4.5 h-4.5" style={{ color: '#6366f1' }} />
+                                    </div>
+                                    <div>
+                                        <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                                            Harekete Geçirebilir İçgörüler
+                                        </h3>
+                                        <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                            Sadece "şunu yap" demek yerine, neden'i de açıklar
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* How it works - Process */}
+                        <div
+                            className="pt-4 border-t"
+                            style={{
+                                borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+                                animation: 'fadeInUp 0.4s ease-out 0.5s backwards'
+                            }}
+                        >
+                            <h3 className={`text-xs font-semibold uppercase tracking-wider mb-4 ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                Nasıl Çalışır?
+                            </h3>
+
+                            <div className="flex items-start gap-3">
+                                {/* Step 1 */}
+                                <div className="flex flex-col items-center">
+                                    <div
+                                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                        style={{
+                                            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                                            color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.5)'
+                                        }}
+                                    >
+                                        <PenLine className="w-4 h-4" />
+                                    </div>
+                                    <div className={`w-0.5 h-6 mt-1 ${isDarkMode ? 'bg-white/10' : 'bg-black/10'}`} />
+                                </div>
+                                <div className="flex-1 pb-4">
+                                    <p className={`text-sm font-medium ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`}>
+                                        Kararını yaz
+                                    </p>
+                                    <p className={`text-xs ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                        "İş değiştirmeli miyim?" gibi
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                {/* Step 2 */}
+                                <div className="flex flex-col items-center">
+                                    <div
+                                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                        style={{
+                                            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                                            color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.5)'
+                                        }}
+                                    >
+                                        <Sparkles className="w-4 h-4" />
+                                    </div>
+                                    <div className={`w-0.5 h-6 mt-1 ${isDarkMode ? 'bg-white/10' : 'bg-black/10'}`} />
+                                </div>
+                                <div className="flex-1 pb-4">
+                                    <p className={`text-sm font-medium ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`}>
+                                        AI sana özel sorular seçer
+                                    </p>
+                                    <p className={`text-xs ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                        Uzmanların hazırladığı sorulardan
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                {/* Step 3 */}
+                                <div className="flex flex-col items-center">
+                                    <div
+                                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                        style={{
+                                            backgroundColor: 'rgba(255, 111, 97, 0.15)',
+                                            color: 'var(--coral-primary)'
+                                        }}
+                                    >
+                                        <MessagesSquare className="w-4 h-4" />
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <p className={`text-sm font-medium ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`}>
+                                        Benzer hikayeleri keşfet
+                                    </p>
+                                    <p className={`text-xs ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                        Seninle aynı durumda olan insanların deneyimleri
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CTA Button */}
+                        <button
+                            onClick={() => setShowAIModal(false)}
+                            className="w-full mt-6 py-3.5 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                            style={{
+                                backgroundColor: 'var(--coral-primary)',
+                                boxShadow: '0 4px 20px rgba(255, 111, 97, 0.3)',
+                                animation: 'fadeInUp 0.4s ease-out 0.6s backwards'
+                            }}
+                        >
+                            Anladım, Başlayalım!
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

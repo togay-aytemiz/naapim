@@ -145,6 +145,13 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
             >
                 {text}
             </p>
+            {/* Bottom fade gradient inside card */}
+            <div
+                className="absolute inset-x-0 bottom-0 h-full pointer-events-none rounded-b-2xl"
+                style={{
+                    background: 'linear-gradient(to top, var(--bg-primary) 0%, transparent 60%)'
+                }}
+            />
         </div>
     );
 
@@ -245,38 +252,28 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                         {/* Card 2: Lightly blurred - text visible but not readable */}
                         <FakeBlurredCard text={fakeTexts[0]} />
 
-                        {/* Gradient overlay at bottom */}
-                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--bg-primary)] to-transparent z-20 pointer-events-none" />
-
-                        {/* Lock Icon Overlay - centered on cards */}
-                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+                        {/* CTA Button - Floating Overlay on cards */}
+                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
                             <div
-                                className="p-3 rounded-full shadow-lg"
+                                className="p-2.5 rounded-full shadow-lg mb-2"
                                 style={{ backgroundColor: 'var(--text-primary)' }}
                             >
-                                <svg className="w-5 h-5" style={{ color: 'var(--bg-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-4 h-4" style={{ color: 'var(--bg-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
                             </div>
-                            <p className="mt-2 text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-secondary)' }}>
-                                Sen paylaş, hepsini gör
-                            </p>
+                            <button
+                                onClick={scrollToRecoveryCode}
+                                className="py-3 px-6 rounded-xl font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98] shadow-lg text-sm"
+                                style={{
+                                    backgroundColor: '#FF6F61',
+                                    boxShadow: '0 4px 20px rgba(255, 111, 97, 0.4)'
+                                }}
+                            >
+                                Hikayeni paylaş, diğerlerini gör ↓
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                {/* CTA Button */}
-                <div className="pt-2">
-                    <button
-                        onClick={scrollToRecoveryCode}
-                        className="w-full py-3.5 px-6 rounded-xl font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                        style={{ backgroundColor: '#FF6F61' }}
-                    >
-                        Hikayeni paylaş, diğerlerini gör ↓
-                    </button>
-                    <p className="text-center text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
-                        Takip kodun ile istediğin zaman geri dönebilirsin
-                    </p>
                 </div>
             </div>
         </div>

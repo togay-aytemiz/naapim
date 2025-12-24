@@ -7,7 +7,7 @@ import { ReminderOptIn } from '../components/ReminderOptIn';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Users } from 'lucide-react';
 
 
 // @ts-ignore
@@ -219,7 +219,7 @@ export const ResultPage = () => {
 
     return (
         <div className="flex flex-col items-center pb-16 pt-8">
-            <div className="w-full max-w-lg space-y-12">
+            <div className="w-full max-w-lg space-y-8">
                 {/* User's decision context */}
                 {sessionUserInput && (
                     <div className="pt-4 text-center px-5">
@@ -301,7 +301,7 @@ export const ResultPage = () => {
                                     boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
                                 }}
                             >
-                                <span>👥</span>
+                                <Users className="w-4 h-4" />
                                 <span>Başkaları neler yapıyor? Öğren</span>
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -417,8 +417,6 @@ export const ResultPage = () => {
                     seededOutcomes={seededOutcomes}
                     isLoadingSeeds={isLoadingSeeds}
                 />
-
-                <div className="divider mx-5 opacity-50" />
 
                 <RecoveryCode
                     onReminderSet={handleReminderSet}

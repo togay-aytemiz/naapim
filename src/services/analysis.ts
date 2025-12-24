@@ -1,11 +1,9 @@
 import { RegistryLoader } from './registryLoader';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 import type { Archetype } from '../types/registry';
 
 // @ts-ignore
 import archetypesData from '../../config/registry/archetypes.json';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export type Sentiment = 'positive' | 'cautious' | 'warning' | 'negative' | 'neutral';
 
@@ -47,7 +45,7 @@ export class AnalysisService {
         const archetypeLabel = archetype ? archetype.label : archetypeId;
 
         // Check if Supabase is configured
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn("Supabase not configured, returning mock analysis.");
             return this.getMockAnalysis();
         }
@@ -60,7 +58,7 @@ export class AnalysisService {
             console.log('   Context:', context || '(empty)');
 
             // Call server-side Edge Function
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-analysis`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-analysis`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,13 +109,13 @@ export class AnalysisService {
         archetypeId: string,
         context: string
     ): Promise<{ outcomes: any[] } | null> {
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping seeded outcomes');
             return null;
         }
 
         try {
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-seeded-outcomes`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-seeded-outcomes`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

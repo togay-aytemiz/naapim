@@ -15,5 +15,6 @@ export const supabase = createClient(
 )
 
 export const SUPABASE_FUNCTIONS_URL = `${supabaseUrl}/functions/v1`
+export const SUPABASE_ANON_KEY = supabaseAnonKey || ''
 
 

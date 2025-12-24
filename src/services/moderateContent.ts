@@ -1,5 +1,4 @@
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 export interface ModerationResult {
     approved: boolean;
@@ -16,13 +15,13 @@ export async function moderateContent(text: string): Promise<ModerationResult> {
         }
 
         // Check if Supabase is configured
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping moderation');
             return { approved: true, corrected_text: text };
         }
 
         // Call server-side Edge Function
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/moderate-content`, {
+        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/moderate-content`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { RegistryLoader } from '../services/registryLoader';
 import { ClassificationService } from '../services/classification';
 import { QuestionSelectionService } from '../services/questionSelection';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 // @ts-ignore
 import registryData from '../../config/registry/archetypes.json';
 import type { Archetype } from '../types/registry';
@@ -10,9 +11,6 @@ import type { Archetype } from '../types/registry';
 import { LoadingScreen } from './questionFlow/LoadingScreen';
 import { ClarificationScreen } from './questionFlow/ClarificationScreen';
 import { BlockedTopicsScreen } from './questionFlow/BlockedTopicsScreen';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 
 interface QuestionFlowProps {
@@ -190,12 +188,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     // Save feedback fire-and-forget
     const saveFeedback = useCallback((fieldKey: string, feedback: 'helpful' | 'not_helpful') => {
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !archetypeId) return;
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY || !archetypeId) return;
 
         setQuestionFeedback(prev => ({ ...prev, [fieldKey]: feedback }));
 
         // Fire and forget
-        fetch(`${SUPABASE_URL}/functions/v1/save-question-feedback`, {
+        fetch(`${SUPABASE_FUNCTIONS_URL}/save-question-feedback`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

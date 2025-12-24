@@ -5,6 +5,7 @@ import type { Sentiment } from '../services/analysis';
 import { RegistryLoader } from '../services/registryLoader';
 import { saveOutcome, type FeelingType } from '../services/saveOutcome';
 import { moderateContent } from '../services/moderateContent';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 // Extracted modules
 import { StoryCard } from './returnFlow/StoryCard';
@@ -15,9 +16,6 @@ import {
     moderationMessages
 } from './returnFlow/constants';
 import type { Outcome, SessionData, FlowStep, OutcomeType } from './returnFlow/types';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const ReturnFlow: React.FC = () => {
     const navigate = useNavigate();
@@ -89,7 +87,7 @@ export const ReturnFlow: React.FC = () => {
         setError(null);
 
         try {
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/fetch-analysis`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/fetch-analysis`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,7 +282,7 @@ export const ReturnFlow: React.FC = () => {
                     .join(', ')
                 : '';
 
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/fetch-community-stories`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/fetch-community-stories`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import type { Archetype } from '../types/registry';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 // @ts-ignore
 import archetypesData from '../../config/registry/archetypes.json';
@@ -10,9 +11,6 @@ import categoriesData from '../../config/registry/categories.json';
 import fieldsData from '../../config/registry/fields.json';
 // @ts-ignore
 import optionSetsData from '../../config/registry/option_sets.json';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 interface Field {
     key: string;
@@ -99,7 +97,7 @@ export class QuestionSelectionService {
         }
 
         // Check if Supabase is configured
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, returning first 7 fields');
             return {
                 selectedFieldKeys: availableFields.slice(0, 7).map(f => f.key),
@@ -108,7 +106,7 @@ export class QuestionSelectionService {
         }
 
         try {
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/select-questions`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/select-questions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

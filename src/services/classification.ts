@@ -1,7 +1,5 @@
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 import type { Archetype } from '../types/registry';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export interface ClassificationResult {
     archetype_id: string;
@@ -18,7 +16,7 @@ export class ClassificationService {
      */
     static async classifyUserQuestion(userQuestion: string, archetypes: Archetype[]): Promise<ClassificationResult> {
         // Check if Supabase is configured
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn("Supabase not configured. Returning fallback.");
             return {
                 archetype_id: archetypes[0]?.id || 'career_decisions',
@@ -29,7 +27,7 @@ export class ClassificationService {
         }
 
         try {
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/classify-question`, {
+            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/classify-question`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

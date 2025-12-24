@@ -1,5 +1,4 @@
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 interface FetchAnalysisResult {
     session_id: string;
@@ -17,17 +16,17 @@ interface FetchAnalysisResult {
 }
 
 export async function fetchAnalysisByCode(code: string): Promise<FetchAnalysisResult | null> {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
         console.error('Supabase env vars not set');
         return null;
     }
 
     try {
-        const response = await fetch(`${supabaseUrl}/functions/v1/fetch-analysis`, {
+        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/fetch-analysis`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             },
             body: JSON.stringify({ code }),
         });

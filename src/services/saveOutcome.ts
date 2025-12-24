@@ -1,5 +1,4 @@
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 export type OutcomeType = 'decided' | 'thinking' | 'cancelled';
 export type FeelingType = 'happy' | 'neutral' | 'regret' | 'uncertain';
@@ -22,7 +21,7 @@ export interface SaveOutcomeResponse {
 
 export async function saveOutcome(params: SaveOutcomeParams): Promise<SaveOutcomeResponse> {
     try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/save-outcome`, {
+        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/save-outcome`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -448,7 +448,11 @@ export const ResultPage = () => {
                 {!reminderAlreadySet && showReminderOptIn && (
                     <>
                         <div className="divider mx-5 opacity-50" />
-                        <ReminderOptIn />
+                        <ReminderOptIn
+                            code={code}
+                            userQuestion={sessionUserInput}
+                            onReminderSet={handleReminderSet}
+                        />
                     </>
                 )}
 

@@ -21,18 +21,19 @@ const loadingMessages = [
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex, isReady, onStart }) => {
     return (
         <>
-            <div className="flex flex-col items-center justify-start min-h-[60vh] px-5 pt-8 animate-in fade-in duration-700">
+            <div className="flex flex-col items-center justify-start px-5 pt-8 pb-10 animate-in fade-in duration-700">
                 <div className="max-w-md w-full space-y-6">
 
                     {/* Main Info Cards */}
                     <div className="space-y-4">
                         {/* Card 1: Expert Questions */}
                         <div
-                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-1000 ease-out"
                             style={{
                                 backgroundColor: 'var(--bg-secondary)',
                                 border: '1px solid var(--border-primary)',
-                                animationDelay: '0ms'
+                                animationDelay: '200ms',
+                                animationFillMode: 'backwards'
                             }}
                         >
                             <div className="flex items-center gap-3">
@@ -54,11 +55,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex, isRe
 
                         {/* Card 2: AI Selection */}
                         <div
-                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-1000 ease-out"
                             style={{
                                 backgroundColor: 'var(--bg-secondary)',
                                 border: '1px solid var(--border-primary)',
-                                animationDelay: '150ms'
+                                animationDelay: '600ms',
+                                animationFillMode: 'backwards'
                             }}
                         >
                             <div className="flex items-center gap-3">
@@ -80,11 +82,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex, isRe
 
                         {/* Card 3: Community Matching */}
                         <div
-                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                            className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-1000 ease-out"
                             style={{
                                 backgroundColor: 'var(--bg-secondary)',
                                 border: '1px solid var(--border-primary)',
-                                animationDelay: '300ms'
+                                animationDelay: '1000ms',
+                                animationFillMode: 'backwards'
                             }}
                         >
                             <div className="flex items-center gap-3">
@@ -124,15 +127,34 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex, isRe
                         </div>
                     )}
 
-                    {/* Spacer for fixed button */}
-                    {isReady && <div className="h-24" />}
+                    {/* Desktop Button - Inline (under cards) */}
+                    {isReady && (
+                        <div className="hidden md:block pt-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                            <button
+                                onClick={onStart}
+                                className="w-full py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                                style={{
+                                    backgroundColor: 'var(--coral-primary)',
+                                    boxShadow: '0 4px 20px rgba(255, 107, 107, 0.35)'
+                                }}
+                            >
+                                <span className="flex items-center justify-center gap-2">
+                                    <span>✨</span>
+                                    <span>Sorular Hazır — Başlayalım!</span>
+                                </span>
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Spacer for mobile fixed button only */}
+                    {isReady && <div className="h-24 md:hidden" />}
                 </div>
             </div>
 
-            {/* Floating CTA Button - Fixed at bottom (OUTSIDE main content) */}
+            {/* Mobile Button - Fixed at bottom */}
             {isReady && (
                 <div
-                    className="fixed bottom-0 left-0 right-0 p-4 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500"
+                    className="md:hidden fixed bottom-0 left-0 right-0 p-4 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500"
                     style={{
                         paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0))',
                         background: 'linear-gradient(to top, var(--bg-primary) 70%, transparent)'

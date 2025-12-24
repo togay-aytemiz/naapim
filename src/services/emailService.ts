@@ -33,7 +33,7 @@ export async function sendCodeEmail(email: string, code: string, userQuestion: s
 
         if (!response.ok) {
             console.error('Failed to send code email:', result);
-            return { success: false, error: result.error || 'Failed to send email' };
+            return { success: false, error: result.message || result.error || 'Failed to send email' };
         }
 
         return { success: true, message_id: result.message_id };
@@ -55,7 +55,8 @@ export async function scheduleReminder(
     code: string,
     userQuestion: string,
     sessionId?: string,
-    followupQuestion?: string
+    followupQuestion?: string,
+    scheduleTime: 'tomorrow' | '1_week' | '2_weeks' = 'tomorrow'
 ): Promise<SendEmailResponse> {
     try {
         const response = await fetch(`${FUNCTIONS_URL}/send-email`, {
@@ -70,7 +71,8 @@ export async function scheduleReminder(
                     code,
                     user_question: userQuestion,
                     session_id: sessionId,
-                    followup_question: followupQuestion
+                    followup_question: followupQuestion,
+                    schedule_time: scheduleTime
                 },
             }),
         });

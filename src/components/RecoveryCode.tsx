@@ -21,6 +21,7 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
     const [showSendOptions, setShowSendOptions] = useState(false);
     const [email, setEmail] = useState('');
     const [sendReminder, setSendReminder] = useState(true);
+    const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('tomorrow');
     const [sent, setSent] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -57,11 +58,23 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
 
                 if (result.success) {
                     setSent(true);
-                    if (sendReminder && onReminderSet) {
-                        onReminderSet(email);
+                    if (sendReminder) {
+                        if (onReminderSet) onReminderSet(email);
+                        // Schedule reminder in background
+                        // Import scheduleReminder separately or move import to top if not present
+                        import('../services/emailService').then(({ scheduleReminder }) => {
+                            scheduleReminder(
+                                email,
+                                code,
+                                userQuestion || '',
+                                undefined,
+                                undefined,
+                                reminderTime
+                            ).catch(err => console.error('Failed to schedule reminder:', err));
+                        });
                     }
                 } else {
-                    setError('E-posta gönderilemedi. Lütfen tekrar dene.');
+                    setError(result.error || 'E-posta gönderilemedi.');
                 }
             } catch (err) {
                 console.error('Email send failed:', err);
@@ -207,7 +220,7 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                         </div>
 
                         {/* Reminder checkbox with trust messaging */}
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <label className="flex items-center gap-3 cursor-pointer group">
                                 <div
                                     onClick={() => setSendReminder(!sendReminder)}
@@ -223,16 +236,36 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                         </svg>
                                     )}
                                 </div>
-                                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                                     Geri dönmemi hatırlat
                                 </span>
                             </label>
+
+                            {sendReminder && (
+                                <div className="ml-8 grid grid-cols-3 gap-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                                    {[
+                                        { id: 'tomorrow', label: 'Yarın' },
+                                        { id: '1_week', label: '1 Hafta' },
+                                        { id: '2_weeks', label: '2 Hafta' }
+                                    ].map((option) => (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => setReminderTime(option.id as any)}
+                                            className={`px-2 py-2 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
+                                                ? 'border-[var(--success-accent)] bg-[var(--success-bg)] text-[var(--success-text)]'
+                                                : 'border-[var(--border-primary)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
+                                                }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Trust messaging */}
                             <p className="text-xs ml-8" style={{ color: 'var(--text-muted)' }}>
                                 🔒 E-postan sadece bu hatırlatma için kullanılacak. Pazarlama yok, 3. taraflarla paylaşım yok.
                             </p>
-
                         </div>
 
                         {error && (

@@ -14,9 +14,10 @@ interface RecoveryCodeProps {
     initialCode?: string;
     onStartInteraction?: () => void;
     userQuestion?: string;
+    seededOutcomes?: any[]; // Added prop
 }
 
-export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion }) => {
+export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion, seededOutcomes }) => {
     const [copied, setCopied] = useState(false);
     const [showSendOptions, setShowSendOptions] = useState(false);
     const [email, setEmail] = useState('');
@@ -69,7 +70,8 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                 userQuestion || '',
                                 undefined,
                                 undefined,
-                                reminderTime
+                                reminderTime,
+                                seededOutcomes // Pass the dynamic social proof data
                             ).catch(err => console.error('Failed to schedule reminder:', err));
                         });
                     }
@@ -281,25 +283,42 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                 {/* Success state */}
                 {sent && (
                     <div
-                        className="animate-in text-center p-4 rounded-xl space-y-3"
-                        style={{ backgroundColor: 'var(--success-bg)' }}
+                        className="animate-in text-center p-6 rounded-2xl space-y-4 shadow-sm border"
+                        style={{
+                            backgroundColor: 'var(--bg-secondary)',
+                            borderColor: 'var(--success-accent)'
+                        }}
                     >
-                        <div>
-                            <p className="font-medium" style={{ color: 'var(--success-text)' }}>
-                                ✓ Kod gönderildi!
-                            </p>
-                            <p className="text-sm mt-2 leading-relaxed" style={{ color: 'var(--success-text)' }}>
-                                {sendReminder ? (
-                                    <>
-                                        Yarın itibariyle dönüp paylaşabilir ve başkalarının fikirlerini öğrenebilirsin.<br />
-                                        <strong>{reminderTime === 'tomorrow' ? 'Yarın' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'}</strong> sana bunu hatırlatacağız.
-                                    </>
-                                ) : (
-                                    <>
-                                        Yarın itibariyle bu kodla dönüp paylaşabilir ve başkalarının fikirlerini öğrenebilirsin.
-                                    </>
-                                )}
-                            </p>
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--success-bg)' }}>
+                                <span className="text-2xl">🚀</span>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+                                    E-posta yola çıktı!
+                                </h4>
+                                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                                    <strong>{email}</strong> adresine takip kodunu gönderdik.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="text-sm leading-relaxed p-4 rounded-xl" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', color: 'var(--success-text)' }}>
+                            {sendReminder ? (
+                                <>
+                                    <p className="font-medium mb-1">Hatırlatman Kuruldu ✨</p>
+                                    <p className="opacity-90">
+                                        Kararını verip dönmen için <strong>{reminderTime === 'tomorrow' ? 'Yarın sabah' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'}</strong> sana küçük bir hatırlatma yapacağız.
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="font-medium mb-1">Kodun Güvende 🔑</p>
+                                    <p className="opacity-90">
+                                        Bu kodla dilediğin zaman dönüp kararın paylaşabilir ve başkalarının deneyimlerini görebilirsin.
+                                    </p>
+                                </>
+                            )}
                         </div>
 
                         {/* Late Reminder Option - If they didn't set one initially */}
@@ -337,7 +356,8 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                                     userQuestion || '',
                                                     undefined,
                                                     undefined,
-                                                    reminderTime
+                                                    reminderTime,
+                                                    seededOutcomes
                                                 ).catch(console.error);
                                             });
                                         }}

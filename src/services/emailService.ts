@@ -58,7 +58,8 @@ export async function scheduleReminder(
     userQuestion: string,
     sessionId?: string,
     followupQuestion?: string,
-    scheduleTime: 'tomorrow' | '1_week' | '2_weeks' = 'tomorrow'
+    scheduleTime: 'tomorrow' | '1_week' | '2_weeks' = 'tomorrow',
+    socialProofData?: any // Added dynamic social proof support
 ): Promise<SendEmailResponse> {
     try {
         const response = await fetch(`${FUNCTIONS_URL}/send-email`, {
@@ -68,14 +69,15 @@ export async function scheduleReminder(
                 'Authorization': `Bearer ${ANON_KEY}`,
             },
             body: JSON.stringify({
-                type: 'reminder_14day',
+                type: 'scheduled_reminder', // Use the new type we standardized
                 to: email,
                 data: {
                     code,
                     user_question: userQuestion,
                     session_id: sessionId,
                     followup_question: followupQuestion,
-                    schedule_time: scheduleTime
+                    schedule_time: scheduleTime,
+                    social_proof_data: socialProofData // Pass data to backend
                 },
             }),
         });

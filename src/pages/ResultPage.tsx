@@ -443,6 +443,7 @@ export const ResultPage = () => {
                     initialCode={code}
                     onStartInteraction={() => setShowReminderOptIn(false)}
                     userQuestion={sessionUserInput}
+                    seededOutcomes={seededOutcomes} // Pass data
                 />
 
                 {!reminderAlreadySet && showReminderOptIn && (

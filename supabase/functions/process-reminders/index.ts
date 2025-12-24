@@ -15,6 +15,8 @@ interface ReminderRow {
     reminder_type: string;
     code: string;
     user_question: string;
+    followup_question?: string; // Added field
+    social_proof_data?: any[]; // Dynamic social proof
     status: string;
 }
 
@@ -82,9 +84,72 @@ function wrapEmailContent(content: string): string {
     `.trim();
 }
 
+// Helper to map outcomes to styles (matches Frontend)
+const outcomeStyles: Record<string, { label: string; color: string; icon: string }> = {
+    decided: { label: 'Karar verdi', color: '#059669', icon: '✓' },
+    cancelled: { label: 'Vazgeçti', color: '#ef4444', icon: '✕' },
+    thinking: { label: 'Düşünüyor', color: '#d97706', icon: '⏳' }
+};
+
+const feelingEmojis: Record<string, string> = {
+    happy: '😊', neutral: '😐', uncertain: '🤔', regret: '😔'
+};
+
+function renderSocialProofCards(socialProofData?: any[]): string {
+    // Fallback to static if no data provided
+    if (!socialProofData || !Array.isArray(socialProofData) || socialProofData.length === 0) {
+        return `
+             <!-- Static Fallback Card 1 -->
+            <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #ef4444; display: flex; align-items: center; gap: 6px;">
+                    ✕ Vazgeçti <span style="font-size: 16px; margin-left: 4px;">😐</span>
+                </div>
+                <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
+                    <p style="margin: 0;">Uzun süre düşündüm ama sonunda almaktan vazgeçtim çünkü...</p>
+                </div>
+            </div>
+            <!-- Static Fallback Card 2 -->
+             <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #22c55e; display: flex; align-items: center; gap: 6px;">
+                    ✓ Satın Aldı <span style="font-size: 16px; margin-left: 4px;">🚀</span>
+                </div>
+                <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
+                    <p style="margin: 0;">Kesinlikle değer, hayatımı o kadar kolaylaştırdı ki anlatamam...</p>
+                </div>
+            </div>
+       `;
+    }
+
+    // Render dynamic cards
+    // Only showing the first one fully, maybe second one defined or static fallback for second?
+    // Let's render what we have. Frontend sends array of outcomes.
+
+    // We limit to 2 cards max for email
+    const cardsToShow = socialProofData.slice(0, 2);
+
+    return cardsToShow.map(outcome => {
+        const style = outcomeStyles[outcome.outcome_type] || outcomeStyles.decided;
+        const emoji = feelingEmojis[outcome.feeling] || '😊';
+
+        // Truncate text for email
+        const text = outcome.outcome_text.length > 80 ? outcome.outcome_text.substring(0, 80) + '...' : outcome.outcome_text;
+
+        return `
+            <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: ${style.color}; display: flex; align-items: center; gap: 6px;">
+                    ${style.icon} ${style.label} <span style="font-size: 16px; margin-left: 4px;">${emoji}</span>
+                </div>
+                <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
+                    <p style="margin: 0;">${text}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
 function generateReminderContent(data: ReminderRow): { subject: string; html: string; text: string } {
     const returnUrl = data.code ? `https://naapim.com/return?code=${data.code}` : 'https://naapim.com/return';
-    const headline = "Kararın ne oldu?";
+    const headline = data.followup_question || "Kararın ne oldu?";
 
     const content = `
         <h1 class="text-primary" style="font-size: 22px; font-weight: 600; color: #1a1a1a; margin: 0 0 16px 0;">
@@ -107,25 +172,7 @@ function generateReminderContent(data: ReminderRow): { subject: string; html: st
             <h3 style="color: #1a1a1a; margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Başkaları ne yaşıyor?</h3>
             <p style="color: #888888; font-size: 12px; margin: 0 0 20px 0;">Benzer kararlar veren insanların deneyimleri</p>
             
-            <!-- Card 1 -->
-            <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #ef4444; display: flex; align-items: center; gap: 6px;">
-                    ✕ Vazgeçti <span style="font-size: 16px; margin-left: 4px;">😐</span>
-                </div>
-                <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
-                    <p style="margin: 0;">Uzun süre düşündüm ama sonunda almaktan vazgeçtim çünkü...</p>
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #22c55e; display: flex; align-items: center; gap: 6px;">
-                    ✓ Satın Aldı <span style="font-size: 16px; margin-left: 4px;">🚀</span>
-                </div>
-                <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
-                    <p style="margin: 0;">Kesinlikle değer, hayatımı o kadar kolaylaştırdı ki anlatamam...</p>
-                </div>
-            </div>
+            ${renderSocialProofCards(data.social_proof_data)}
         </div>
 
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">

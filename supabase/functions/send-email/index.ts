@@ -307,11 +307,13 @@ Deno.serve(async (req) => {
                 .from('email_reminders')
                 .insert({
                     email: to,
-                    reminder_type: type,
+                    reminder_type: 'scheduled_reminder', // Clean name
                     schedule_time: data.schedule_time,
                     scheduled_at: scheduledAt.toISOString(),
                     code: data.code,
                     user_question: data.user_question,
+                    followup_question: data.followup_question, // Save the custom headline
+                    social_proof_data: data.social_proof_data, // Save social proof
                     status: 'pending'
                 })
 

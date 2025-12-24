@@ -24,12 +24,23 @@ interface QuestionFlowProps {
 }
 
 export const QuestionFlow: React.FC<QuestionFlowProps> = ({
-    userInput,
+    userInput: propUserInput,
     archetypeId: initialArchetypeId,
     selectedFieldKeys: initialSelectedFieldKeys,
     onComplete,
     onBack
 }) => {
+    // Persist userInput to sessionStorage and retrieve on refresh
+    const [userInput] = useState<string | undefined>(() => {
+        if (propUserInput) {
+            // Save to sessionStorage when received from props
+            sessionStorage.setItem('questionFlow_userInput', propUserInput);
+            return propUserInput;
+        }
+        // Try to retrieve from sessionStorage on refresh
+        return sessionStorage.getItem('questionFlow_userInput') || undefined;
+    });
+
     // State for internal classification results
     const [archetypeId, setArchetypeId] = useState<string | undefined>(initialArchetypeId);
     const [selectedFieldKeys, setSelectedFieldKeys] = useState<string[] | undefined>(initialSelectedFieldKeys);
@@ -46,6 +57,14 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     // Track which userInput has been classified to prevent duplicates
     const classifiedInputRef = useRef<string | null>(null);
+
+    // Redirect to home if no userInput (even after checking sessionStorage)
+    useEffect(() => {
+        if (!userInput) {
+            onBack();
+        }
+    }, [userInput, onBack]);
+
 
     useEffect(() => {
         // If we have an initial ID, ensure state matches (handle prop updates)

@@ -116,8 +116,8 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                     </p>
                     <button
                         onClick={() => setShowWhyTomorrow(true)}
-                        className="mt-1 text-xs underline hover:no-underline"
-                        style={{ color: 'var(--text-muted)' }}
+                        className="mt-1 text-sm underline hover:no-underline"
+                        style={{ color: 'var(--coral-primary)' }}
                     >
                         Neden yarın?
                     </button>

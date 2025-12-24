@@ -18,7 +18,7 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('2_weeks');
+    const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('1_week');
     const [error, setError] = useState<string | null>(null);
 
     const isEmailValid = isValidEmail(email);
@@ -96,8 +96,8 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
                             key={option.id}
                             onClick={() => setReminderTime(option.id as any)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
-                                    ? 'border-[var(--coral-primary)] bg-[var(--coral-primary)] text-white'
-                                    : 'border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
+                                ? 'border-[var(--coral-primary)] bg-[var(--coral-primary)] text-white'
+                                : 'border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
                                 }`}
                         >
                             {option.label}

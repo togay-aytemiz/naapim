@@ -12,7 +12,7 @@ interface SendEmailResponse {
 /**
  * Send the session code to user's email
  */
-export async function sendCodeEmail(email: string, code: string): Promise<SendEmailResponse> {
+export async function sendCodeEmail(email: string, code: string, userQuestion: string): Promise<SendEmailResponse> {
     try {
         const response = await fetch(`${FUNCTIONS_URL}/send-email`, {
             method: 'POST',
@@ -22,7 +22,10 @@ export async function sendCodeEmail(email: string, code: string): Promise<SendEm
             body: JSON.stringify({
                 type: 'code_delivery',
                 to: email,
-                data: { code },
+                data: {
+                    code,
+                    user_question: userQuestion
+                },
             }),
         });
 

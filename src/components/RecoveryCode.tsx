@@ -7,18 +7,23 @@ const isValidEmail = (email: string): boolean => {
     return emailRegex.test(email);
 };
 
+import { sendCodeEmail } from '../services/emailService';
+
 interface RecoveryCodeProps {
     onReminderSet?: (email: string) => void;
     initialCode?: string;
     onStartInteraction?: () => void;
+    userQuestion?: string;
 }
 
-export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction }) => {
+export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion }) => {
     const [copied, setCopied] = useState(false);
     const [showSendOptions, setShowSendOptions] = useState(false);
     const [email, setEmail] = useState('');
     const [sendReminder, setSendReminder] = useState(true);
     const [sent, setSent] = useState(false);
+    const [isSending, setIsSending] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [showWhyTomorrow, setShowWhyTomorrow] = useState(false);
 
     const code = initialCode || 'NY-48K2-P7';
@@ -41,11 +46,28 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
         setShowSendOptions(!showSendOptions);
     };
 
-    const handleSend = () => {
-        if (isEmailValid) {
-            setSent(true);
-            if (sendReminder && onReminderSet) {
-                onReminderSet(email);
+    const handleSend = async () => {
+        if (isEmailValid && !isSending) {
+            setIsSending(true);
+            setError(null);
+
+            try {
+                // Send code email (which now includes the question context)
+                const result = await sendCodeEmail(email, code, userQuestion || '');
+
+                if (result.success) {
+                    setSent(true);
+                    if (sendReminder && onReminderSet) {
+                        onReminderSet(email);
+                    }
+                } else {
+                    setError('E-posta gönderilemedi. Lütfen tekrar dene.');
+                }
+            } catch (err) {
+                console.error('Email send failed:', err);
+                setError('Bir hata oluştu.');
+            } finally {
+                setIsSending(false);
             }
         }
     };
@@ -171,15 +193,16 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                             />
                             <button
                                 onClick={handleSend}
-                                disabled={!isEmailValid}
-                                className="px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200"
+                                disabled={!isEmailValid || isSending}
+                                className="px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center justify-center min-w-[100px]"
                                 style={{
-                                    backgroundColor: isEmailValid ? 'var(--btn-primary-bg)' : 'var(--btn-disabled-bg)',
-                                    color: isEmailValid ? 'var(--btn-primary-text)' : 'var(--btn-disabled-text)',
-                                    cursor: isEmailValid ? 'pointer' : 'not-allowed'
+                                    backgroundColor: isEmailValid && !isSending ? 'var(--btn-primary-bg)' : 'var(--btn-disabled-bg)',
+                                    color: isEmailValid && !isSending ? 'var(--btn-primary-text)' : 'var(--btn-disabled-text)',
+                                    cursor: isEmailValid && !isSending ? 'pointer' : 'not-allowed',
+                                    opacity: isSending ? 0.7 : 1
                                 }}
                             >
-                                Gönder
+                                {isSending ? '...' : 'Gönder'}
                             </button>
                         </div>
 
@@ -209,7 +232,14 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                             <p className="text-xs ml-8" style={{ color: 'var(--text-muted)' }}>
                                 🔒 E-postan sadece bu hatırlatma için kullanılacak. Pazarlama yok, 3. taraflarla paylaşım yok.
                             </p>
+
                         </div>
+
+                        {error && (
+                            <p className="text-sm text-center" style={{ color: 'var(--error-accent, #ef4444)' }}>
+                                {error}
+                            </p>
+                        )}
                     </div>
                 )}
 

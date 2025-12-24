@@ -58,9 +58,10 @@ function wrapEmailContent(content: string): string {
                     <!-- Logo Header -->
                     <tr>
                         <td style="padding: 32px 32px 24px 32px;">
-                            <a href="https://naapim.com" style="text-decoration: none;">
-                                <span class="text-primary" style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -1px; color: #1a1a1a; font-feature-settings: 'ss01' 1;">naapim</span><span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 32px; color: #ff6b6b;">?</span>
-                            </a>
+                            <!-- Light mode logo -->
+                            <img class="logo-light" src="https://naapim.com/logo.png" alt="naapim" width="120" height="auto" style="display: block; border: 0;">
+                            <!-- Dark mode logo (hidden by default) -->
+                            <img class="logo-dark" src="https://naapim.com/logo-beyaz.png" alt="naapim" width="120" height="auto" style="display: none; border: 0;">
                         </td>
                     </tr>
                     <!-- Content -->
@@ -97,6 +98,11 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
                 <h1 class="text-primary" style="font-size: 22px; font-weight: 600; color: #1a1a1a; margin: 0 0 16px 0;">
                     Takip Kodun 🔑
                 </h1>
+                <div class="quote-box" style="background-color: #fff8f0; padding: 16px 20px; border-left: 4px solid #ff6b6b; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
+                    <p class="text-primary" style="font-size: 15px; font-style: italic; color: #1a1a1a; margin: 0; line-height: 1.5;">
+                        "${data.user_question}"
+                    </p>
+                </div>
                 <p class="text-secondary" style="font-size: 15px; line-height: 1.6; color: #4a4a4a; margin: 0 0 24px 0;">
                     Bu anahtarla <strong>yarından itibaren</strong> kararına geri dönebilir ve başkalarının seninle aynı durumda neler düşündüğünü görebilirsin:
                 </p>

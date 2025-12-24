@@ -442,6 +442,7 @@ export const ResultPage = () => {
                     onReminderSet={handleReminderSet}
                     initialCode={code}
                     onStartInteraction={() => setShowReminderOptIn(false)}
+                    userQuestion={sessionUserInput}
                 />
 
                 {!reminderAlreadySet && showReminderOptIn && (

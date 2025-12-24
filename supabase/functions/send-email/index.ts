@@ -10,7 +10,7 @@ const corsHeaders = {
 }
 
 interface SendEmailRequest {
-    type: 'code_delivery' | 'reminder_14day';
+    type: 'code_delivery' | 'reminder_14day' | 'scheduled_reminder'; // Added new type
     to: string;
     data: {
         code?: string;
@@ -18,6 +18,7 @@ interface SendEmailRequest {
         session_id?: string;
         followup_question?: string;
         schedule_time?: 'tomorrow' | '1_week' | '2_weeks';
+        social_proof_data?: any[]; // Added for dynamic social proof
     };
 }
 
@@ -136,6 +137,7 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
             };
         }
 
+        case 'scheduled_reminder': // Fall through (same as reminder_14day)
         case 'reminder_14day': {
             const headline = data.followup_question || "Kararın ne oldu?";
 

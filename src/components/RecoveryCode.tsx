@@ -15,9 +15,20 @@ interface RecoveryCodeProps {
     onStartInteraction?: () => void;
     userQuestion?: string;
     seededOutcomes?: any[]; // Added prop
+    followupQuestion?: string; // Added prop
 }
 
-export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion, seededOutcomes }) => {
+// Helper to truncate social proof for email storage (5-6 words max)
+function truncateForEmail(outcomes: any[] | undefined): any[] | undefined {
+    if (!outcomes || !Array.isArray(outcomes)) return undefined;
+    return outcomes.slice(0, 2).map(o => ({
+        outcome_type: o.outcome_type,
+        feeling: o.feeling,
+        outcome_text: o.outcome_text?.split(' ').slice(0, 6).join(' ') + '...'
+    }));
+}
+
+export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion, seededOutcomes, followupQuestion }) => {
     const [copied, setCopied] = useState(false);
     const [showSendOptions, setShowSendOptions] = useState(false);
     const [email, setEmail] = useState('');
@@ -64,14 +75,15 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                         // Schedule reminder in background
                         // Import scheduleReminder separately or move import to top if not present
                         import('../services/emailService').then(({ scheduleReminder }) => {
+                            const truncatedProof = truncateForEmail(seededOutcomes);
                             scheduleReminder(
                                 email,
                                 code,
                                 userQuestion || '',
                                 undefined,
-                                undefined,
+                                followupQuestion, // Pass the followup question
                                 reminderTime,
-                                seededOutcomes // Pass the dynamic social proof data
+                                truncatedProof // Pass truncated dynamic social proof data
                             ).catch(err => console.error('Failed to schedule reminder:', err));
                         });
                     }
@@ -350,14 +362,15 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                         onClick={() => {
                                             setSendReminder(true);
                                             import('../services/emailService').then(({ scheduleReminder }) => {
+                                                const truncatedProof = truncateForEmail(seededOutcomes);
                                                 scheduleReminder(
                                                     email,
                                                     code,
                                                     userQuestion || '',
                                                     undefined,
-                                                    undefined,
+                                                    followupQuestion, // Pass the followup question
                                                     reminderTime,
-                                                    seededOutcomes
+                                                    truncatedProof // Pass truncated data
                                                 ).catch(console.error);
                                             });
                                         }}

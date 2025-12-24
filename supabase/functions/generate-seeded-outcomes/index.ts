@@ -134,7 +134,31 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
 - KÖTÜ: Her cümle "Sonunda..." ile başlıyor - BUNU YAPMA!
 - Her hikayenin başlangıcı FARKLI olmalı.`
 
-        const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        // Helper: Retry fetch with exponential backoff
+        const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3): Promise<Response> => {
+            let lastError: Error | null = null;
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok || response.status < 500) {
+                        return response; // Success or client error (don't retry 4xx)
+                    }
+                    // 5xx error - retry
+                    console.warn(`Attempt ${attempt + 1} failed with ${response.status}, retrying...`);
+                    lastError = new Error(`HTTP ${response.status}`);
+                } catch (err) {
+                    console.warn(`Attempt ${attempt + 1} failed with network error, retrying...`);
+                    lastError = err instanceof Error ? err : new Error(String(err));
+                }
+                // Wait before retry (exponential backoff: 1s, 2s, 4s)
+                if (attempt < maxRetries - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
+                }
+            }
+            throw lastError || new Error('Max retries exceeded');
+        };
+
+        const openaiResponse = await fetchWithRetry('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,7 +177,7 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
                 max_tokens: 1500,
                 response_format: { type: 'json_object' }
             })
-        })
+        });
 
         if (!openaiResponse.ok) {
             const errorText = await openaiResponse.text()
@@ -168,7 +192,13 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
             throw new Error('No content in response')
         }
 
-        const generatedData = JSON.parse(content)
+        let generatedData;
+        try {
+            generatedData = JSON.parse(content);
+        } catch (parseErr) {
+            console.error('Failed to parse OpenAI response:', content);
+            throw new Error('Invalid JSON in OpenAI response');
+        }
         const outcomes = generatedData.outcomes || []
 
         // Save to database

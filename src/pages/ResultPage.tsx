@@ -444,15 +444,18 @@ export const ResultPage = () => {
                     onStartInteraction={() => setShowReminderOptIn(false)}
                     userQuestion={sessionUserInput}
                     seededOutcomes={seededOutcomes} // Pass data
+                    followupQuestion={analysis?.followup_question} // Pass followup
                 />
 
-                {!reminderAlreadySet && showReminderOptIn && (
+                {showReminderOptIn && (
                     <>
                         <div className="divider mx-5 opacity-50" />
                         <ReminderOptIn
                             code={code}
                             userQuestion={sessionUserInput}
                             onReminderSet={handleReminderSet}
+                            seededOutcomes={seededOutcomes} // Pass data
+                            followupQuestion={analysis?.followup_question} // Pass followup
                         />
                     </>
                 )}

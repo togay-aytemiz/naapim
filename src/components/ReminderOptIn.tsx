@@ -12,9 +12,21 @@ interface ReminderOptInProps {
     code?: string;
     userQuestion?: string;
     onReminderSet?: (email: string) => void;
+    seededOutcomes?: any[]; // Added prop
+    followupQuestion?: string; // Added prop
 }
 
-export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion, onReminderSet }) => {
+// Helper to truncate social proof for email storage (5-6 words max)
+function truncateForEmail(outcomes: any[] | undefined): any[] | undefined {
+    if (!outcomes || !Array.isArray(outcomes)) return undefined;
+    return outcomes.slice(0, 2).map(o => ({
+        outcome_type: o.outcome_type,
+        feeling: o.feeling,
+        outcome_text: o.outcome_text?.split(' ').slice(0, 6).join(' ') + '...'
+    }));
+}
+
+export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion, onReminderSet, seededOutcomes, followupQuestion }) => {
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,14 +41,18 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
             setError(null);
 
             try {
-                // Call passing the flexible time
+                // Truncate social proof for email storage
+                const truncatedProof = truncateForEmail(seededOutcomes);
+
+                // Call passing the flexible time, followup question, and social proof data
                 const result = await scheduleReminder(
                     email,
                     code || '',
                     userQuestion || '',
                     undefined,
-                    undefined,
-                    reminderTime
+                    followupQuestion, // Pass the followup question
+                    reminderTime,
+                    truncatedProof // Pass truncated dynamic social proof data
                 );
 
                 if (result.success) {
@@ -57,18 +73,31 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
     if (submitted) {
         return (
             <div
-                className="text-center p-6 rounded-2xl animate-in mx-5"
-                style={{ backgroundColor: 'var(--success-bg)' }}
+                className="animate-in text-center p-6 rounded-2xl space-y-4 shadow-sm border mx-5"
+                style={{
+                    backgroundColor: 'var(--bg-secondary)',
+                    borderColor: 'var(--success-accent)'
+                }}
             >
-                <p className="font-medium" style={{ color: 'var(--success-text)' }}>
-                    ✓ Ayarlandı!
-                </p>
-                <p className="text-sm mt-1" style={{ color: 'var(--success-text)' }}>
-                    {reminderTime === 'tomorrow' ? 'Yarın' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'} sana haber vereceğiz.
-                </p>
-                <p className="text-xs mt-2 opacity-75" style={{ color: 'var(--success-text)' }}>
-                    Takip kodun: {code}
-                </p>
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--success-bg)' }}>
+                        <span className="text-2xl">🚀</span>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+                            Hatırlatma Kuruldu
+                        </h4>
+                        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                            <strong>{email}</strong> adresine takip kodunu gönderdik.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="text-sm leading-relaxed p-4 rounded-xl" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', color: 'var(--success-text)' }}>
+                    <p className="opacity-90">
+                        Kararını paylaşıp başkalarının yaşadıklarını görmek için <strong>{reminderTime === 'tomorrow' ? 'Yarın itibariyle' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'}</strong> sana küçük bir hatırlatma yapacağız.
+                    </p>
+                </div>
             </div>
         );
     }
@@ -130,7 +159,7 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
                             opacity: isLoading ? 0.7 : 1
                         }}
                     >
-                        {isLoading ? '...' : 'Hatırlat'}
+                        {isLoading ? 'Ayarlanıyor...' : 'Hatırlat'}
                     </button>
                 </div>
                 {error && <p className="text-xs text-center text-red-500">{error}</p>}

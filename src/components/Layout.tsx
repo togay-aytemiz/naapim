@@ -37,7 +37,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
     }, []);
 
     const toggleTheme = () => {
-        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     };
 
     const handleLogoClick = () => {

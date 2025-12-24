@@ -54,7 +54,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     // Clarification state for vague inputs
     const [needsClarification, setNeedsClarification] = useState(false);
     const [clarificationPrompt, setClarificationPrompt] = useState<string | null>(null);
-    const [clarifiedInput, setClarifiedInput] = useState('');
+    const [additionalInput, setAdditionalInput] = useState('');  // New clarification input only
+    const [accumulatedQuestion, setAccumulatedQuestion] = useState<string>(userInput || '');  // Grows with each clarification
     const [effectiveQuestion, setEffectiveQuestion] = useState<string>(userInput || '');
 
     // Track which userInput has been classified to prevent duplicates
@@ -120,7 +121,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     console.log('⚠️ Clarification needed:', classificationResult.clarification_prompt);
                     setNeedsClarification(true);
                     setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen kararınızı biraz daha açıklayın.');
-                    setClarifiedInput(userInput); // Pre-fill with original input
+                    setAdditionalInput(''); // Clear for fresh input
+                    // accumulatedQuestion already has the current question
                     setIsLoading(false);
                     return;
                 }
@@ -136,13 +138,15 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys);
                 setArchetypeId(classificationResult.archetype_id);
                 setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                setQuestionsReady(true); // Only set when questions are actually ready
+                console.log('🏁 Done, questions ready');
             } catch (error) {
                 console.error('❌ Classification failed:', error);
                 // Fallback to default
                 setArchetypeId('career_decisions');
+                setQuestionsReady(true); // Fallback also means ready
             } finally {
-                console.log('🏁 Done, questions ready');
-                setQuestionsReady(true);
+                setIsLoading(false);
             }
         };
 
@@ -274,7 +278,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }, [currentQuestion, isTransitioning, handleOptionSelect]);
 
     // Render Loading State with hybrid CTA (ready when both LLM done AND min wait elapsed)
-    if (isLoading || (questionsReady && !minWaitElapsed)) {
+    // IMPORTANT: Skip loading screen if clarification is needed
+    if (!needsClarification && (isLoading || (questionsReady && !minWaitElapsed))) {
         const showReadyButton = questionsReady && minWaitElapsed;
         return (
             <LoadingScreen
@@ -286,36 +291,56 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }
 
 
-    // Clarification needed - elegant UI to ask for more details
+    // Clarification needed - check FIRST before loading state
+    // This ensures clarification screen is shown even if minWaitElapsed hasn't triggered
     if (needsClarification) {
         const handleClarificationSubmit = () => {
-            if (!clarifiedInput.trim()) return;
-            // Reset classification state and re-classify with clarified input
-            classifiedInputRef.current = null;
+            if (!additionalInput.trim()) return;
+
+            // Merge logic: Original + " — " + New Detail
+            const mergedInput = `${accumulatedQuestion} — ${additionalInput.trim()}`;
+
+            // Update accumulated question for potential next rounds
+            setAccumulatedQuestion(mergedInput);
+
+            // Mark the merged input to prevent useEffect from re-running with old userInput
+            classifiedInputRef.current = mergedInput;
+
             setNeedsClarification(false);
             setIsLoading(true);
+            setQuestionsReady(false); // Reset questions ready state
+            setMinWaitElapsed(false); // Reset min wait for new classification
+
             const reclassify = async () => {
                 try {
+                    console.log('🔄 Reclassifying with merged input:', mergedInput);
                     const archetypes = (registryData as { archetypes: Archetype[] }).archetypes;
-                    const classificationResult = await ClassificationService.classifyUserQuestion(clarifiedInput.trim(), archetypes);
+                    const classificationResult = await ClassificationService.classifyUserQuestion(mergedInput, archetypes);
+                    console.log('✅ Reclassification result:', classificationResult);
 
                     if (classificationResult.needs_clarification) {
+                        console.log('⚠️ Still needs clarification:', classificationResult.clarification_prompt);
                         setNeedsClarification(true);
                         setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen biraz daha detay verin.');
+                        setAdditionalInput(''); // Clear for fresh input, accumulatedQuestion holds the merged context
                         setIsLoading(false);
                         return;
                     }
 
                     const selectionResult = await QuestionSelectionService.selectQuestions(
-                        clarifiedInput.trim(),
+                        mergedInput,
                         classificationResult.archetype_id
                     );
-                    setEffectiveQuestion(clarifiedInput.trim());
+                    console.log('✅ Question selection result:', selectionResult);
+
+                    setEffectiveQuestion(mergedInput);
                     setArchetypeId(classificationResult.archetype_id);
                     setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                    setQuestionsReady(true); // Mark questions as ready
                 } catch (error) {
-                    console.error('Reclassification failed:', error);
+                    console.error('❌ Reclassification failed:', error);
                     setArchetypeId('career_decisions');
+                    setQuestionsReady(true);
                 } finally {
                     setIsLoading(false);
                 }
@@ -326,8 +351,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         return (
             <ClarificationScreen
                 clarificationPrompt={clarificationPrompt || 'Lütfen kararınızı biraz daha açıklayın.'}
-                clarifiedInput={clarifiedInput}
-                onInputChange={setClarifiedInput}
+                originalQuestion={accumulatedQuestion}
+                additionalInput={additionalInput}
+                onInputChange={setAdditionalInput}
                 onSubmit={handleClarificationSubmit}
                 onBack={onBack}
             />

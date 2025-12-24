@@ -230,6 +230,43 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
             }
         }
 
+        // Valid feeling values that match database check constraint
+        const validFeelings = ['happy', 'neutral', 'uncertain', 'regret'] as const
+        type ValidFeeling = typeof validFeelings[number]
+
+        // Sanitize feeling value - map invalid values to closest valid one
+        const sanitizeFeeling = (feeling: string | undefined, fallback: string): ValidFeeling => {
+            if (!feeling) return fallback as ValidFeeling
+            const normalized = feeling.toLowerCase().trim()
+
+            // Direct match
+            if (validFeelings.includes(normalized as ValidFeeling)) {
+                return normalized as ValidFeeling
+            }
+
+            // Map common alternatives
+            const feelingMap: Record<string, ValidFeeling> = {
+                'satisfaction': 'happy',
+                'satisfied': 'happy',
+                'relief': 'happy',
+                'relieved': 'happy',
+                'excited': 'happy',
+                'content': 'happy',
+                'positive': 'happy',
+                'sad': 'regret',
+                'disappointed': 'regret',
+                'worry': 'uncertain',
+                'worried': 'uncertain',
+                'anxious': 'uncertain',
+                'confused': 'uncertain',
+                'indifferent': 'neutral',
+                'okay': 'neutral',
+                'fine': 'neutral'
+            }
+
+            return feelingMap[normalized] || fallback as ValidFeeling
+        }
+
         // Generate embeddings for each outcome (based on similar_question + original context)
         // This ensures generated outcomes match users with similar question AND answers
         const outcomesWithEmbeddings = await Promise.all(
@@ -238,11 +275,16 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
                     ? `${o.similar_question || user_question} | ${context}`
                     : (o.similar_question || user_question)
                 const embedding = await generateEmbedding(textForEmbedding)
+
+                // Sanitize feeling to prevent DB constraint violation
+                const fallbackFeeling = outcomeCombos[index]?.feeling || 'neutral'
+                const sanitizedFeeling = sanitizeFeeling(o.feeling, fallbackFeeling)
+
                 return {
                     session_id: null,
                     outcome_type: o.outcome_type || outcomeCombos[index]?.outcomeType || 'decided',
                     outcome_text: o.outcome_text,
-                    feeling: o.feeling || outcomeCombos[index]?.feeling || 'neutral',
+                    feeling: sanitizedFeeling,
                     related_question: o.similar_question,
                     archetype_id: archetype_id || null,
                     is_generated: true,

@@ -50,6 +50,16 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 // Shuffle on initial load
 const placeholderQuestions = shuffleArray(allPlaceholderQuestions);
 
+// Random headline variations
+const headlineVariations = [
+    "Karar vermekte zorlanıyor musun?",
+    "Aklında bir soru mu var?",
+    "Bir konuda kararsız mısın?",
+    "Kafanı kurcalayan bir şey mi var?",
+    "Bir şeye karar veremiyor musun?",
+];
+const randomHeadline = headlineVariations[Math.floor(Math.random() * headlineVariations.length)];
+
 
 // Smart active user count based on time of day
 const getSmartActiveCount = (): number => {
@@ -217,8 +227,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
     };
 
     const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
+        const newDarkMode = !isDarkMode;
+        setIsDarkMode(newDarkMode);
         document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
     };
 
     // Placeholder: "Acaba" stays, question types/deletes
@@ -257,8 +269,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                 <div className="w-full max-w-lg">
                     {/* Hero text - simplified */}
                     <div className="text-center mb-6">
-                        <h1 className={`text-2xl md:text-3xl font-semibold mb-2 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
-                            Karar vermekte zorlanıyor musun?
+                        <h1 className={`text-2xl md:text-3xl font-bold mb-2 ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>
+                            {randomHeadline}
                         </h1>
                         <p className={`text-sm ${isDarkMode ? 'text-neutral-300' : 'text-neutral-500'}`}>
                             Senin gibi düşünen binlerce kişiden ilham al.

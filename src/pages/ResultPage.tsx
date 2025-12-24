@@ -7,6 +7,7 @@ import { ReminderOptIn } from '../components/ReminderOptIn';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
+import { Sparkles } from 'lucide-react';
 
 
 // @ts-ignore
@@ -32,6 +33,7 @@ export const ResultPage = () => {
     const [showReminderOptIn, setShowReminderOptIn] = useState(true);
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
+    const [showAllSteps, setShowAllSteps] = useState(false);
 
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
@@ -236,6 +238,21 @@ export const ResultPage = () => {
                                 border: '1px solid var(--border-secondary)'
                             }}
                         >
+                            {/* AI Badge */}
+                            <div className="flex items-center justify-center gap-2 mb-4">
+                                <span
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                                    style={{
+                                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                                        color: 'var(--coral-primary)'
+                                    }}
+                                >
+                                    <Sparkles className="w-3.5 h-3.5" fill="currentColor" />
+                                    <span>naapim AI</span>
+                                    <span style={{ color: 'var(--text-muted)' }}>•</span>
+                                    <span style={{ color: 'var(--text-secondary)' }}>Kişiselleştirilmiş Analiz</span>
+                                </span>
+                            </div>
 
                             {/* Title */}
                             <h1
@@ -274,23 +291,25 @@ export const ResultPage = () => {
                                 );
                             })()}
 
-                            {/* Scroll to next section button - moved above NEDEN */}
+                            {/* Community Button - Accent Styled */}
                             <button
                                 onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="mb-6 w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                                className="mb-6 w-full py-3.5 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
                                 style={{
-                                    backgroundColor: 'var(--bg-tertiary)',
-                                    color: 'var(--text-secondary)'
+                                    backgroundColor: 'var(--coral-primary)',
+                                    color: 'white',
+                                    boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
                                 }}
                             >
-                                Başkaları neler yapıyor? Öğren
+                                <span>👥</span>
+                                <span>Başkaları neler yapıyor? Öğren</span>
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                 </svg>
                             </button>
 
                             {/* Reasoning - Single bullet */}
-                            <div className="mb-8">
+                            <div className="mb-6">
                                 <h3
                                     className="text-sm font-semibold uppercase tracking-wider mb-2"
                                     style={{ color: 'var(--text-muted)' }}
@@ -305,31 +324,82 @@ export const ResultPage = () => {
                                 </p>
                             </div>
 
-                            {/* Steps - Max 5 */}
-                            <div>
+                            {/* Collapsible Steps Section */}
+                            <div className="mb-6">
                                 <h3
                                     className="text-sm font-semibold uppercase tracking-wider mb-4"
                                     style={{ color: 'var(--text-muted)' }}
                                 >
                                     ÖNERİLEN ADIMLAR
                                 </h3>
-                                <ul className="space-y-3">
-                                    {analysis.steps.slice(0, 5).map((step, idx) => (
-                                        <li key={idx} className="flex items-start gap-3">
-                                            <span
-                                                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
-                                                style={{
-                                                    backgroundColor: 'var(--accent-100)',
-                                                    color: 'var(--accent-600)'
-                                                }}
-                                            >
-                                                {idx + 1}
-                                            </span>
-                                            <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+
+                                <div className="relative">
+                                    <ul className="space-y-3">
+                                        {analysis.steps.slice(0, showAllSteps ? 5 : 2).map((step, idx) => (
+                                            <li key={idx} className="flex items-start gap-3">
+                                                <span
+                                                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
+                                                    style={{
+                                                        backgroundColor: 'var(--accent-100)',
+                                                        color: 'var(--accent-600)'
+                                                    }}
+                                                >
+                                                    {idx + 1}
+                                                </span>
+                                                <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    {/* Gradient overlay when collapsed */}
+                                    {!showAllSteps && analysis.steps.length > 2 && (
+                                        <div
+                                            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+                                            style={{
+                                                background: 'linear-gradient(to top, var(--bg-elevated) 30%, transparent)'
+                                            }}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* Expand/Collapse Button */}
+                                {analysis.steps.length > 2 && (
+                                    <button
+                                        onClick={() => setShowAllSteps(!showAllSteps)}
+                                        className="mt-3 w-full py-2.5 px-4 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all"
+                                        style={{
+                                            backgroundColor: 'var(--bg-secondary)',
+                                            color: 'var(--text-secondary)',
+                                            border: '1px solid var(--border-primary)'
+                                        }}
+                                    >
+                                        {showAllSteps ? (
+                                            <>
+                                                <span>Kapat</span>
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>📋</span>
+                                                <span>Tüm adımları gör ({analysis.steps.length})</span>
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                             </div>
+
+                            {/* Legal Disclaimer - Minimal */}
+                            <p
+                                className="text-xs text-center pt-2"
+                                style={{ color: 'var(--text-muted)' }}
+                            >
+                                naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
+                            </p>
                         </div>
                     ) : (
                         <div
@@ -373,6 +443,6 @@ export const ResultPage = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

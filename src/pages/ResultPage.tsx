@@ -325,18 +325,21 @@ export const ResultPage = () => {
                             </div>
 
                             {/* Collapsible Steps Section */}
-                            <div className="mb-6">
+                            <div className="mb-4">
                                 <h3
-                                    className="text-sm font-semibold uppercase tracking-wider mb-4"
+                                    className="text-sm font-semibold uppercase tracking-wider mb-3"
                                     style={{ color: 'var(--text-muted)' }}
                                 >
                                     ÖNERİLEN ADIMLAR
                                 </h3>
 
-                                <div className="relative">
+                                <div className="relative pb-6">
                                     <ul className="space-y-3">
                                         {analysis.steps.slice(0, showAllSteps ? 5 : 2).map((step, idx) => (
-                                            <li key={idx} className="flex items-start gap-3">
+                                            <li
+                                                key={idx}
+                                                className="flex items-start gap-3"
+                                            >
                                                 <span
                                                     className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
                                                     style={{
@@ -351,46 +354,35 @@ export const ResultPage = () => {
                                         ))}
                                     </ul>
 
-                                    {/* Gradient overlay when collapsed */}
-                                    {!showAllSteps && analysis.steps.length > 2 && (
-                                        <div
-                                            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-                                            style={{
-                                                background: 'linear-gradient(to top, var(--bg-elevated) 30%, transparent)'
-                                            }}
-                                        />
+                                    {/* Gradient overlay + Button when collapsed */}
+                                    {analysis.steps.length > 2 && !showAllSteps && (
+                                        <>
+                                            <div
+                                                className="absolute bottom-0 left-0 right-0 h-17 pointer-events-none"
+                                                style={{
+                                                    background: 'linear-gradient(to top, var(--bg-elevated) 40%, transparent)'
+                                                }}
+                                            />
+                                            <button
+                                                onClick={() => setShowAllSteps(true)}
+                                                className="absolute bottom-0 left-0 right-0 text-center text-[11px]  transition-all hover:opacity-70 z-10"
+                                                style={{ color: 'var(--text-primary)', opacity: 0.8 }}
+                                            >
+                                                Diğer adımları gör ↓
+                                            </button>
+                                        </>
+                                    )}
+
+                                    {showAllSteps && analysis.steps.length > 2 && (
+                                        <button
+                                            onClick={() => setShowAllSteps(false)}
+                                            className="w-full text-center text-[11px] pt-3 transition-all hover:opacity-100"
+                                            style={{ color: 'var(--text-muted)' }}
+                                        >
+                                            Kapat ↑
+                                        </button>
                                     )}
                                 </div>
-
-                                {/* Expand/Collapse Button */}
-                                {analysis.steps.length > 2 && (
-                                    <button
-                                        onClick={() => setShowAllSteps(!showAllSteps)}
-                                        className="mt-3 w-full py-2.5 px-4 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all"
-                                        style={{
-                                            backgroundColor: 'var(--bg-secondary)',
-                                            color: 'var(--text-secondary)',
-                                            border: '1px solid var(--border-primary)'
-                                        }}
-                                    >
-                                        {showAllSteps ? (
-                                            <>
-                                                <span>Kapat</span>
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                                </svg>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span>📋</span>
-                                                <span>Tüm adımları gör ({analysis.steps.length})</span>
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                                </svg>
-                                            </>
-                                        )}
-                                    </button>
-                                )}
                             </div>
 
                             {/* Legal Disclaimer - Minimal */}

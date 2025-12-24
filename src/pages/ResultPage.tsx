@@ -38,6 +38,9 @@ export const ResultPage = () => {
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
 
+    // Ref for smooth height animation
+    const analysisContentRef = React.useRef<HTMLDivElement>(null);
+
 
     useEffect(() => {
         // Guard against double execution (React StrictMode in dev)
@@ -256,7 +259,7 @@ export const ResultPage = () => {
 
                             {/* Title */}
                             <h1
-                                className="text-2xl font-semibold text-center mb-6"
+                                className="text-2xl font-semibold text-center mb-6 max-w-[90%] mx-auto"
                                 style={{ color: 'var(--text-primary)' }}
                             >
                                 {analysis.title}
@@ -293,11 +296,14 @@ export const ResultPage = () => {
 
                             {/* Collapsible Analysis Details (NEDEN + ADIMLAR) */}
                             <div className="relative">
-                                {/* Content container with conditional max-height */}
+                                {/* Content container with smooth height transition */}
                                 <div
-                                    className="transition-all duration-300 ease-out overflow-hidden"
+                                    ref={analysisContentRef}
+                                    className="transition-[height] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
                                     style={{
-                                        maxHeight: showFullAnalysis ? '1000px' : '100px'
+                                        height: showFullAnalysis
+                                            ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
+                                            : '100px'
                                     }}
                                 >
                                     {/* Reasoning */}
@@ -344,31 +350,32 @@ export const ResultPage = () => {
                                 </div>
 
                                 {/* Gradient overlay + Expand button when collapsed */}
-                                {!showFullAnalysis && (
-                                    <>
-                                        <div
-                                            className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
-                                            style={{
-                                                background: 'linear-gradient(to top, var(--bg-elevated) 50%, transparent)'
-                                            }}
-                                        />
-                                        <button
-                                            onClick={() => setShowFullAnalysis(true)}
-                                            className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-all hover:opacity-90 z-10 border border-black/5"
-                                            style={{
-                                                backgroundColor: 'var(--bg-tertiary)',
-                                                color: 'var(--text-secondary)',
-                                                fontSize: '11px',
-                                                fontWeight: 500,
-                                                boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
-                                            }}
-                                        >
-                                            <Sparkles className="w-3 h-3" />
-                                            <span>naapim AI analizinin tamamını oku</span>
-                                            <span>↓</span>
-                                        </button>
-                                    </>
-                                )}
+                                <div
+                                    className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${showFullAnalysis ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                                >
+                                    <div
+                                        className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                                        style={{
+                                            background: 'linear-gradient(to top, var(--bg-elevated) 50%, transparent)'
+                                        }}
+                                    />
+                                    <button
+                                        onClick={() => setShowFullAnalysis(true)}
+                                        className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-all hover:opacity-90 z-10 border border-black/5"
+                                        style={{
+                                            backgroundColor: 'var(--bg-tertiary)',
+                                            color: 'var(--text-secondary)',
+                                            fontSize: '11px',
+                                            fontWeight: 500,
+                                            boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        <Sparkles className="w-3 h-3" />
+                                        <span>naapim AI analizinin tamamını oku</span>
+                                        <span>↓</span>
+
+                                    </button>
+                                </div>
 
                                 {/* Collapse button when expanded */}
                                 {showFullAnalysis && (

@@ -22,6 +22,72 @@
             ]
         },
         {
+            "id": "decision_readiness_v1",
+            "description": "Karar olgunluğu - tüm arketipler için alternatif",
+            "options": [
+                {
+                    "id": "exploring",
+                    "label": "Henüz fikir aşamasındayım"
+                },
+                {
+                    "id": "considering",
+                    "label": "Ciddi ciddi düşünüyorum"
+                },
+                {
+                    "id": "ready",
+                    "label": "Karar vermeye hazırım"
+                },
+                {
+                    "id": "must_decide",
+                    "label": "Artık karar vermem şart"
+                }
+            ]
+        },
+        {
+            "id": "reflection_period_v1",
+            "description": "Düşünme süresi - duygusal kararlar için",
+            "options": [
+                {
+                    "id": "just_now",
+                    "label": "Yeni aklıma geldi"
+                },
+                {
+                    "id": "weeks",
+                    "label": "Birkaç haftadır düşünüyorum"
+                },
+                {
+                    "id": "months",
+                    "label": "Aylardır kafamda"
+                },
+                {
+                    "id": "years",
+                    "label": "Yıllardır erteliyorum"
+                }
+            ]
+        },
+        {
+            "id": "life_stage_readiness_v1",
+            "description": "Hayat aşaması hazırlığı - aile/ilişki kararları için",
+            "options": [
+                {
+                    "id": "not_ready",
+                    "label": "Şu an için hazır değilim"
+                },
+                {
+                    "id": "maybe_soon",
+                    "label": "Yakın gelecekte olabilir"
+                },
+                {
+                    "id": "feeling_ready",
+                    "label": "Hazır hissediyorum"
+                },
+                {
+                    "id": "overdue",
+                    "label": "Çoktan geç bile kaldığımı düşünüyorum"
+                }
+            ]
+        },
+        {
             "id": "risk_level_general_v1",
             "description": "Genel risk algısı - tüm arketipler için",
             "options": [

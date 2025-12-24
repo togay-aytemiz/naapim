@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, Brain, Users, Shield, Lightbulb, PenLine, MessagesSquare, X } from 'lucide-react';
 
 interface HomeScreenProps {
@@ -94,6 +95,7 @@ const isValidCode = (code: string): boolean => {
 };
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter, isLoading = false }) => {
+    const navigate = useNavigate();
     const [input, setInput] = useState('');
     const [showSocialProof, setShowSocialProof] = useState(false);
     const [activeCount, setActiveCount] = useState(0);
@@ -274,7 +276,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
                             Karar vermekte zorlanıyor musun?
                         </h1>
                         <p className={isDarkMode ? 'text-neutral-200' : 'text-neutral-600'}>
-                            Senin gibi düşünen binlerce kişinin ne yaptığını gör.
+                            Senin gibi düşünen binlerce kişinin ne yaptığını gör.<br />
+                            Tamamen anonim, hesap gerekmez.
                         </p>
                     </div>
 
@@ -339,22 +342,27 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, onCodeEnter,
 
             {/* Footer - With iOS safe area for Safari URL bar */}
             <footer
-                className="pb-4 md:pb-5 px-5 flex-shrink-0 -mt-4 md:mt-0"
+                className="pb-4 md:pb-5 px-5 flex-shrink-0 relative bottom-8 md:bottom-0"
                 style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0))' }}
             >
                 <div className="max-w-lg mx-auto text-center">
                     {!showCodeEntry ? (
                         <div className="space-y-1.5">
+                            {/* Mobile: Navigate to /return, Desktop: Show inline code entry */}
                             <button
-                                onClick={() => setShowCodeEntry(true)}
+                                onClick={() => {
+                                    // Check if mobile (< 768px)
+                                    if (window.innerWidth < 768) {
+                                        navigate('/return');
+                                    } else {
+                                        setShowCodeEntry(true);
+                                    }
+                                }}
                                 className="text-sm underline underline-offset-2 transition-colors"
                                 style={{ color: 'var(--text-secondary)' }}
                             >
                                 Takip kodun mu var?
                             </button>
-                            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                                Tamamen anonim. Hesap gerekmez.
-                            </p>
                         </div>
                     ) : (
                         <div className="animate-in space-y-2">

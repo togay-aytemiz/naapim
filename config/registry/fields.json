@@ -7,6 +7,24 @@
             "option_set_id": "urgency_level_v1"
         },
         {
+            "key": "decision_readiness",
+            "label": "Bu karar konusunda ne aşamadasın?",
+            "type": "single_select",
+            "option_set_id": "decision_readiness_v1"
+        },
+        {
+            "key": "reflection_period",
+            "label": "Bu konuyu ne zamandır düşünüyorsun?",
+            "type": "single_select",
+            "option_set_id": "reflection_period_v1"
+        },
+        {
+            "key": "life_stage_readiness",
+            "label": "Hayatındaki bu değişikliğe ne kadar hazırsın?",
+            "type": "single_select",
+            "option_set_id": "life_stage_readiness_v1"
+        },
+        {
             "key": "risk_tolerance_general",
             "label": "Genel olarak risk almaya ne kadar açıksın?",
             "type": "single_select",

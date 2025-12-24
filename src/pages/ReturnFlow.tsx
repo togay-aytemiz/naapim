@@ -368,8 +368,8 @@ export const ReturnFlow: React.FC = () => {
                             <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
                                 Tekrar hoş geldin!
                             </h1>
-                            <p className="text-[var(--text-secondary)]">
-                                Takip kodunu girerek kaldığın yerden devam et.
+                            <p className="text-[var(--text-secondary)] max-w-xs mx-auto">
+                                Takip kodunu girerek kaldığın yerden devam edebilirsin.
                             </p>
                         </div>
 

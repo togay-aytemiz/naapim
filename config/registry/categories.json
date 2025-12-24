@@ -8,6 +8,27 @@
             ]
         },
         {
+            "id": "decision_readiness",
+            "label": "Karar olgunluğu",
+            "field_keys": [
+                "decision_readiness"
+            ]
+        },
+        {
+            "id": "reflection_period",
+            "label": "Düşünme süresi",
+            "field_keys": [
+                "reflection_period"
+            ]
+        },
+        {
+            "id": "life_stage_readiness",
+            "label": "Hayat aşaması hazırlığı",
+            "field_keys": [
+                "life_stage_readiness"
+            ]
+        },
+        {
             "id": "risk_preference",
             "label": "Risk tercihi",
             "field_keys": [

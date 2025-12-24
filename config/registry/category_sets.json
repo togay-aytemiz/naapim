@@ -23,6 +23,42 @@
             ]
         },
         {
+            "id": "core_v2",
+            "label": "Çekirdek v2 (karar olgunluğu odaklı)",
+            "description": "urgency yerine decision_readiness kullanır",
+            "category_ids": [
+                "decision_readiness",
+                "support_system",
+                "priority_goal",
+                "constraint_blocker",
+                "decision_nature"
+            ]
+        },
+        {
+            "id": "core_life_v1",
+            "label": "Hayat kararları çekirdeği",
+            "description": "Aile, ilişki, hayat değişikliği kararları için",
+            "category_ids": [
+                "life_stage_readiness",
+                "support_system",
+                "priority_goal",
+                "emotional_barriers",
+                "decision_nature"
+            ]
+        },
+        {
+            "id": "core_emotional_v2",
+            "label": "Duygusal çekirdek v2 (düşünme süresi)",
+            "description": "urgency yerine reflection_period kullanır",
+            "category_ids": [
+                "reflection_period",
+                "support_system",
+                "priority_goal",
+                "emotional_barriers",
+                "decision_nature"
+            ]
+        },
+        {
             "id": "social_v1",
             "label": "Sosyal ilişkiler özel",
             "category_ids": [

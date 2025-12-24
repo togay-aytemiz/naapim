@@ -20,13 +20,11 @@ export const ResultPage = () => {
     // Load archetypes
     // const archetypes: Archetype[] = (archetypesData as any).archetypes;
 
-    // State passed from App.tsx navigation
-    const userInput = location.state?.userInput as string | undefined;
-    const answers = location.state?.answers as Record<string, string> | undefined;
-    const archetypeId = location.state?.archetypeId as string | undefined;
+    // Session data - initialized from route state, but can be updated from DB fetch
+    const [sessionUserInput, setSessionUserInput] = useState<string | undefined>(location.state?.userInput);
+    const [sessionAnswers, setSessionAnswers] = useState<Record<string, string> | undefined>(location.state?.answers);
+    const [sessionArchetypeId, setSessionArchetypeId] = useState<string | undefined>(location.state?.archetypeId);
     const sessionId = location.state?.sessionId as string | undefined;
-
-
 
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +35,7 @@ export const ResultPage = () => {
 
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
+
 
     useEffect(() => {
         // Guard against double execution (React StrictMode in dev)
@@ -55,6 +54,10 @@ export const ResultPage = () => {
 
                     if (result && result.analysis) {
                         setAnalysis(result.analysis as AnalysisResult);
+                        // Populate session data from DB for seeded outcomes
+                        if (result.user_question) setSessionUserInput(result.user_question);
+                        if (result.archetype_id) setSessionArchetypeId(result.archetype_id);
+                        if (result.answers) setSessionAnswers(result.answers);
                     } else {
                         console.error('No analysis found in DB for code:', code);
                     }
@@ -65,18 +68,18 @@ export const ResultPage = () => {
                 }
             }
             // Case 2: Creating new session (code IS 'creating')
-            else if (code === 'creating' && userInput && answers && archetypeId) {
+            else if (code === 'creating' && sessionUserInput && sessionAnswers && sessionArchetypeId) {
                 hasCalledAnalysis.current = true;
                 setIsLoading(true);
 
                 // Start Analysis Generation
-                const analysisPromise = AnalysisService.generateAnalysis(userInput, answers, archetypeId);
+                const analysisPromise = AnalysisService.generateAnalysis(sessionUserInput, sessionAnswers, sessionArchetypeId);
 
                 // Start Session Creation
                 const sessionPromise = submitSession({
-                    user_question: userInput,
-                    archetype_id: archetypeId,
-                    answers: answers
+                    user_question: sessionUserInput,
+                    archetype_id: sessionArchetypeId,
+                    answers: sessionAnswers
                 });
 
                 try {
@@ -118,18 +121,18 @@ export const ResultPage = () => {
             }
         };
         performParallelWork();
-    }, [code, userInput, answers, archetypeId, sessionId, navigate, location.state]);
+    }, [code, sessionUserInput, sessionAnswers, sessionArchetypeId, sessionId, navigate, location.state]);
 
     // Separate effect for seeded outcomes - runs after main loading completes
     // User reads the analysis while this loads in background
     useEffect(() => {
-        if (isLoading || !analysis || !userInput || !archetypeId) return;
+        if (isLoading || !analysis || !sessionUserInput || !sessionArchetypeId) return;
 
         const loadSeededOutcomes = async () => {
             setIsLoadingSeeds(true);
             try {
-                const context = Object.entries(answers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
-                const outcomes = await AnalysisService.generateSeededOutcomes(userInput, archetypeId, context);
+                const context = Object.entries(sessionAnswers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
+                const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context);
                 setSeededOutcomes(outcomes?.outcomes || []);
             } catch (err) {
                 console.warn('Seeded outcomes error:', err);
@@ -139,7 +142,7 @@ export const ResultPage = () => {
         };
 
         loadSeededOutcomes();
-    }, [isLoading, analysis, userInput, archetypeId, answers]);
+    }, [isLoading, analysis, sessionUserInput, sessionArchetypeId, sessionAnswers]);
 
     const handleReminderSet = (_email: string) => {
         setReminderAlreadySet(true);
@@ -198,13 +201,13 @@ export const ResultPage = () => {
                     </div>
 
                     {/* User question reminder */}
-                    {userInput && (
+                    {sessionUserInput && (
                         <div
                             className="p-4 rounded-xl"
                             style={{ backgroundColor: 'var(--bg-secondary)' }}
                         >
                             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Sorunu analiz ediyoruz:</p>
-                            <p className="font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>"{userInput}"</p>
+                            <p className="font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>"{sessionUserInput}"</p>
                         </div>
                     )}
                 </div>
@@ -216,10 +219,10 @@ export const ResultPage = () => {
         <div className="flex flex-col items-center pb-16 pt-8">
             <div className="w-full max-w-lg space-y-12">
                 {/* User's decision context */}
-                {userInput && (
+                {sessionUserInput && (
                     <div className="pt-4 text-center px-5">
                         <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>Düşündüğün konu</p>
-                        <p className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>"{userInput}"</p>
+                        <p className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>"{sessionUserInput}"</p>
                     </div>
                 )}
 

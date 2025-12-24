@@ -5,10 +5,7 @@ import { QuestionFlow } from './components/QuestionFlow';
 import { ResultPage } from './pages/ResultPage';
 import { ReturnFlow } from './pages/ReturnFlow';
 import { ScrollToTop } from './components/ScrollToTop';
-// type Archetype import removed
 
-// @ts-ignore
-import registryData from '../config/registry/archetypes.json';
 
 function App() {
   const navigate = useNavigate();

@@ -41,10 +41,10 @@ serve(async (req) => {
             )
         }
 
-        // Now fetch the session for user_question and archetype_id
+        // Now fetch the session for user_question, archetype_id, and created_at
         const { data: sessionData, error: sessionError } = await supabase
             .from('sessions')
-            .select('id, user_question, archetype_id')
+            .select('id, user_question, archetype_id, created_at')
             .eq('id', resultData.session_id)
             .single()
 
@@ -76,12 +76,20 @@ serve(async (req) => {
             .eq('session_id', resultData.session_id)
             .order('created_at', { ascending: false })
 
+        // Check if reminder exists for this code
+        const { count: reminderCount } = await supabase
+            .from('email_reminders')
+            .select('*', { count: 'exact', head: true })
+            .eq('code', code)
+
         return new Response(
             JSON.stringify({
                 session_id: sessionData.id,
                 code: code,
                 user_question: sessionData.user_question,
                 archetype_id: sessionData.archetype_id,
+                created_at: sessionData.created_at, // For time-gating
+                has_reminder: (reminderCount || 0) > 0, // For reminder CTA
                 answers: answers,
                 analysis: resultData.analysis_json || null,
                 previous_outcomes: outcomesData || []

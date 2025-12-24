@@ -53,6 +53,13 @@ export const ReturnFlow: React.FC = () => {
     const [storiesOffset, setStoriesOffset] = useState(0);
     const [noExactMatch, setNoExactMatch] = useState(false);
 
+    // Inline reminder state for too-early screen
+    const [reminderEmail, setReminderEmail] = useState('');
+    const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('1_week');
+    const [reminderSubmitted, setReminderSubmitted] = useState(false);
+    const [reminderLoading, setReminderLoading] = useState(false);
+    const [reminderError, setReminderError] = useState<string | null>(null);
+
     // Auto-fetch if code in URL or passed from HomeScreen
     useEffect(() => {
         if (initialCode) {
@@ -103,6 +110,30 @@ export const ReturnFlow: React.FC = () => {
             // Update URL with code (for sharing/bookmarking)
             const newUrl = `${window.location.pathname}?code=${codeToFetch.trim().toUpperCase()}`;
             window.history.replaceState({}, '', newUrl);
+
+            // TIME-GATING LOGIC
+            // User must wait until 07:30 UTC+3 (04:30 UTC) the morning after session creation
+            if (data.created_at) {
+                const sessionCreated = new Date(data.created_at);
+                const now = new Date();
+
+                // Calculate unlock time: next 04:30 UTC after session creation
+                // (which is 07:30 UTC+3 = 04:30 UTC)
+                const unlockTime = new Date(sessionCreated);
+                unlockTime.setUTCHours(4, 30, 0, 0);
+
+                // If session was created after 04:30 UTC, unlock is next day
+                if (sessionCreated.getUTCHours() >= 4 && sessionCreated.getUTCMinutes() >= 30 ||
+                    sessionCreated.getUTCHours() > 4) {
+                    unlockTime.setUTCDate(unlockTime.getUTCDate() + 1);
+                }
+
+                // If user is too early, show time-gated message
+                if (now < unlockTime) {
+                    setStep('too-early');
+                    return;
+                }
+            }
 
             // Decide which step to show
             if (data.previous_outcomes && data.previous_outcomes.length > 0) {
@@ -389,6 +420,174 @@ export const ReturnFlow: React.FC = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Step 1b: Too Early (Time-Gated) */}
+                {step === 'too-early' && sessionData && (() => {
+                    // Calculate unlock time for display
+                    const sessionCreated = new Date(sessionData.created_at);
+                    const unlockTime = new Date(sessionCreated);
+                    unlockTime.setUTCHours(4, 30, 0, 0);
+                    if (sessionCreated.getUTCHours() >= 4 && sessionCreated.getUTCMinutes() >= 30 ||
+                        sessionCreated.getUTCHours() > 4) {
+                        unlockTime.setUTCDate(unlockTime.getUTCDate() + 1);
+                    }
+
+                    // Format for Turkish locale
+                    const timeString = unlockTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                    const dateString = unlockTime.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+                    return (
+                        <div className="space-y-8 animate-in">
+                            <div className="text-center space-y-4">
+                                <div className="text-6xl">⏰</div>
+                                <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                    Biraz sabret!
+                                </h1>
+                                <p className="text-[var(--text-secondary)] leading-relaxed">
+                                    Acele etme, düşünceli kararlar en iyileridir. <br />
+                                    Yarın sabah tekrar gel, o zaman hikayeni paylaşabilirsin.
+                                </p>
+                            </div>
+
+                            {/* Unlock Time Display */}
+                            <div className="p-5 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-secondary)' }}>
+                                <p className="text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Görüntüleyebilirsin:</p>
+                                <p className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                    {dateString}
+                                </p>
+                                <p className="text-lg font-medium mt-1" style={{ color: 'var(--coral-primary)' }}>
+                                    Saat {timeString}'den itibaren
+                                </p>
+                            </div>
+
+                            {/* Original Question */}
+                            <div className="p-5 rounded-2xl" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-secondary)' }}>
+                                <p className="text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Sorduğun soru:</p>
+                                <p className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>"{sessionData.user_question}"</p>
+                            </div>
+
+                            {/* Reminder CTA (if no reminder set) */}
+                            {!sessionData.has_reminder && !reminderSubmitted && (
+                                <div className="p-5 rounded-2xl space-y-4" style={{ backgroundColor: 'rgba(255, 107, 107, 0.08)', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                                    <p className="text-sm font-medium text-center" style={{ color: 'var(--text-primary)' }}>
+                                        🔔 Unutmamak için hatırlatma kur!
+                                    </p>
+                                    <p className="text-xs text-center" style={{ color: 'var(--text-secondary)' }}>
+                                        Sana e-posta ile haber verelim, böylece doğru zamanda geri dönebilirsin.
+                                    </p>
+
+                                    {/* Time Selection Pills */}
+                                    <div className="flex justify-center gap-2">
+                                        {[
+                                            { id: 'tomorrow', label: 'Yarın' },
+                                            { id: '1_week', label: '1 Hafta' },
+                                            { id: '2_weeks', label: '2 Hafta' }
+                                        ].map((option) => (
+                                            <button
+                                                key={option.id}
+                                                onClick={() => setReminderTime(option.id as any)}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
+                                                    ? 'border-[var(--coral-primary)] bg-[var(--coral-primary)] text-white'
+                                                    : 'border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
+                                                    }`}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Email + Button */}
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="email"
+                                            value={reminderEmail}
+                                            onChange={(e) => setReminderEmail(e.target.value)}
+                                            placeholder="E-posta adresin"
+                                            className="flex-1 px-4 py-3 rounded-xl text-sm"
+                                            style={{
+                                                backgroundColor: 'var(--bg-secondary)',
+                                                border: '1px solid var(--border-primary)',
+                                                color: 'var(--text-primary)'
+                                            }}
+                                        />
+                                        <button
+                                            onClick={async () => {
+                                                if (!reminderEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reminderEmail)) return;
+                                                setReminderLoading(true);
+                                                setReminderError(null);
+                                                try {
+                                                    const { scheduleReminder } = await import('../services/emailService');
+                                                    const result = await scheduleReminder(
+                                                        reminderEmail,
+                                                        sessionData.code,
+                                                        sessionData.user_question,
+                                                        undefined,
+                                                        undefined,
+                                                        reminderTime
+                                                    );
+                                                    if (result.success) {
+                                                        setReminderSubmitted(true);
+                                                    } else {
+                                                        setReminderError('Bir hata oluştu.');
+                                                    }
+                                                } catch {
+                                                    setReminderError('Bağlantı hatası.');
+                                                } finally {
+                                                    setReminderLoading(false);
+                                                }
+                                            }}
+                                            disabled={!reminderEmail || reminderLoading}
+                                            className="px-5 py-3 rounded-xl font-medium text-sm whitespace-nowrap text-white"
+                                            style={{
+                                                backgroundColor: reminderEmail ? 'var(--coral-primary)' : 'var(--btn-disabled-bg)',
+                                                color: reminderEmail ? 'white' : 'var(--btn-disabled-text)',
+                                                opacity: reminderLoading ? 0.7 : 1
+                                            }}
+                                        >
+                                            {reminderLoading ? 'Ayarlanıyor...' : 'Hatırlat'}
+                                        </button>
+                                    </div>
+                                    {reminderError && <p className="text-xs text-center text-red-500">{reminderError}</p>}
+                                </div>
+                            )}
+
+                            {/* Reminder Success Feedback */}
+                            {reminderSubmitted && (
+                                <div
+                                    className="animate-in text-center p-5 rounded-2xl space-y-3"
+                                    style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}
+                                >
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)' }}>
+                                            <span className="text-xl">🚀</span>
+                                        </div>
+                                        <p className="font-semibold" style={{ color: 'var(--success-text)' }}>Hatırlatma Kuruldu!</p>
+                                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                                            <strong>{reminderEmail}</strong> adresine {reminderTime === 'tomorrow' ? 'yarın' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'} haber vereceğiz.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Already has reminder */}
+                            {sessionData.has_reminder && (
+                                <div className="p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                                    <span className="text-2xl">✅</span>
+                                    <div>
+                                        <p className="font-medium text-sm" style={{ color: 'var(--success-text)' }}>Hatırlatma zaten kurulu!</p>
+                                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Sana e-posta ile haber vereceğiz.</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="text-center">
+                                <button onClick={() => navigate('/')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                    ← Ana sayfaya dön
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* Step 2: Welcome Back (First Time - No Previous Outcomes) */}
                 {step === 'welcome-back' && sessionData && (

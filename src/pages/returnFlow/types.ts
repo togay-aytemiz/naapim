@@ -17,6 +17,8 @@ export interface SessionData {
     code: string;
     user_question: string;
     archetype_id: string;
+    created_at: string; // For time-gating
+    has_reminder: boolean; // For reminder CTA
     answers: Record<string, string>;
     analysis: AnalysisResult | null;
     previous_outcomes: Outcome[];
@@ -24,6 +26,7 @@ export interface SessionData {
 
 export type FlowStep =
     | 'enter-code'
+    | 'too-early'           // Time-gated: user came back too soon
     | 'welcome-back'
     | 'returning-user'      // User has previous outcomes - show last choice
     | 'choose-outcome'      // Select decided/thinking/cancelled

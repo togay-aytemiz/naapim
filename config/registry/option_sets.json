@@ -22,6 +22,28 @@
             ]
         },
         {
+            "id": "decision_style_v1",
+            "description": "Karar verme tarzı - tek başına mı ortak mı",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Tek başıma karar veriyorum"
+                },
+                {
+                    "id": "with_partner",
+                    "label": "Eşim/partnerimle birlikte"
+                },
+                {
+                    "id": "with_family",
+                    "label": "Aileyle birlikte (ebeveyn, kardeş vb.)"
+                },
+                {
+                    "id": "external_input",
+                    "label": "Başkalarının fikrini alıyorum ama son karar bende"
+                }
+            ]
+        },
+        {
             "id": "partner_alignment_v1",
             "description": "Eş/partner uyumu - aile planlaması için",
             "options": [

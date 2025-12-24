@@ -8,6 +8,13 @@
             ]
         },
         {
+            "id": "decision_style",
+            "label": "Karar Verme Tarzı",
+            "field_keys": [
+                "decision_style"
+            ]
+        },
+        {
             "id": "partner_alignment",
             "label": "Partner Uyumu",
             "field_keys": [
@@ -721,17 +728,10 @@
             ]
         },
         {
-            "id": "travel_logistics",
-            "label": "Seyahat Lojistik",
+            "id": "travel_preferences",
+            "label": "Seyahat Tercihleri",
             "field_keys": [
                 "travel_budget",
-                "travel_duration"
-            ]
-        },
-        {
-            "id": "travel_style",
-            "label": "Seyahat Tarzı",
-            "field_keys": [
                 "travel_style",
                 "destination_type"
             ]

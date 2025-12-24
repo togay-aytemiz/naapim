@@ -7,6 +7,12 @@
             "option_set_id": "urgency_level_v1"
         },
         {
+            "key": "decision_style",
+            "label": "Bu kararı kimle birlikte veriyorsun?",
+            "type": "single_select",
+            "option_set_id": "decision_style_v1"
+        },
+        {
             "key": "partner_alignment",
             "label": "Eşinle/partnerinle bu konuda aynı fikirde misiniz?",
             "type": "single_select",

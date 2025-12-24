@@ -49,6 +49,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     const [isLoading, setIsLoading] = useState<boolean>(!!userInput && !initialArchetypeId);
     const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
+    // Hybrid CTA: Wait for BOTH LLM completion AND minimum read time
+    const [questionsReady, setQuestionsReady] = useState(false);
+    const [minWaitElapsed, setMinWaitElapsed] = useState(false);
+
     // Clarification state for vague inputs
     const [needsClarification, setNeedsClarification] = useState(false);
     const [clarificationPrompt, setClarificationPrompt] = useState<string | null>(null);
@@ -57,6 +61,21 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     // Track which userInput has been classified to prevent duplicates
     const classifiedInputRef = useRef<string | null>(null);
+
+    // Minimum wait timer (3.5 seconds to read the info cards)
+    useEffect(() => {
+        if (isLoading && !minWaitElapsed) {
+            const timer = setTimeout(() => {
+                setMinWaitElapsed(true);
+            }, 3500);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoading, minWaitElapsed]);
+
+    // Handle start button click
+    const handleStartQuestions = () => {
+        setIsLoading(false);
+    };
 
     // Redirect to home if no userInput (even after checking sessionStorage)
     useEffect(() => {
@@ -124,8 +143,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 // Fallback to default
                 setArchetypeId('career_decisions');
             } finally {
-                console.log('🏁 Done, setting isLoading to false');
-                setIsLoading(false);
+                console.log('🏁 Done, questions ready');
+                setQuestionsReady(true);
             }
         };
 
@@ -256,9 +275,16 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [currentQuestion, isTransitioning, handleOptionSelect]);
 
-    // Render Loading State
-    if (isLoading) {
-        return <LoadingScreen messageIndex={loadingMessageIndex} />;
+    // Render Loading State with hybrid CTA (ready when both LLM done AND min wait elapsed)
+    if (isLoading || (questionsReady && !minWaitElapsed)) {
+        const showReadyButton = questionsReady && minWaitElapsed;
+        return (
+            <LoadingScreen
+                messageIndex={loadingMessageIndex}
+                isReady={showReadyButton}
+                onStart={handleStartQuestions}
+            />
+        );
     }
 
 

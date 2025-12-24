@@ -2,48 +2,159 @@ import React from 'react';
 
 interface LoadingScreenProps {
     messageIndex: number;
+    isReady?: boolean;
+    onStart?: () => void;
 }
 
-// Loading messages in Turkish
+// Loading messages in Turkish - rotating at bottom
 const loadingMessages = [
     "İhtiyaçların analiz ediliyor...",
     "Sana özel sorular hazırlanıyor...",
-    "Konu başlıkları belirleniyor...",
     "En uygun sorular seçiliyor...",
-    "Kişiselleştirilmiş akış oluşturuluyor...",
     "Neredeyse hazır..."
 ];
 
 /**
- * Loading screen with animated spinner and rotating messages
- * Used during classification and question selection
+ * Loading screen with informative content and animated progress
+ * Explains how questions are prepared while LLM works in background
  */
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex }) => {
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ messageIndex, isReady, onStart }) => {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-700">
-            <div className="text-center space-y-8 max-w-sm">
-                {/* Animated spinner - Brand Colors */}
-                <div className="relative mx-auto w-16 h-16">
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-5 animate-in fade-in duration-700">
+            <div className="max-w-md w-full space-y-8">
+
+                {/* Main Info Cards */}
+                <div className="space-y-4">
+                    {/* Card 1: Expert Questions */}
                     <div
-                        className="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
-                        style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--coral-primary)' }}
-                    />
+                        className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                        style={{
+                            backgroundColor: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-primary)',
+                            animationDelay: '0ms'
+                        }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div
+                                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+                                style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                            >
+                                📝
+                            </div>
+                            <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                Uzman Sorular
+                            </h3>
+                        </div>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            Sana soracağımız sorular <strong style={{ color: 'var(--text-primary)' }}>naapim ekibi</strong> tarafından
+                            özenle hazırlandı. Her soru, kararını daha net görmen için tasarlandı.
+                        </p>
+                    </div>
+
+                    {/* Card 2: AI Selection */}
                     <div
-                        className="absolute inset-2 rounded-full border-4 border-t-transparent animate-spin"
-                        style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--charcoal-primary)', animationDirection: 'reverse', animationDuration: '1.5s' }}
-                    />
+                        className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                        style={{
+                            backgroundColor: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-primary)',
+                            animationDelay: '150ms'
+                        }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div
+                                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+                                style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)' }}
+                            >
+                                🤖
+                            </div>
+                            <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                Akıllı Seçim
+                            </h3>
+                        </div>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            Yapay zeka, yazdığın konuyu anlayıp sana <strong style={{ color: 'var(--text-primary)' }}>en uygun soruları</strong> seçiyor.
+                            Gereksiz sorularla vakit kaybetmezsin.
+                        </p>
+                    </div>
+
+                    {/* Card 3: Community Matching */}
+                    <div
+                        className="p-5 rounded-2xl space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700"
+                        style={{
+                            backgroundColor: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-primary)',
+                            animationDelay: '300ms'
+                        }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div
+                                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+                                style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)' }}
+                            >
+                                👥
+                            </div>
+                            <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                Benzer Deneyimler
+                            </h3>
+                        </div>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            Cevapların, seninle <strong style={{ color: 'var(--text-primary)' }}>aynı durumda olan diğer kişilerle</strong> eşleştirme
+                            için kullanılacak. Yalnız olmadığını göreceksin.
+                        </p>
+                    </div>
                 </div>
 
-                {/* Rotating message */}
-                <div className="h-8 overflow-hidden">
-                    <p
-                        className="text-lg font-medium animate-in fade-in slide-in-from-bottom-2 duration-500"
-                        style={{ color: 'var(--text-primary)' }}
-                        key={messageIndex}
-                    >
-                        {loadingMessages[messageIndex] || loadingMessages[0]}
-                    </p>
+                {/* Bottom: Progress or CTA Button */}
+                <div className="text-center space-y-4 pt-4">
+                    {isReady ? (
+                        /* Ready state: Show CTA button */
+                        <button
+                            onClick={onStart}
+                            className="w-full py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300 animate-in fade-in zoom-in-95 duration-500"
+                            style={{
+                                backgroundColor: 'var(--coral-primary)',
+                                boxShadow: '0 4px 20px rgba(255, 107, 107, 0.35)',
+                                animation: 'pulse-subtle 2s ease-in-out infinite'
+                            }}
+                        >
+                            <span className="flex items-center justify-center gap-2">
+                                <span>✨</span>
+                                <span>Sorular Hazır — Başlayalım!</span>
+                            </span>
+                        </button>
+                    ) : (
+                        /* Loading state: Show spinner */
+                        <>
+                            <div className="relative mx-auto w-8 h-8">
+                                <div
+                                    className="absolute inset-0 rounded-full border-2 border-t-transparent animate-spin"
+                                    style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--coral-primary)' }}
+                                />
+                            </div>
+                            <p
+                                className="text-sm font-medium animate-in fade-in duration-300"
+                                style={{ color: 'var(--text-muted)' }}
+                                key={messageIndex}
+                            >
+                                {loadingMessages[messageIndex % loadingMessages.length]}
+                            </p>
+                        </>
+                    )}
                 </div>
+
+                {/* Custom keyframes for subtle pulse */}
+                <style>{`
+                    @keyframes pulse-subtle {
+                        0%, 100% { 
+                            transform: scale(1);
+                            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.35);
+                        }
+                        50% { 
+                            transform: scale(1.02);
+                            box-shadow: 0 6px 25px rgba(255, 107, 107, 0.45);
+                        }
+                    }
+                `}</style>
             </div>
         </div>
     );

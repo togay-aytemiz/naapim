@@ -10,12 +10,13 @@ const isValidEmail = (email: string): boolean => {
 import { sendCodeEmail } from '../services/emailService';
 
 interface RecoveryCodeProps {
-    onReminderSet?: (email: string) => void;
+    onReminderSet?: (email: string, reminderTime: 'tomorrow' | '1_week' | '2_weeks') => void;
     initialCode?: string;
     onStartInteraction?: () => void;
     userQuestion?: string;
-    seededOutcomes?: any[]; // Added prop
-    followupQuestion?: string; // Added prop
+    seededOutcomes?: any[];
+    followupQuestion?: string;
+    unlockEmail?: string | null;
 }
 
 // Helper to truncate social proof for email storage (5-6 words max)
@@ -28,16 +29,27 @@ function truncateForEmail(outcomes: any[] | undefined): any[] | undefined {
     }));
 }
 
-export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion, seededOutcomes, followupQuestion }) => {
+export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initialCode, onStartInteraction, userQuestion, seededOutcomes, followupQuestion, unlockEmail }) => {
     const [copied, setCopied] = useState(false);
     const [showSendOptions, setShowSendOptions] = useState(false);
-    const [email, setEmail] = useState('');
-    const [sendReminder, setSendReminder] = useState(true);
+    const [email, setEmail] = useState(unlockEmail || '');
+    const [sendReminder, setSendReminder] = useState(!unlockEmail); // Hide checkbox if already has reminder
     const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('1_week');
     const [sent, setSent] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showWhyTomorrow, setShowWhyTomorrow] = useState(false);
+    const [isEditingReminder, setIsEditingReminder] = useState(false);
+
+    // Sync email with unlockEmail prop when it changes (e.g., after page load)
+    React.useEffect(() => {
+        if (unlockEmail && !email) {
+            setEmail(unlockEmail);
+        }
+    }, [unlockEmail]);
+
+    // User already has a reminder from unlock flow
+    const hasExistingReminder = !!unlockEmail;
 
     const code = initialCode || 'NY-48K2-P7';
     const isEmailValid = isValidEmail(email);
@@ -71,7 +83,7 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                 if (result.success) {
                     setSent(true);
                     if (sendReminder) {
-                        if (onReminderSet) onReminderSet(email);
+                        if (onReminderSet) onReminderSet(email, reminderTime);
                         // Schedule reminder in background
                         // Import scheduleReminder separately or move import to top if not present
                         import('../services/emailService').then(({ scheduleReminder }) => {
@@ -287,32 +299,95 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                             </button>
                         </div>
 
-                        {/* Reminder checkbox with trust messaging */}
-                        <div className="space-y-3">
-                            <label
-                                className="flex items-center gap-3 cursor-pointer group"
-                                onClick={() => setSendReminder(!sendReminder)}
-                            >
-                                <div
-                                    className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
-                                    style={{
-                                        borderColor: sendReminder ? 'var(--success-accent)' : 'var(--border-hover)',
-                                        backgroundColor: sendReminder ? 'var(--success-accent)' : 'transparent'
-                                    }}
+                        {/* Reminder checkbox with trust messaging - HIDE if unlocked via modal */}
+                        {!hasExistingReminder ? (
+                            <div className="space-y-3">
+                                <label
+                                    className="flex items-center gap-3 cursor-pointer group"
+                                    onClick={() => setSendReminder(!sendReminder)}
                                 >
-                                    {sendReminder && (
-                                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    )}
-                                </div>
-                                <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    Kararımı verdikten sonra sonucu paylaşmamı hatırlat
-                                </span>
-                            </label>
+                                    <div
+                                        className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
+                                        style={{
+                                            borderColor: sendReminder ? 'var(--success-accent)' : 'var(--border-hover)',
+                                            backgroundColor: sendReminder ? 'var(--success-accent)' : 'transparent'
+                                        }}
+                                    >
+                                        {sendReminder && (
+                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                                        Kararımı verdikten sonra sonucu paylaşmamı hatırlat
+                                    </span>
+                                </label>
 
-                            {sendReminder && (
-                                <div className="ml-8 grid grid-cols-3 gap-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                                {sendReminder && (
+                                    <div className="ml-8 grid grid-cols-3 gap-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                                        {[
+                                            { id: 'tomorrow', label: 'Yarın' },
+                                            { id: '1_week', label: '1 Hafta' },
+                                            { id: '2_weeks', label: '2 Hafta' }
+                                        ].map((option) => (
+                                            <button
+                                                key={option.id}
+                                                onClick={() => setReminderTime(option.id as any)}
+                                                className={`px-2 py-2 rounded-lg text-xs font-medium transition-all border ${reminderTime === option.id
+                                                    ? 'border-[var(--success-accent)] bg-[var(--success-bg)] text-[var(--success-text)]'
+                                                    : 'border-[var(--border-primary)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]'
+                                                    }`}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Trust messaging */}
+                                <p className="text-xs ml-8" style={{ color: 'var(--text-muted)' }}>
+                                    🔒 E-postan sadece bu hatırlatma için kullanılacak. Pazarlama yok, 3. taraflarla paylaşım yok.
+                                </p>
+                            </div>
+                        ) : !isEditingReminder ? (
+                            // Show rocket feedback for existing reminder with edit option (same style as ReminderOptIn)
+                            <div
+                                className="p-5 rounded-2xl text-center space-y-3"
+                                style={{
+                                    backgroundColor: 'var(--bg-secondary)',
+                                    border: '1px solid var(--success-accent)'
+                                }}
+                            >
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--success-bg)' }}>
+                                        <span className="text-xl">🚀</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                                            Hatırlatman Kuruldu
+                                        </p>
+                                        <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
+                                            <strong>{unlockEmail}</strong> adresine hatırlatma gönderilecek.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setIsEditingReminder(true)}
+                                    className="text-xs underline hover:no-underline"
+                                    style={{ color: 'var(--coral-primary)' }}
+                                >
+                                    Değiştir
+                                </button>
+                            </div>
+                        ) : (
+                            // Editing mode - show reminder time options (no checkbox needed, they already have a reminder)
+                            <div className="space-y-3">
+                                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                                    Hatırlatma zamanını güncelle:
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-2">
                                     {[
                                         { id: 'tomorrow', label: 'Yarın' },
                                         { id: '1_week', label: '1 Hafta' },
@@ -330,13 +405,12 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                         </button>
                                     ))}
                                 </div>
-                            )}
 
-                            {/* Trust messaging */}
-                            <p className="text-xs ml-8" style={{ color: 'var(--text-muted)' }}>
-                                🔒 E-postan sadece bu hatırlatma için kullanılacak. Pazarlama yok, 3. taraflarla paylaşım yok.
-                            </p>
-                        </div>
+                                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                    E-posta: yukarıdaki alandan değiştirebilirsin.
+                                </p>
+                            </div>
+                        )}
 
                         {error && (
                             <p className="text-sm text-center" style={{ color: 'var(--error-accent, #ef4444)' }}>
@@ -377,6 +451,13 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                         Kararını verip dönmen için <strong>{reminderTime === 'tomorrow' ? 'Yarın sabah' : reminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra'}</strong> sana küçük bir hatırlatma yapacağız.
                                     </p>
                                 </>
+                            ) : hasExistingReminder ? (
+                                <>
+                                    <p className="font-medium mb-1">Hatırlatman Zaten Kurulu ✨</p>
+                                    <p className="opacity-90">
+                                        <strong>{unlockEmail}</strong> adresine hatırlatma gönderilecek.
+                                    </p>
+                                </>
                             ) : (
                                 <>
                                     <p className="font-medium mb-1">Kodun Güvende 🔑</p>
@@ -387,8 +468,9 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                             )}
                         </div>
 
-                        {/* Late Reminder Option - If they didn't set one initially */}
-                        {!sendReminder && (
+
+                        {/* Late Reminder Option - If they didn't set one initially AND don't have existing reminder */}
+                        {!sendReminder && !hasExistingReminder && (
                             <div className="pt-3 mt-3 border-t border-[rgba(0,0,0,0.05)]">
                                 <p className="text-xs mb-2 opacity-80" style={{ color: 'var(--success-text)' }}>
                                     Fikrini değiştirdin mi? Sana hatırlatabiliriz:
@@ -425,7 +507,9 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
                                                     followupQuestion, // Pass the followup question
                                                     reminderTime,
                                                     truncatedProof // Pass truncated data
-                                                ).catch(console.error);
+                                                ).then(() => {
+                                                    if (onReminderSet) onReminderSet(email, reminderTime);
+                                                }).catch(console.error);
                                             });
                                         }}
                                         className="text-xs underline font-medium mt-1 hover:no-underline"

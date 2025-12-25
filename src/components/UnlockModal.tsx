@@ -6,6 +6,7 @@ interface UnlockModalProps {
     isOpen: boolean;
     onClose: () => void;
     onUnlock: () => void;
+    onUnlockWithEmail?: (email: string, reminderTime: 'tomorrow' | '1_week' | '2_weeks') => void;
     code: string;
     userQuestion?: string;
     sessionId?: string;
@@ -17,6 +18,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
     isOpen,
     onClose,
     onUnlock,
+    onUnlockWithEmail,
     code,
     userQuestion,
     sessionId,
@@ -68,6 +70,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
 
             // Auto close after success and trigger unlock
             setTimeout(() => {
+                onUnlockWithEmail?.(email, reminderTime);
                 onUnlock();
                 onClose();
             }, 2500);
@@ -131,8 +134,8 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                                             key={opt.id}
                                             onClick={() => setReminderTime(opt.id as any)}
                                             className={`py-2 rounded-lg text-xs font-medium transition-all ${reminderTime === opt.id
-                                                    ? 'bg-amber-100 text-amber-700 border border-amber-200'
-                                                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-transparent hover:border-[var(--border-secondary)]'
+                                                ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                                : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-transparent hover:border-[var(--border-secondary)]'
                                                 }`}
                                         >
                                             {opt.label}

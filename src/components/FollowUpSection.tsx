@@ -11,8 +11,9 @@ interface FollowUpSectionProps {
     followupDays?: number;
     seededOutcomes?: SeededOutcome[];
     isLoadingSeeds?: boolean;
-    isUnlocked?: boolean; // New prop
-    onUnlock: () => void; // New prop
+    isUnlocked?: boolean;
+    onUnlock: () => void;
+    onUnlockWithEmail?: (email: string, reminderTime: 'tomorrow' | '1_week' | '2_weeks') => void;
     // Data for modal
     code?: string;
     userQuestion?: string;
@@ -63,6 +64,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     isLoadingSeeds = false,
     isUnlocked = false,
     onUnlock,
+    onUnlockWithEmail,
     code = '',
     userQuestion = '',
     sessionId,
@@ -383,10 +385,11 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 isOpen={showUnlockModal}
                 onClose={() => setShowUnlockModal(false)}
                 onUnlock={onUnlock}
+                onUnlockWithEmail={onUnlockWithEmail}
                 code={code}
                 userQuestion={userQuestion}
                 sessionId={sessionId}
-                seededOutcomes={seededOutcomes} // Pass for immediate reminder payload
+                seededOutcomes={seededOutcomes}
                 followupQuestion={followupQuestion}
             />
         </div>

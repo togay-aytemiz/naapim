@@ -11,9 +11,11 @@ import { scheduleReminder } from '../services/emailService';
 interface ReminderOptInProps {
     code?: string;
     userQuestion?: string;
-    onReminderSet?: (email: string) => void;
-    seededOutcomes?: any[]; // Added prop
-    followupQuestion?: string; // Added prop
+    onReminderSet?: (email: string, reminderTime: 'tomorrow' | '1_week' | '2_weeks') => void;
+    seededOutcomes?: any[];
+    followupQuestion?: string;
+    unlockEmail?: string | null;
+    unlockReminderTime?: 'tomorrow' | '1_week' | '2_weeks';
 }
 
 // Helper to truncate social proof for email storage (5-6 words max)
@@ -26,7 +28,7 @@ function truncateForEmail(outcomes: any[] | undefined): any[] | undefined {
     }));
 }
 
-export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion, onReminderSet, seededOutcomes, followupQuestion }) => {
+export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion, onReminderSet, seededOutcomes, followupQuestion, unlockEmail, unlockReminderTime }) => {
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -56,8 +58,13 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
                 );
 
                 if (result.success) {
-                    setSubmitted(true);
-                    if (onReminderSet) onReminderSet(email);
+                    // If editing existing reminder, go back to confirmation view
+                    if (isEditing) {
+                        setIsEditing(false);
+                    } else {
+                        setSubmitted(true);
+                    }
+                    if (onReminderSet) onReminderSet(email, reminderTime);
                 } else {
                     setError('Bir hata oluştu. Lütfen tekrar dene.');
                 }
@@ -69,6 +76,50 @@ export const ReminderOptIn: React.FC<ReminderOptInProps> = ({ code, userQuestion
             }
         }
     };
+
+    // State for editing when user has existing unlock reminder
+    const [isEditing, setIsEditing] = useState(false);
+
+    // User already has a reminder from unlock flow - show confirmation card
+    if (unlockEmail && !isEditing) {
+        const timeLabel = unlockReminderTime === 'tomorrow' ? 'Yarın' : unlockReminderTime === '1_week' ? '1 hafta sonra' : '2 hafta sonra';
+
+        return (
+            <div
+                className="animate-in text-center p-6 rounded-2xl space-y-4 shadow-sm border mx-5"
+                style={{
+                    backgroundColor: 'var(--bg-secondary)',
+                    borderColor: 'var(--success-accent)'
+                }}
+            >
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--success-bg)' }}>
+                        <span className="text-2xl">🚀</span>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+                            Hatırlatman Kuruldu
+                        </h4>
+                        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                            <strong>{unlockEmail}</strong> adresine {timeLabel} hatırlatma gönderilecek.
+                        </p>
+                    </div>
+                </div>
+
+                <button
+                    onClick={() => {
+                        setEmail(unlockEmail);
+                        setReminderTime(unlockReminderTime || '1_week');
+                        setIsEditing(true);
+                    }}
+                    className="text-sm underline hover:no-underline"
+                    style={{ color: 'var(--coral-primary)' }}
+                >
+                    Değiştir
+                </button>
+            </div>
+        );
+    }
 
     if (submitted) {
         return (

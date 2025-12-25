@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FollowUpSection } from '../components/FollowUpSection';
@@ -8,7 +7,10 @@ import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
 import { Sparkles, Users } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
+// Helper types
+// type AnalysisStatus = 'loading' | 'analyzing' | 'complete' | 'error';
 
 // @ts-ignore
 // import archetypesData from '../../config/registry/archetypes.json';
@@ -33,6 +35,30 @@ export const ResultPage = () => {
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
     const [showFullAnalysis, setShowFullAnalysis] = useState(false);
+
+    // Track unlock email data for downstream components - persist to localStorage
+    const [unlockEmail, setUnlockEmail] = useState<string | null>(() => {
+        if (code) {
+            const saved = localStorage.getItem(`unlock_${code}`);
+            if (saved) {
+                try {
+                    return JSON.parse(saved).email || null;
+                } catch { return null; }
+            }
+        }
+        return null;
+    });
+    const [unlockReminderTime, setUnlockReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>(() => {
+        if (code) {
+            const saved = localStorage.getItem(`unlock_${code}`);
+            if (saved) {
+                try {
+                    return JSON.parse(saved).reminderTime || '1_week';
+                } catch { return '1_week'; }
+            }
+        }
+        return '1_week';
+    });
 
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
@@ -148,12 +174,64 @@ export const ResultPage = () => {
         loadSeededOutcomes();
     }, [isLoading, analysis, sessionUserInput, sessionArchetypeId, sessionAnswers]);
 
-    const handleReminderSet = (_email: string) => {
-        setShowReminderOptIn(false);
+    const handleReminderSet = (email: string, time: 'tomorrow' | '1_week' | '2_weeks') => {
+        setUnlockEmail(email);
+        setUnlockReminderTime(time);
+
+        // Update local storage
+        if (code) {
+            localStorage.setItem(`unlock_${code}`, JSON.stringify({
+                email,
+                reminderTime: time,
+                timestamp: Date.now()
+            }));
+        }
     };
 
-    // Unlock state for "Undecided" path (3 stories)
-    const [isStoriesUnlocked, setIsStoriesUnlocked] = useState(false);
+    // Check for existing reminder in DB (for refresh scenarios)
+    useEffect(() => {
+        const checkExistingReminder = async () => {
+            if (!code || !unlockEmail) return;
+
+            try {
+                const { data, error: dbError } = await supabase
+                    .from('email_reminders')
+                    .select('schedule_time')
+                    .eq('code', code)
+                    .eq('email', unlockEmail)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (dbError) throw dbError;
+
+                if (data && data.schedule_time && data.schedule_time !== unlockReminderTime) {
+                    console.log('Syncing reminder time from DB:', data.schedule_time);
+                    setUnlockReminderTime(data.schedule_time as any);
+
+                    // Update local storage too
+                    localStorage.setItem(`unlock_${code}`, JSON.stringify({
+                        email: unlockEmail,
+                        reminderTime: data.schedule_time,
+                        timestamp: Date.now()
+                    }));
+                }
+            } catch (err) {
+                console.error('Failed to sync reminder:', err);
+            }
+        };
+
+        checkExistingReminder();
+    }, [code, unlockEmail]); // Run when code or email is available
+
+    // Unlock state for "Undecided" path (3 stories) - initialize from localStorage
+    const [isStoriesUnlocked, setIsStoriesUnlocked] = useState(() => {
+        if (code) {
+            const saved = localStorage.getItem(`unlock_${code}`);
+            return !!saved;
+        }
+        return false;
+    });
 
     const handleUnlockStories = () => {
         setIsStoriesUnlocked(true);
@@ -445,6 +523,14 @@ export const ResultPage = () => {
                     isLoadingSeeds={isLoadingSeeds}
                     isUnlocked={isStoriesUnlocked}
                     onUnlock={handleUnlockStories}
+                    onUnlockWithEmail={(email, time) => {
+                        setUnlockEmail(email);
+                        setUnlockReminderTime(time);
+                        // Persist to localStorage for page refresh
+                        if (code) {
+                            localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
+                        }
+                    }}
                     code={code}
                     userQuestion={sessionUserInput}
                     sessionId={sessionId}
@@ -456,8 +542,9 @@ export const ResultPage = () => {
                     initialCode={code}
                     onStartInteraction={() => setShowReminderOptIn(false)}
                     userQuestion={sessionUserInput}
-                    seededOutcomes={seededOutcomes} // Pass data
-                    followupQuestion={analysis?.followup_question} // Pass followup
+                    seededOutcomes={seededOutcomes}
+                    followupQuestion={analysis?.followup_question}
+                    unlockEmail={unlockEmail}
                 />
 
                 {showReminderOptIn && (
@@ -467,8 +554,10 @@ export const ResultPage = () => {
                             code={code}
                             userQuestion={sessionUserInput}
                             onReminderSet={handleReminderSet}
-                            seededOutcomes={seededOutcomes} // Pass data
-                            followupQuestion={analysis?.followup_question} // Pass followup
+                            seededOutcomes={seededOutcomes}
+                            followupQuestion={analysis?.followup_question}
+                            unlockEmail={unlockEmail}
+                            unlockReminderTime={unlockReminderTime}
                         />
                     </>
                 )}

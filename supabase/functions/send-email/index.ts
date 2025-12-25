@@ -310,16 +310,19 @@ Deno.serve(async (req) => {
 
             const { error: scheduleError } = await supabase
                 .from('email_reminders')
-                .insert({
+                .upsert({
                     email: to,
-                    reminder_type: 'scheduled_reminder', // Clean name
+                    reminder_type: 'scheduled_reminder',
                     schedule_time: data.schedule_time,
                     scheduled_at: scheduledAt.toISOString(),
                     code: data.code,
                     user_question: data.user_question,
-                    followup_question: data.followup_question, // Save the custom headline
-                    social_proof_data: data.social_proof_data || null, // Only include if explicitly provided
+                    followup_question: data.followup_question,
+                    social_proof_data: data.social_proof_data || null,
                     status: 'pending'
+                }, {
+                    onConflict: 'email,code',
+                    ignoreDuplicates: false
                 })
 
             if (scheduleError) {

@@ -207,23 +207,39 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
         >
             {/* Main Content */}
             <main className="flex-grow flex flex-col items-center justify-center w-full px-4 relative z-10 scale-90 md:scale-100 transition-transform duration-500">
-                <div className="w-full max-w-4xl flex flex-col items-center gap-10 text-center animate-fade-in-up">
+                <div className="w-full max-w-4xl flex flex-col items-center gap-10 text-center">
 
                     <div className="flex flex-col gap-6 max-w-3xl">
-                        <h1 className={`text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight ${isDarkMode ? 'text-white drop-shadow-sm' : 'text-slate-900'}`}>
+                        {/* Headline - appears first */}
+                        <h1
+                            className={`text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white drop-shadow-sm' : 'text-slate-900'}`}
+                        >
                             {headline}
                         </h1>
-                        <h2 className={`text-lg md:text-xl lg:text-2xl font-medium leading-relaxed max-w-2xl mx-auto ${isDarkMode ? 'text-[#94a3b8]' : 'text-slate-600'}`}>
-                            Sadece bir yapay zekaya sormadan, aynı ikilemi yaşamış <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>gerçek insanlarla bağlantı kur.</span>
+                        {/* Description - appears second */}
+                        <h2
+                            className={`text-lg md:text-xl lg:text-2xl font-medium leading-relaxed max-w-2xl mx-auto opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.3s_forwards] ${isDarkMode ? 'text-[#94a3b8]' : 'text-slate-600'}`}
+                        >
+                            Sadece bir yapay zekaya sormadan, aynı ikilemi yaşamış <span
+                                className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}
+                                style={{
+                                    backgroundImage: isDarkMode
+                                        ? 'linear-gradient(to top, rgba(255, 111, 97, 0.25) 0%, rgba(255, 111, 97, 0.25) 20%, transparent 20%)'
+                                        : 'linear-gradient(to top, rgba(255, 111, 97, 0.3) 0%, rgba(255, 111, 97, 0.3) 20%, transparent 20%)',
+                                    paddingBottom: '2px'
+                                }}
+                            >gerçek insanlarla bağlantı kur.</span>
                         </h2>
                     </div>
 
                     <div className="w-full max-w-2xl flex flex-col gap-6 z-10">
-                        {/* Search Bar Container */}
-                        <label className={`group relative flex w-full items-center p-2 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl ${isDarkMode
-                            ? 'bg-[#0f172a]/60 border border-[#334155]/50 shadow-black/20 hover:shadow-black/30 hover:bg-[#0f172a]/80 focus-within:ring-4 focus-within:ring-[#1e3a8a]/50 focus-within:border-[#3b82f6]/50'
-                            : 'bg-white shadow-blue-900/5 hover:shadow-blue-900/10'
-                            }`}>
+                        {/* Search Bar Container - appears third */}
+                        <label
+                            className={`group relative flex w-full items-center p-2 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.5s_forwards] ${isDarkMode
+                                ? 'bg-[#0f172a]/60 border border-[#334155]/50 shadow-black/20 hover:shadow-black/30 hover:bg-[#0f172a]/80 focus-within:ring-4 focus-within:ring-[#1e3a8a]/50 focus-within:border-[#3b82f6]/50'
+                                : 'bg-white shadow-blue-900/5 hover:shadow-blue-900/10'
+                                }`}
+                        >
                             <div className={`hidden sm:flex pl-4 items-center justify-center pointer-events-none ${isDarkMode ? 'text-[#64748b]' : 'text-slate-400'}`}>
                                 <span className="material-symbols-outlined text-2xl">search</span>
                             </div>
@@ -253,7 +269,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
                             </div>
                         </label>
 
-                        <div className="flex flex-col items-center gap-3">
+                        {/* Online count & How it works - appears last */}
+                        <div className="flex flex-col items-center gap-3 opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.9s_forwards]">
                             <div className={`flex items-center gap-2 text-sm md:text-base font-medium ${isDarkMode ? 'text-neutral-400' : 'text-slate-600/80'}`}>
                                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                                 <p>{activeCount} kişi şu an bir karar üzerinde düşünüyor</p>
@@ -262,8 +279,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
                             <button
                                 onClick={() => setShowAIModal(true)}
                                 className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border text-xs md:text-sm font-semibold transition-all cursor-pointer shadow-sm backdrop-blur-sm ${isDarkMode
-                                    ? 'bg-white/10 border-white/20 text-neutral-300 hover:bg-white/20 hover:text-white'
-                                    : 'bg-white/40 border-white/60 text-slate-600 hover:bg-white hover:text-[#2b8cee]'
+                                    ? 'bg-white/10 border-white/20 text-neutral-300 hover:bg-white/20 hover:text-[var(--coral-primary)]'
+                                    : 'bg-white/40 border-white/60 text-slate-600 hover:bg-white hover:text-[var(--coral-primary)]'
                                     }`}
                             >
                                 <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>

@@ -5,6 +5,7 @@ import { Check, Clock, X, ChevronDown, ChevronUp, Calendar, CheckCircle, Hourgla
 import { RegistryLoader } from '../services/registryLoader';
 import { saveOutcome, type FeelingType } from '../services/saveOutcome';
 import { moderateContent } from '../services/moderateContent';
+import { getArchetypeStats, type ArchetypeStats } from '../services/statsService';
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 // Extracted modules
@@ -65,6 +66,8 @@ export const ReturnFlow: React.FC = () => {
     const [storiesOffset, setStoriesOffset] = useState(0);
     const [noExactMatch, setNoExactMatch] = useState(false);
     const [showValidationShake, setShowValidationShake] = useState(false);
+    const [archetypeStats, setArchetypeStats] = useState<ArchetypeStats | null>(null);
+    const [statsLoading, setStatsLoading] = useState(false);
 
     // Inline reminder state for too-early screen
     const [reminderEmail, setReminderEmail] = useState('');
@@ -83,6 +86,15 @@ export const ReturnFlow: React.FC = () => {
     // Scroll to top when step changes
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Fetch archetype stats when entering view-stories step
+        if (step === 'view-stories' && sessionData?.archetype_id) {
+            setStatsLoading(true);
+            getArchetypeStats(sessionData.archetype_id).then(stats => {
+                setArchetypeStats(stats);
+                setStatsLoading(false);
+            });
+        }
     }, [step]);
 
     // Rotating moderation messages
@@ -1490,38 +1502,67 @@ export const ReturnFlow: React.FC = () => {
 
                             {/* Stats Cards */}
                             <div className="grid grid-cols-3 gap-3">
-                                {/* Satisfaction Rate */}
-                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Memnuniyet</span>
-                                        <span className="text-base">😊</span>
-                                    </div>
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>%85</span>
-                                        <span className="text-xs text-green-500">↗ +2%</span>
-                                    </div>
-                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Benzer kararları verenlerin oranı</p>
-                                </div>
+                                {statsLoading ? (
+                                    /* Skeleton Loading */
+                                    <>
+                                        {[1, 2, 3].map(i => (
+                                            <div key={i} className="p-4 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="h-2 w-16 rounded bg-slate-300 dark:bg-slate-700" />
+                                                    <div className="h-4 w-4 rounded bg-slate-300 dark:bg-slate-700" />
+                                                </div>
+                                                <div className="h-8 w-20 rounded bg-slate-300 dark:bg-slate-700 mx-auto" />
+                                                <div className="h-2 w-24 rounded bg-slate-300 dark:bg-slate-700 mt-2 mx-auto" />
+                                            </div>
+                                        ))}
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Satisfaction Rate */}
+                                        <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Memnuniyet</span>
+                                                <span className="text-base">😊</span>
+                                            </div>
+                                            <div className="flex items-baseline gap-1 justify-center">
+                                                <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                                    %{archetypeStats?.satisfaction_rate ?? 85}
+                                                </span>
+                                                {(archetypeStats?.satisfaction_change ?? 0) > 0 && (
+                                                    <span className="text-xs text-green-500">↗ +{archetypeStats?.satisfaction_change}%</span>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Benzer kararları verenlerin oranı</p>
+                                        </div>
 
-                                {/* Most Common Feeling */}
-                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>En Yaygın Sonuç</span>
-                                        <span className="text-base">🎯</span>
-                                    </div>
-                                    <span className="text-lg md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Rahatlama</span>
-                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Katılımcıların çoğu bunu hissetti</p>
-                                </div>
+                                        {/* Most Common Feeling */}
+                                        <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>En Yaygın Sonuç</span>
+                                                <span className="text-base">{archetypeStats?.most_common_feeling_emoji ?? '🎯'}</span>
+                                            </div>
+                                            <span className="text-lg md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                                {archetypeStats?.most_common_feeling ?? 'Rahatlama'}
+                                            </span>
+                                            <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Katılımcıların çoğu bunu hissetti</p>
+                                        </div>
 
-                                {/* Average Time */}
-                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Ortalama Süre</span>
-                                        <span className="text-base">⏱️</span>
-                                    </div>
-                                    <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>2 Hafta</span>
-                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Etkilerin görülme süresi</p>
-                                </div>
+                                        {/* Average Time */}
+                                        <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Ortalama Süre</span>
+                                                <span className="text-base">⏱️</span>
+                                            </div>
+                                            <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                                {(archetypeStats?.average_decision_days ?? 14) >= 7
+                                                    ? `${Math.round((archetypeStats?.average_decision_days ?? 14) / 7)} Hafta`
+                                                    : `${archetypeStats?.average_decision_days ?? 14} Gün`
+                                                }
+                                            </span>
+                                            <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Etkilerin görülme süresi</p>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             {/* User's Story Card */}

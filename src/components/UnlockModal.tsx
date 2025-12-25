@@ -85,7 +85,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300 backdrop-blur-sm"
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
             onClick={onClose}
         >

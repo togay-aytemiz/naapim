@@ -146,7 +146,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 setArchetypeId('career_decisions');
                 setQuestionsReady(true); // Fallback also means ready
             } finally {
-                setIsLoading(false);
+                // Do NOT turn off loading here. 
+                // We keep isLoading=true so the LoadingScreen stays visible.
+                // The LoadingScreen will show the "Start" button when questionsReady=true.
+                // setIsLoading(false); 
             }
         };
 

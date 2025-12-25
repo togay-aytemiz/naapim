@@ -152,6 +152,13 @@ export const ResultPage = () => {
         setShowReminderOptIn(false);
     };
 
+    // Unlock state for "Undecided" path (3 stories)
+    const [isStoriesUnlocked, setIsStoriesUnlocked] = useState(false);
+
+    const handleUnlockStories = () => {
+        setIsStoriesUnlocked(true);
+    };
+
     const handleBackToHome = () => {
         navigate('/');
     };
@@ -435,6 +442,12 @@ export const ResultPage = () => {
                 <FollowUpSection
                     seededOutcomes={seededOutcomes}
                     isLoadingSeeds={isLoadingSeeds}
+                    isUnlocked={isStoriesUnlocked}
+                    onUnlock={handleUnlockStories}
+                    code={code}
+                    userQuestion={sessionUserInput}
+                    sessionId={sessionId}
+                    followupQuestion={analysis?.followup_question}
                 />
 
                 <RecoveryCode

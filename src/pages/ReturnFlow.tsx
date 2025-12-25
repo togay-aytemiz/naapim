@@ -183,31 +183,10 @@ export const ReturnFlow: React.FC = () => {
         try {
             setFeeling(f);
 
-            // If "thinking", save outcome and show reminder encouragement (never show stories)
-            if (outcomeType === 'thinking' && sessionData) {
-                setLoading(true);
-                try {
-                    await saveOutcome({
-                        session_id: sessionData.session_id,
-                        outcome_type: outcomeType,
-                        outcome_text: undefined,
-                        feeling: f,
-                        archetype_id: sessionData.archetype_id
-                    });
-                } catch (err) {
-                    console.error('Error saving outcome:', err);
-                }
-                // Always go to thinking-reminder step (no stories for thinking users)
-                setStep('thinking-reminder');
-                setLoading(false);
-            } else {
-                setStep('share-outcome');
-            }
+            setStep('share-outcome');
         } catch (error) {
             console.error("Unexpected error in feeling selection", error);
-            if (outcomeType !== 'thinking') {
-                setStep('share-outcome');
-            }
+            setStep('share-outcome');
         }
     };
 

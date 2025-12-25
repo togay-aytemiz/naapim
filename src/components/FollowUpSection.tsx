@@ -11,6 +11,13 @@ interface FollowUpSectionProps {
     followupDays?: number;
     seededOutcomes?: SeededOutcome[];
     isLoadingSeeds?: boolean;
+    isUnlocked?: boolean; // New prop
+    onUnlock: () => void; // New prop
+    // Data for modal
+    code?: string;
+    userQuestion?: string;
+    sessionId?: string;
+    followupQuestion?: string;
 }
 
 const feelingEmojis: Record<string, string> = {
@@ -46,8 +53,16 @@ const fakeTexts = [
 
 export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     seededOutcomes = [],
-    isLoadingSeeds = false
+    isLoadingSeeds = false,
+    isUnlocked = false,
+    onUnlock,
+    code = '',
+    userQuestion = '',
+    sessionId,
+    followupQuestion
 }) => {
+    const [showUnlockModal, setShowUnlockModal] = React.useState(false);
+
     const scrollToRecoveryCode = () => {
         document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -149,7 +164,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
             <div
                 className="absolute inset-x-0 bottom-0 h-full pointer-events-none rounded-b-2xl"
                 style={{
-                    background: 'linear-gradient(to top, var(--bg-primary) 0%, transparent 60%)'
+                    background: 'linear-gradient(to top, var(--bg-tertiary) 0%, transparent 60%)'
                 }}
             />
         </div>
@@ -231,51 +246,127 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 <div className="space-y-4">
                     <div className="text-center">
                         <h3 className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>
-                            Başkaları ne yaşıyor?
+                            {isUnlocked ? 'Topluluktan Hikayeler' : 'Başkaları ne yaşıyor?'}
                         </h3>
                         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-                            Benzer kararlar veren insanların deneyimleri
+                            {isUnlocked ? 'Seninle benzer durumda olanların paylaşımları' : 'Benzer kararlar veren insanların deneyimleri'}
                         </p>
                     </div>
 
-                    {/* Cards container with overlay */}
+                    {/* Cards container */}
                     <div className="space-y-3 relative">
-                        {/* Card 1: Real seeded outcome or skeleton */}
-                        {isLoadingSeeds ? (
-                            <SkeletonCard />
-                        ) : realOutcome ? (
-                            <RealOutcomeCard outcome={realOutcome} />
-                        ) : (
-                            <SkeletonCard />
-                        )}
+                        {/* UNLOCKED STATE: Show 3 real outcomes */}
+                        {isUnlocked ? (
+                            <div className="space-y-3 animate-in fade-in duration-500">
+                                {seededOutcomes.slice(0, 3).map((outcome, idx) => (
+                                    <RealOutcomeCard key={idx} outcome={outcome} />
+                                ))}
 
-                        {/* Card 2: Lightly blurred - text visible but not readable */}
-                        <FakeBlurredCard text={fakeTexts[0]} />
+                                {/* If there are more, show faint text */}
+                                {seededOutcomes.length > 3 && (
+                                    <p className="text-center text-xs opacity-50 py-2">
+                                        ve {seededOutcomes.length - 3} hikaye daha...
+                                    </p>
+                                )}
 
-                        {/* CTA Button - Floating Overlay on cards */}
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-                            <div
-                                className="p-2.5 rounded-full shadow-lg mb-2"
-                                style={{ backgroundColor: 'var(--text-primary)' }}
-                            >
-                                <svg className="w-4 h-4" style={{ color: 'var(--bg-primary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
+                                {/* CTA to share */}
+                                <div className="pt-2 text-center">
+                                    <button
+                                        onClick={scrollToRecoveryCode}
+                                        className="text-sm underline font-medium"
+                                        style={{ color: 'var(--coral-primary)' }}
+                                    >
+                                        Hepsini görmek için kararını paylaş
+                                    </button>
+                                </div>
                             </div>
-                            <button
-                                onClick={scrollToRecoveryCode}
-                                className="py-3 px-6 rounded-xl font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98] shadow-lg text-sm"
-                                style={{
-                                    backgroundColor: '#FF6F61',
-                                    boxShadow: '0 4px 20px rgba(255, 111, 97, 0.4)'
-                                }}
-                            >
-                                Hikayeni paylaş, diğerlerini gör ↓
-                            </button>
-                        </div>
+                        ) : (
+                            /* LOCKED STATE */
+                            <>
+                                {/* Card 1: Real outcome (partially visible) */}
+                                {isLoadingSeeds ? (
+                                    <SkeletonCard />
+                                ) : realOutcome ? (
+                                    <RealOutcomeCard outcome={realOutcome} />
+                                ) : (
+                                    <SkeletonCard />
+                                )}
+
+                                {/* Card 2: Blurred */}
+                                <FakeBlurredCard text={fakeTexts[0]} />
+
+                                {/* Card 3: Blurred (Added one more for stack effect) */}
+                                <FakeBlurredCard text={fakeTexts[1]} />
+
+                                {/* CTA Overlay */}
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
+
+                                    {/* Primary CTA: Share Decision */}
+                                    <div className="mb-4 w-full max-w-xs">
+                                        <div
+                                            className="mx-auto w-10 h-10 rounded-full shadow-lg mb-2 flex items-center justify-center"
+                                            style={{ backgroundColor: 'var(--text-primary)' }}
+                                        >
+                                            <svg className="w-5 h-5 text-[var(--bg-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                            </svg>
+                                        </div>
+                                        <button
+                                            onClick={scrollToRecoveryCode}
+                                            className="w-full py-3 px-6 rounded-xl font-medium text-white shadow-lg transition-transform active:scale-[0.98] text-sm"
+                                            style={{
+                                                backgroundColor: '#FF6F61', // Coral
+                                                boxShadow: '0 4px 15px rgba(255, 111, 97, 0.4)'
+                                            }}
+                                        >
+                                            Hikayeni paylaş, hepsini gör
+                                        </button>
+                                    </div>
+
+                                    {/* Secondary CTA: Undecided / Unlock */}
+                                    <div className="w-full max-w-xs">
+                                        <button
+                                            onClick={() => setShowUnlockModal(true)}
+                                            className="group w-full py-3 px-5 rounded-2xl font-medium text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                                            style={{
+                                                background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.9) 100%)',
+                                                border: '1px solid rgba(0,0,0,0.08)',
+                                                boxShadow: '0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)'
+                                            }}
+                                        >
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span className="text-lg">🤔</span>
+                                                <div className="text-left">
+                                                    <span style={{ color: 'var(--text-secondary)' }}>Henüz karar veremedim</span>
+                                                    <span
+                                                        className="block text-xs font-semibold group-hover:underline"
+                                                        style={{ color: 'var(--coral-primary)' }}
+                                                    >
+                                                        → 3 hikayeyle ilham al
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
+
+            {/* Unlock Modal */}
+            <UnlockModal
+                isOpen={showUnlockModal}
+                onClose={() => setShowUnlockModal(false)}
+                onUnlock={onUnlock}
+                code={code}
+                userQuestion={userQuestion}
+                sessionId={sessionId}
+                seededOutcomes={seededOutcomes} // Pass for immediate reminder payload
+                followupQuestion={followupQuestion}
+            />
         </div>
     );
 };
+import { UnlockModal } from './UnlockModal';

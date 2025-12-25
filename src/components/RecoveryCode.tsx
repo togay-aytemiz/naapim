@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Moon, Shield, Settings } from 'lucide-react';
 
 // Email validation helper
 const isValidEmail = (email: string): boolean => {
@@ -101,55 +101,107 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
 
     return (
         <>
-            {/* Why Tomorrow Modal */}
+            {/* Why Tomorrow Modal - Mobile: Bottom Sheet, Desktop: Centered */}
             {showWhyTomorrow && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+                    className="fixed inset-0 z-50 flex items-end md:items-center justify-center"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
                     onClick={() => setShowWhyTomorrow(false)}
                 >
                     <div
-                        className="relative w-full max-w-md rounded-2xl p-6 animate-in zoom-in-95 duration-200"
-                        style={{ backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-secondary)' }}
+                        className="relative w-full md:max-w-md rounded-t-3xl md:rounded-2xl p-6 pb-8 md:p-8 animate-in slide-in-from-bottom md:zoom-in-95 duration-300"
+                        style={{
+                            backgroundColor: 'var(--bg-primary)',
+                            boxShadow: '0 -4px 30px rgba(0,0,0,0.15)'
+                        }}
                         onClick={(e) => e.stopPropagation()}
                     >
+                        {/* Drag Handle (mobile) */}
+                        <div className="md:hidden w-10 h-1 rounded-full bg-gray-300 mx-auto mb-4" />
+
+                        {/* Close button */}
                         <button
                             onClick={() => setShowWhyTomorrow(false)}
-                            className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                            className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                         >
                             <X className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
                         </button>
 
-                        <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                        {/* Title */}
+                        <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
                             Neden yarın?
                         </h3>
 
-                        <div className="space-y-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            <p>
-                                <strong style={{ color: 'var(--text-primary)' }}>Gerçek deneyimler için</strong><br />
-                                Kararını verdikten hemen sonra değil, en az bir gece üstüne uyduktan sonra paylaşmanı istiyoruz.
-                                Bu sayede daha gerçekçi ve düşünülmüş geri bildirimler topluyoruz.
-                            </p>
+                        {/* Reasons with Icons */}
+                        <div className="space-y-5">
+                            {/* Reason 1 */}
+                            <div className="flex items-start gap-4">
+                                <div
+                                    className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center"
+                                    style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                                >
+                                    <Moon className="w-5 h-5" style={{ color: 'var(--coral-primary)' }} />
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                                        Gerçek deneyimler için
+                                    </p>
+                                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                        Kararını verdikten hemen sonra değil, en az bir gece üstüne uyduktan sonra paylaşmanı istiyoruz. Bu sayede daha gerçekçi ve düşünülmüş geri bildirimler topluyoruz.
+                                    </p>
+                                </div>
+                            </div>
 
-                            <p>
-                                <strong style={{ color: 'var(--text-primary)' }}>Spam ve kötüye kullanımı önlemek için</strong><br />
-                                24 saatlik bekleme süresi, sistemi otomatik spam ve anlık duygusal tepkilerden korur.
-                                Bu sayede herkes için daha değerli bir topluluk deneyimi yaratıyoruz.
-                            </p>
+                            {/* Reason 2 */}
+                            <div className="flex items-start gap-4">
+                                <div
+                                    className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center"
+                                    style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                                >
+                                    <Shield className="w-5 h-5" style={{ color: 'var(--coral-primary)' }} />
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                                        Spam ve kötüye kullanımı önlemek için
+                                    </p>
+                                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                        24 saatlik bekleme süresi, sistemi otomatik spam ve anlık duygusal tepkilerden korur. Bu sayede herkes için daha değerli bir topluluk deneyimi yaratıyoruz.
+                                    </p>
+                                </div>
+                            </div>
 
-                            <p>
-                                <strong style={{ color: 'var(--text-primary)' }}>Düşünceli kararlar için</strong><br />
-                                Araştırmalar gösteriyor ki önemli kararlar için bir gece beklemek daha sağlıklı sonuçlar veriyor.
-                                Bu süre sana da kararını gözden geçirme fırsatı tanıyor.
-                            </p>
+                            {/* Reason 3 */}
+                            <div className="flex items-start gap-4">
+                                <div
+                                    className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center"
+                                    style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                                >
+                                    <Settings className="w-5 h-5" style={{ color: 'var(--coral-primary)' }} />
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                                        Düşünceli kararlar için
+                                    </p>
+                                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                        Araştırmalar gösteriyor ki önemli kararlar için bir gece beklemek daha sağlıklı sonuçlar veriyor. Bu süre sana da kararını gözden geçirme fırsatı tanıyor.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
+                        {/* CTA Button */}
                         <button
                             onClick={() => setShowWhyTomorrow(false)}
-                            className="mt-6 w-full py-2.5 rounded-xl font-medium"
-                            style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-secondary)' }}
+                            className="mt-8 w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
+                            style={{
+                                backgroundColor: 'var(--coral-primary)',
+                                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.35)'
+                            }}
                         >
-                            Anladım
+                            Anladım, sabırsızlanıyorum!
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
                         </button>
                     </div>
                 </div>

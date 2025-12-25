@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
 import { AIInfoModal } from './shared/AIInfoModal';
 
 interface HomeScreenProps {
@@ -88,8 +86,7 @@ const getSmartActiveCount = (): number => {
     return Math.max(12, Math.round(baseCount + minuteVariation + randomVariation));
 };
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, isLoading = false }) => {
-    const navigate = useNavigate();
+export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
     const [input, setInput] = useState('');
     const [activeCount, setActiveCount] = useState(0);
     const [targetCount] = useState(() => getSmartActiveCount());
@@ -192,12 +189,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue, isLoading = 
         onContinue(input);
     };
 
-    const toggleTheme = () => {
-        const newDarkMode = !isDarkMode;
-        setIsDarkMode(newDarkMode);
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-    };
+
 
     const fullPlaceholder = displayedQuestion ? `Acaba ${displayedQuestion}` : 'Acaba ';
 

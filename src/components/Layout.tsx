@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 
 interface LayoutProps {
@@ -11,9 +11,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const isQuestionsPage = location.pathname === '/questions';
 
     useEffect(() => {
         // Check initial dark mode
@@ -42,15 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     };
 
-    const handleLogoClick = () => {
-        if (isQuestionsPage) {
-            // Show confirmation on questions page
-            setShowExitConfirm(true);
-        } else {
-            // Direct navigation on other pages
-            navigate('/');
-        }
-    };
+
 
     const handleConfirmExit = () => {
         setShowExitConfirm(false);

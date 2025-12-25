@@ -304,10 +304,18 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                     {/* Primary CTA: Share Decision */}
                                     <div className="mb-4 w-full max-w-xs">
                                         <div
-                                            className="mx-auto w-10 h-10 rounded-full shadow-lg mb-2 flex items-center justify-center"
-                                            style={{ backgroundColor: 'var(--text-primary)' }}
+                                            className="mx-auto w-14 h-14 rounded-2xl shadow-xl mb-3 flex items-center justify-center relative"
+                                            style={{
+                                                background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A80 100%)',
+                                                boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)'
+                                            }}
                                         >
-                                            <svg className="w-5 h-5 text-[var(--bg-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            {/* Subtle pulse ring */}
+                                            <div
+                                                className="absolute inset-0 rounded-2xl animate-ping opacity-20"
+                                                style={{ backgroundColor: 'var(--coral-primary)' }}
+                                            />
+                                            <svg className="w-6 h-6 text-white relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                             </svg>
                                         </div>

@@ -1715,6 +1715,27 @@ export const ReturnFlow: React.FC = () => {
                                 </div>
                             )}
 
+                            {/* CTA - Go to Dashboard */}
+                            <div className="pt-2">
+                                <button
+                                    onClick={() => {
+                                        // Refresh session data to include new outcome
+                                        window.location.reload();
+                                    }}
+                                    className="w-full py-4 px-6 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                                    style={{
+                                        backgroundColor: 'var(--coral-primary)',
+                                        color: 'white'
+                                    }}
+                                >
+                                    Hikayeme Git
+                                    <span className="text-lg">→</span>
+                                </button>
+                                <p className="text-center text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
+                                    Tam ekranı gör, düzenle veya toplulukla etkileşime geç
+                                </p>
+                            </div>
+
                             {/* Others' Experiences with Feelings - Real Data */}
                             {communityStories.filter(s => s.feeling && s.outcome_text).length > 0 && (
                                 <>

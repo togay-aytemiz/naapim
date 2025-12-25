@@ -85,24 +85,26 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, sessionId }) => {
     const outcomeStyle = outcomeTypeStyles[story.outcome_type] || outcomeTypeStyles.decided;
 
     return (
-        <div className="p-5 rounded-2xl transition-all duration-300 hover:shadow-sm" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-            <div className="flex items-center gap-2 mb-3">
-                {/* Outcome Type Badge */}
+        <div className="p-5 rounded-2xl transition-all duration-300 hover:shadow-md" style={{ backgroundColor: 'var(--bg-primary)' }}>
+            <div className="flex items-center justify-between mb-3">
+                {/* Outcome Type Badge - Left */}
                 <span
-                    className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+                    className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
                     style={{ backgroundColor: outcomeStyle.bg, color: outcomeStyle.text }}
                 >
                     {outcomeStyle.icon}
                     {outcomeStyle.label}
                 </span>
-                {/* Feeling Badge */}
-                <span className="text-lg">{feelingInfo.emoji}</span>
-                <span
-                    className="text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: colors.bg, color: colors.text }}
-                >
-                    {feelingInfo.label}
-                </span>
+                {/* Feeling - Right */}
+                <div className="flex items-center gap-1.5">
+                    <span
+                        className="text-xs font-medium px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: colors.bg, color: colors.text }}
+                    >
+                        {feelingInfo.label}
+                    </span>
+                    <span className="text-lg">{feelingInfo.emoji}</span>
+                </div>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 "{story.outcome_text}"

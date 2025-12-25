@@ -14,42 +14,60 @@ export const ReturnFlowTabs: React.FC<ReturnFlowTabsProps> = ({
     canViewCommunity,
     onLockedClick
 }) => {
-    const handleCommunityClick = () => {
-        if (canViewCommunity) {
-            onSectionChange('community');
-        } else {
+    const handleTabClick = (section: 'my-story' | 'community') => {
+        if (section === 'community' && !canViewCommunity) {
             onLockedClick?.();
+            return;
         }
+        onSectionChange(section);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    return (
-        <div className="hidden md:flex items-center justify-center gap-2 mb-8">
-            {/* My Story Tab */}
-            <button
-                onClick={() => onSectionChange('my-story')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${activeSection === 'my-story'
-                    ? 'bg-[var(--coral-primary)] text-white shadow-lg'
-                    : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
-                    }`}
-            >
-                <FileText className="w-4 h-4" />
-                Hikayem
-            </button>
+    const indicatorPosition = activeSection === 'community' && canViewCommunity ? 1 : 0;
 
-            {/* Community Tab */}
-            <button
-                onClick={handleCommunityClick}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${activeSection === 'community' && canViewCommunity
-                    ? 'bg-[var(--coral-primary)] text-white shadow-lg'
-                    : canViewCommunity
-                        ? 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
-                        : 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed opacity-60'
-                    }`}
-            >
-                <Users className="w-4 h-4" />
-                Topluluk
-                {!canViewCommunity && <Lock className="w-3 h-3 ml-1" />}
-            </button>
+    return (
+        <div className="hidden md:block mb-8">
+            <div className="relative flex border-b" style={{ borderColor: 'var(--border-primary)' }}>
+                {/* Sliding Underline Indicator */}
+                <div
+                    className="absolute bottom-0 h-[2px] bg-[var(--coral-primary)] transition-all duration-300 ease-out"
+                    style={{
+                        width: '50%',
+                        left: indicatorPosition === 0 ? '0%' : '50%',
+                    }}
+                />
+
+                {/* My Story Tab */}
+                <button
+                    onClick={() => handleTabClick('my-story')}
+                    className={`flex-1 flex items-center justify-center gap-3 py-4 transition-colors duration-200 group ${activeSection === 'my-story'
+                            ? 'text-[var(--coral-primary)]'
+                            : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                        }`}
+                >
+                    <FileText className={`w-5 h-5 transition-transform duration-200 ${activeSection === 'my-story' ? 'scale-110' : 'group-hover:scale-105'}`} />
+                    <span className="font-semibold text-[15px] tracking-tight">Hikayem</span>
+                </button>
+
+                {/* Community Tab */}
+                <button
+                    onClick={() => handleTabClick('community')}
+                    className={`flex-1 flex items-center justify-center gap-3 py-4 transition-colors duration-200 group ${activeSection === 'community' && canViewCommunity
+                            ? 'text-[var(--coral-primary)]'
+                            : canViewCommunity
+                                ? 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                                : 'text-[var(--text-muted)] cursor-not-allowed opacity-40'
+                        }`}
+                >
+                    <div className="relative">
+                        <Users className={`w-5 h-5 transition-transform duration-200 ${activeSection === 'community' && canViewCommunity ? 'scale-110' : 'group-hover:scale-105'}`} />
+                        {!canViewCommunity && (
+                            <Lock className="w-3 h-3 absolute -top-1.5 -right-2 text-amber-500" />
+                        )}
+                    </div>
+                    <span className="font-semibold text-[15px] tracking-tight">Topluluk</span>
+                </button>
+            </div>
         </div>
     );
 };

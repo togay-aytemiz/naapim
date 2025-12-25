@@ -795,14 +795,19 @@ export const ReturnFlow: React.FC = () => {
                     </div>
 
                 )}
-
                 {/* Step 2b: Returning User (Has Previous Outcomes) */}
                 {step === 'returning-user' && sessionData && lastOutcome && (
-                    <div className="w-full max-w-3xl mx-auto space-y-8 animate-in text-left pb-20 md:pb-0">
-                        {/* Page Header */}
-                        <div className="flex items-center justify-between gap-4 mb-6">
-                            <h2 className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>Merhaba 🙌</h2>
-                            <span className="font-mono px-2 py-0.5 rounded text-xs" style={{ color: '#2b8cee', backgroundColor: 'rgba(43, 140, 238, 0.1)' }}>
+                    <div className="w-full max-w-3xl mx-auto space-y-6 animate-in text-left pb-20 md:pb-0">
+                        {/* Dynamic Header - Shows active tab name (Mobile Only) */}
+                        <div className="md:hidden flex items-center justify-between gap-4">
+                            <h1
+                                key={activeSection}
+                                className="text-2xl font-bold animate-in fade-in slide-in-from-left-4 duration-300"
+                                style={{ color: 'var(--text-primary)' }}
+                            >
+                                {activeSection === 'my-story' ? 'Hikayem' : 'Topluluk'}
+                            </h1>
+                            <span className="font-mono px-2.5 py-1 rounded-lg text-xs font-medium" style={{ color: '#2b8cee', backgroundColor: 'rgba(43, 140, 238, 0.1)' }}>
                                 #{sessionData.code}
                             </span>
                         </div>

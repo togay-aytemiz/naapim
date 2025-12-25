@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 
-// Email validation helper
-const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
+import { isValidEmail } from '../utils/validation';
 
 import { scheduleReminder } from '../services/emailService';
 

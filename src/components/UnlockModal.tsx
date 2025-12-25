@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { X, Lock, CheckCircle } from 'lucide-react';
 import { sendCodeEmail, scheduleReminder } from '../services/emailService';
 
+import { isValidEmail } from '../utils/validation';
+
 interface UnlockModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -31,14 +33,14 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
     const [step, setStep] = useState<'input' | 'success'>('input');
     const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('1_week');
 
-    // Simple email validation
-    const isValidEmail = email.includes('@') && email.includes('.') && email.length > 5;
+    // Advanced email validation
+    const validEmail = isValidEmail(email);
 
     if (!isOpen) return null;
 
     const handleSubmit = async () => {
-        if (!isValidEmail) {
-            setError('Geçerli bir e-posta adresi giriniz.');
+        if (!validEmail) {
+            setError('Girdiğin e-posta adresi geçerli görünmüyor.');
             return;
         }
 
@@ -165,11 +167,11 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
 
                             <button
                                 onClick={handleSubmit}
-                                disabled={isLoading || !isValidEmail}
+                                disabled={isLoading || !validEmail}
                                 className="w-full py-3.5 rounded-xl font-medium text-white shadow-lg transition-all active:scale-[0.98] disabled:cursor-not-allowed"
                                 style={{
-                                    backgroundColor: isValidEmail && !isLoading ? '#EA580C' : '#d4d4d4',
-                                    color: isValidEmail && !isLoading ? 'white' : '#a3a3a3'
+                                    backgroundColor: validEmail && !isLoading ? '#EA580C' : '#d4d4d4',
+                                    color: validEmail && !isLoading ? 'white' : '#a3a3a3'
                                 }}
                             >
                                 {isLoading ? 'Açılıyor...' : 'Kilidi Aç ve Hatırlat'}

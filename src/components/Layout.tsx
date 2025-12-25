@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 
 interface LayoutProps {
@@ -11,6 +11,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Return page handles its own background with gradients
+    const isReturnPage = location.pathname === '/return';
 
     useEffect(() => {
         // Check initial dark mode
@@ -50,16 +54,25 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
         setShowExitConfirm(false);
     };
 
-    // Logo rules are now handled by the Header component
+    // Determine gradient background for return page
+    const getBackgroundStyle = () => {
+        if (isReturnPage) {
+            return isDarkMode
+                ? 'radial-gradient(ellipse at top right, #263245cc 0%, #0a1628ee 50%, #141414ff 100%)'
+                : 'radial-gradient(ellipse at top left, #f3e8ffcc 0%, #f8fafc 50%, #dbeafebb 100%)';
+        }
+        return undefined;
+    };
 
     return (
         <div
-            className={`min-h-screen min-h-dvh flex flex-col ${!isHomePage ? 'bg-[var(--bg-primary)]' : ''}`}
+            className={`min-h-screen min-h-dvh flex flex-col ${(!isHomePage && !isReturnPage) ? 'bg-[var(--bg-primary)]' : ''}`}
             style={{
                 // iOS safe area insets - homepage: no top padding so background extends to status bar
                 paddingTop: isHomePage ? '0' : 'env(safe-area-inset-top, 0)',
                 paddingLeft: 'env(safe-area-inset-left, 0)',
                 paddingRight: 'env(safe-area-inset-right, 0)',
+                background: getBackgroundStyle(),
             }}
         >
             {/* Exit Confirmation Modal */}
@@ -109,6 +122,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isHomePage = false }) 
 
             <Header
                 isTransparent={isHomePage}
+                hasGradientBg={isReturnPage}
                 isDarkMode={isDarkMode}
                 toggleTheme={toggleTheme}
                 showStatusButton={isHomePage}

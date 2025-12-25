@@ -123,6 +123,12 @@
   --success-bg: var(--emerald-50);
   --success-text: var(--emerald-700);
   --success-accent: var(--emerald-500);
+
+  /* Return Flow Specifics */
+  --return-card-top: #1f2937;
+  --return-card-text-top: #ffffff;
+  --return-card-bottom: #f1f5f9;
+  --return-card-border: var(--neutral-200);
 }
 
 /* ========================================
@@ -173,6 +179,12 @@
   --success-bg: rgba(16, 185, 129, 0.15);
   --success-text: var(--emerald-400);
   --success-accent: var(--emerald-500);
+
+  /* Return Flow Specifics */
+  --return-card-top: #192633;
+  --return-card-text-top: var(--neutral-100);
+  --return-card-bottom: #141f2a;
+  --return-card-border: #26384a;
 }
 
 /* ========================================

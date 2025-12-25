@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
     isTransparent?: boolean;
+    hasGradientBg?: boolean;
     isDarkMode: boolean;
     toggleTheme: () => void;
     showStatusButton?: boolean;
@@ -10,14 +11,22 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
     isTransparent = false,
+    hasGradientBg = false,
     isDarkMode,
     toggleTheme,
     showStatusButton = false
 }) => {
     const navigate = useNavigate();
 
+    // Determine background style
+    const bgClass = isTransparent
+        ? 'absolute top-0 left-0 bg-transparent'
+        : hasGradientBg
+            ? 'relative bg-transparent'
+            : 'relative bg-[var(--bg-primary)]';
+
     return (
-        <header className={`w-full flex items-center justify-between px-6 py-4 z-50 transition-all duration-300 ${isTransparent ? 'absolute top-0 left-0 bg-transparent' : 'relative bg-[var(--bg-primary)]'}`}>
+        <header className={`w-full flex items-center justify-between px-6 py-4 z-50 transition-all duration-300 ${bgClass}`}>
             {/* Logo Section */}
             <div className="flex items-center gap-2">
                 <button
@@ -26,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
                     aria-label="Anasayfa"
                 >
                     <img
-                        src={isDarkMode ? '/logo-beyaz.webp' : (isTransparent ? '/graphite-logo.webp' : '/logo.webp')}
+                        src={isDarkMode ? '/logo-beyaz.webp' : (isTransparent || hasGradientBg ? '/graphite-logo.webp' : '/logo.webp')}
                         alt="NeYapsam Logo"
                         className="h-full w-auto object-contain"
                     />
@@ -39,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
                     onClick={toggleTheme}
                     className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-black/5 ${isDarkMode
                         ? 'text-white hover:bg-white/10'
-                        : (isTransparent ? 'text-slate-600 hover:text-slate-900' : 'text-[var(--text-secondary)]')
+                        : (isTransparent || hasGradientBg ? 'text-slate-600 hover:text-slate-900' : 'text-[var(--text-secondary)]')
                         }`}
                     aria-label="Tema değiştir"
                 >

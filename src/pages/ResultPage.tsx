@@ -241,10 +241,11 @@ export const ResultPage = () => {
                 <div className="px-5">
                     {analysis ? (
                         <div
-                            className="rounded-2xl p-6 shadow-sm"
+                            className="rounded-3xl p-6 md:p-8"
                             style={{
                                 backgroundColor: 'var(--bg-elevated)',
-                                border: '1px solid var(--border-secondary)'
+                                border: '1px solid var(--border-secondary)',
+                                boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)'
                             }}
                         >
                             {/* AI Badge */}
@@ -309,7 +310,7 @@ export const ResultPage = () => {
                                     style={{
                                         height: showFullAnalysis
                                             ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
-                                            : '100px'
+                                            : '160px'
                                     }}
                                 >
                                     {/* Reasoning */}
@@ -355,32 +356,32 @@ export const ResultPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Gradient overlay + Expand button when collapsed */}
                                 <div
                                     className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${showFullAnalysis ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                                 >
+                                    {/* Gradient fade */}
                                     <div
-                                        className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                                        className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
                                         style={{
-                                            background: 'linear-gradient(to top, var(--bg-elevated) 50%, transparent)'
+                                            background: 'linear-gradient(to top, var(--bg-elevated) 0%, var(--bg-elevated) 20%, transparent 100%)'
                                         }}
                                     />
-                                    <button
-                                        onClick={() => setShowFullAnalysis(true)}
-                                        className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-all hover:opacity-90 z-10 border border-black/5"
-                                        style={{
-                                            backgroundColor: 'var(--bg-tertiary)',
-                                            color: 'var(--text-secondary)',
-                                            fontSize: '11px',
-                                            fontWeight: 500,
-                                            boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
-                                        }}
-                                    >
-                                        <Sparkles className="w-3 h-3" />
-                                        <span>naapim AI analizinin tamamını oku</span>
-                                        <span>↓</span>
-
-                                    </button>
+                                    {/* Button container - sits on top of gradient */}
+                                    <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2 z-20">
+                                        <button
+                                            onClick={() => setShowFullAnalysis(true)}
+                                            className="flex items-center gap-2 px-5 py-2.5 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-md group"
+                                            style={{
+                                                backgroundColor: 'var(--bg-elevated)',
+                                                border: '1px solid var(--border-secondary)',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                                            }}
+                                        >
+                                            <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12" style={{ color: 'var(--coral-primary)' }} />
+                                            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>naapim AI analizinin tamamını oku</span>
+                                            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>↓</span>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Collapse button when expanded */}

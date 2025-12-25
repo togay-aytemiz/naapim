@@ -27,6 +27,13 @@ const feelingEmojis: Record<string, string> = {
     regret: '😔'
 };
 
+const feelingLabels: Record<string, string> = {
+    happy: 'Mutlu',
+    neutral: 'Nötr',
+    uncertain: 'Kararsız',
+    regret: 'Pişman'
+};
+
 const outcomeStyles: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
     decided: {
         icon: <Check className="w-3.5 h-3.5" />,
@@ -88,8 +95,8 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
         </div>
     );
 
-    // Real Outcome Card (first line visible, rest blurred)
-    const RealOutcomeCard = ({ outcome }: { outcome: SeededOutcome }) => {
+    // Real Outcome Card (first line visible, rest blurred - unless showFull is true)
+    const RealOutcomeCard = ({ outcome, showFull = false }: { outcome: SeededOutcome; showFull?: boolean }) => {
         const style = outcomeStyles[outcome.outcome_type] || outcomeStyles.decided;
         const firstSentence = outcome.outcome_text.split(/[.!?]/)[0] + '...';
         const restOfText = outcome.outcome_text.substring(firstSentence.length - 3);
@@ -114,21 +121,28 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                         {style.icon}
                         <span>{style.label}</span>
                     </div>
-                    <span className="text-lg">{feelingEmojis[outcome.feeling]}</span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-lg">{feelingEmojis[outcome.feeling]}</span>
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{feelingLabels[outcome.feeling]}</span>
+                    </div>
                 </div>
 
-                {/* Text: first part visible, rest blurred */}
-                <p className="text-sm leading-relaxed">
-                    <span style={{ color: 'var(--text-primary)' }}>
-                        {firstSentence}
-                    </span>
-                    {restOfText && (
-                        <span
-                            className="blur-[4px] select-none"
-                            style={{ color: 'var(--text-secondary)', opacity: 0.7 }}
-                        >
-                            {' '}{restOfText.substring(0, 60)}...
-                        </span>
+                {/* Text: show full or partial based on showFull prop */}
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-primary)' }}>
+                    {showFull ? (
+                        outcome.outcome_text
+                    ) : (
+                        <>
+                            <span>{firstSentence}</span>
+                            {restOfText && (
+                                <span
+                                    className="blur-[4px] select-none"
+                                    style={{ color: 'var(--text-secondary)', opacity: 0.7 }}
+                                >
+                                    {' '}{restOfText.substring(0, 60)}...
+                                </span>
+                            )}
+                        </>
                     )}
                 </p>
             </div>
@@ -175,7 +189,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
             <div className="w-full max-w-md space-y-8">
                 {/* Conversational intro */}
                 <div className="text-center space-y-3">
-                    <h3 className="text-xl md:text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>
+                    <h3 className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
                         Hikaye burada bitmiyor.
                     </h3>
                     <p className="leading-relaxed max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
@@ -185,10 +199,11 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 
                 {/* Simple exchange card */}
                 <div
-                    className="rounded-2xl p-6"
+                    className="rounded-3xl p-6 md:p-8"
                     style={{
-                        backgroundColor: 'var(--bg-secondary)',
-                        border: '1px solid var(--border-secondary)'
+                        backgroundColor: 'var(--bg-elevated)',
+                        border: '1px solid var(--border-secondary)',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)'
                     }}
                 >
                     {/* How it works */}
@@ -259,7 +274,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                         {isUnlocked ? (
                             <div className="space-y-3 animate-in fade-in duration-500">
                                 {seededOutcomes.slice(0, 3).map((outcome, idx) => (
-                                    <RealOutcomeCard key={idx} outcome={outcome} />
+                                    <RealOutcomeCard key={idx} outcome={outcome} showFull={true} />
                                 ))}
 
                                 {/* If there are more, show faint text */}

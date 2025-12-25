@@ -209,8 +209,8 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
 
             <div id="recovery-code-section" className="space-y-6 px-5 scroll-mt-24">
                 <div className="text-center">
-                    <h3 className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>
-                        Takip kodun
+                    <h3 className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        Takip kodunla hikayeni paylaş
                     </h3>
                     <p className="text-helper mt-2 max-w-sm mx-auto">
                         Bu anahtarı sakla. <strong>Yarından itibaren</strong> geri dönüp hikayeni paylaşabilir ve diğerlerinin deneyimlerini görebilirsin.

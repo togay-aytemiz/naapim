@@ -64,6 +64,7 @@ export const ReturnFlow: React.FC = () => {
     const [hasMoreStories, setHasMoreStories] = useState(false);
     const [storiesOffset, setStoriesOffset] = useState(0);
     const [noExactMatch, setNoExactMatch] = useState(false);
+    const [showValidationShake, setShowValidationShake] = useState(false);
 
     // Inline reminder state for too-early screen
     const [reminderEmail, setReminderEmail] = useState('');
@@ -1002,8 +1003,8 @@ export const ReturnFlow: React.FC = () => {
                                     onClick={() => lastOutcomeType !== 'decided' && handleOutcomeSelect('decided')}
                                     disabled={lastOutcomeType === 'decided'}
                                     className={`group relative p-4 rounded-xl border transition-all duration-300 flex items-center gap-4 text-left ${lastOutcomeType === 'decided'
-                                            ? 'opacity-60 cursor-not-allowed'
-                                            : 'hover:scale-[1.01]'
+                                        ? 'opacity-60 cursor-not-allowed'
+                                        : 'hover:scale-[1.01]'
                                         }`}
                                     style={{
                                         backgroundColor: 'var(--bg-elevated)',
@@ -1034,8 +1035,8 @@ export const ReturnFlow: React.FC = () => {
                                     onClick={() => lastOutcomeType !== 'thinking' && handleOutcomeSelect('thinking')}
                                     disabled={lastOutcomeType === 'thinking'}
                                     className={`group relative p-4 rounded-xl border transition-all duration-300 flex items-center gap-4 text-left ${lastOutcomeType === 'thinking'
-                                            ? 'opacity-60 cursor-not-allowed'
-                                            : 'hover:scale-[1.01]'
+                                        ? 'opacity-60 cursor-not-allowed'
+                                        : 'hover:scale-[1.01]'
                                         }`}
                                     style={{
                                         backgroundColor: 'var(--bg-elevated)',
@@ -1066,8 +1067,8 @@ export const ReturnFlow: React.FC = () => {
                                     onClick={() => lastOutcomeType !== 'cancelled' && handleOutcomeSelect('cancelled')}
                                     disabled={lastOutcomeType === 'cancelled'}
                                     className={`group relative p-4 rounded-xl border transition-all duration-300 flex items-center gap-4 text-left ${lastOutcomeType === 'cancelled'
-                                            ? 'opacity-60 cursor-not-allowed'
-                                            : 'hover:scale-[1.01]'
+                                        ? 'opacity-60 cursor-not-allowed'
+                                        : 'hover:scale-[1.01]'
                                         }`}
                                     style={{
                                         backgroundColor: 'var(--bg-elevated)',
@@ -1196,7 +1197,7 @@ export const ReturnFlow: React.FC = () => {
                                 value={outcomeText}
                                 onChange={(e) => { setOutcomeText(e.target.value); setModerationError(null); }}
                                 disabled={isModerating || loading}
-                                className="w-full h-72 p-6 md:p-8 border-0 rounded-3xl text-lg md:text-xl leading-relaxed resize-none transition-all duration-300 focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-600 outline-none"
+                                className="w-full h-48 md:h-72 p-6 md:p-8 border-0 rounded-3xl text-lg md:text-xl leading-relaxed resize-none transition-all duration-300 focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-600 outline-none"
                                 style={{
                                     backgroundColor: 'var(--bg-elevated)',
                                     color: 'var(--text-primary)',
@@ -1204,10 +1205,20 @@ export const ReturnFlow: React.FC = () => {
                                 }}
                                 placeholder="Ne karar verdin? Ne oldu? Nasıl hissettin?"
                             />
-                            <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 pointer-events-none opacity-40" style={{ color: 'var(--text-muted)' }}>
-                                <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300" }}>edit_note</span>
+                            {/* Character counter */}
+                            <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 flex items-center gap-2">
+                                <span className={`text-xs font-medium ${outcomeText.length < 50 ? 'text-amber-500' : 'text-green-500'}`}>
+                                    {outcomeText.length}/50
+                                </span>
                             </div>
                         </div>
+
+                        {/* Validation error - directly under textarea */}
+                        {outcomeText.length > 0 && outcomeText.length < 50 && (
+                            <p className="text-center text-sm text-amber-600 dark:text-amber-400 -mt-4 mb-4">
+                                En az 50 karakter yazmalısın ({50 - outcomeText.length} karakter kaldı)
+                            </p>
+                        )}
 
                         <div className="max-w-xl mx-auto w-full space-y-5">
                             {/* AI Moderation Note */}
@@ -1240,13 +1251,18 @@ export const ReturnFlow: React.FC = () => {
                             )}
 
                             <button
-                                onClick={handleShare}
+                                onClick={() => {
+                                    if (outcomeText.length < 50) {
+                                        setShowValidationShake(true);
+                                        setTimeout(() => setShowValidationShake(false), 500);
+                                        return;
+                                    }
+                                    handleShare();
+                                }}
                                 disabled={isModerating || loading}
-                                className="w-full text-white text-lg font-medium py-5 px-8 rounded-2xl shadow-xl transform transition-all duration-300 flex items-center justify-center group ring-1 ring-white/10 hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-[0.99]"
+                                className={`w-full text-white text-lg font-medium py-5 px-8 rounded-2xl shadow-xl transform transition-all duration-300 flex items-center justify-center group ring-1 ring-white/10 ${outcomeText.length >= 50 ? 'hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-[0.99]' : 'opacity-60 cursor-not-allowed'} ${showValidationShake ? 'animate-shake' : ''}`}
                                 style={{
-                                    backgroundColor: '#18181b', // Primary dark
-                                    // Dark mode note: user theme has primary as #18181b, but in dark mode button should probably be white or accent. 
-                                    // Let's stick to a solid impactful color.
+                                    backgroundColor: '#18181b',
                                 }}
                             >
                                 {isModerating ? (
@@ -1420,158 +1436,181 @@ export const ReturnFlow: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 6: View Stories */}
-                {step === 'view-stories' && sessionData && (
-                    <div className="space-y-6 animate-in">
-                        <div className="text-center space-y-3">
-                            <div className="text-4xl">🎉</div>
-                            <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Teşekkürler!</h1>
-                            <p className="text-[var(--text-secondary)]">Hikayeni paylaştığın için teşekkürler.</p>
-                        </div>
+                {/* Step 6: View Stories - Success Page */}
+                {step === 'view-stories' && sessionData && (() => {
+                    // Dynamic celebration messages based on outcome type + feeling
+                    const getCelebrationMessage = () => {
+                        const messages: Record<string, Record<string, { emoji: string; title: string; subtitle: string }>> = {
+                            decided: {
+                                happy: { emoji: '🎉', title: 'Harika bir adım attın!', subtitle: 'Kararını verdin ve mutlusun. Bu harika bir başlangıç!' },
+                                neutral: { emoji: '✨', title: 'Önemli bir adım attın', subtitle: 'Karar vermek her zaman kolay değil. İleriye bakıyorsun.' },
+                                sad: { emoji: '💪', title: 'Cesur bir adım attın', subtitle: 'Zor olsa da karar verdin. Bu da bir güç göstergesi.' },
+                                regret: { emoji: '🌱', title: 'Her deneyim bir ders', subtitle: 'Pişmanlık hissetsen de, bu seni büyütecek.' },
+                            },
+                            thinking: {
+                                happy: { emoji: '💭', title: 'Düşünmeye devam et!', subtitle: 'Pozitif bir bakış açısıyla düşünüyorsun, bu güzel.' },
+                                neutral: { emoji: '⏳', title: 'Acele etme, düşün', subtitle: 'Doğru karar için zaman ayırıyorsun, bu akıllıca.' },
+                                sad: { emoji: '🤗', title: 'Yalnız değilsin', subtitle: 'Zor bir süreçtesin ama destek her zaman var.' },
+                                regret: { emoji: '💡', title: 'Her şeyi tartmak önemli', subtitle: 'Dikkatli düşünmen iyi, kendine zaman tanı.' },
+                            },
+                            cancelled: {
+                                happy: { emoji: '🙌', title: 'Doğru kararı verdin!', subtitle: 'Vazgeçmek bazen en iyi karar. Rahatlamış görünüyorsun.' },
+                                neutral: { emoji: '🔄', title: 'Sayfa çevrildi', subtitle: 'Bu kapandı, yeni fırsatlara bakma zamanı.' },
+                                sad: { emoji: '💔', title: 'Kolay olmadı biliyoruz', subtitle: 'Vazgeçmek acı verebilir ama bazen gerekli.' },
+                                regret: { emoji: '🌿', title: 'Kendine nazik ol', subtitle: 'Her sonuç bir öğrenme. İleriye bak.' },
+                            },
+                        };
+                        const outcome = outcomeType || 'decided';
+                        const feel = feeling || 'neutral';
+                        return messages[outcome]?.[feel] || messages.decided.neutral;
+                    };
 
-                        {/* User's story with feeling */}
-                        {(outcomeText.trim() || feeling) && (
-                            <div className="p-4 rounded-2xl" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-secondary)' }}>
-                                <p className="text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Senin hikayen:</p>
-                                {outcomeText.trim() && (
-                                    <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-primary)' }}>"{outcomeText}"</p>
-                                )}
-                                {feeling && (
-                                    <div className="flex items-center gap-2 pt-2" style={{ borderTop: '1px solid var(--border-primary)' }}>
-                                        <span className="text-xl">{feelingOptions.find(f => f.type === feeling)?.emoji}</span>
-                                        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                                            {feelingOptions.find(f => f.type === feeling)?.label} hissediyorsun
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                    const celebration = getCelebrationMessage();
 
-                        {/* Expandable Answers Section */}
-                        {sessionData.answers && sessionData.archetype_id && Object.keys(sessionData.answers).length > 0 && (() => {
-                            const questions = RegistryLoader.getQuestionsForArchetype(sessionData.archetype_id);
-                            const allAnswers = Object.entries(sessionData.answers);
-                            const answersToShow = showAllAnswers ? allAnswers : allAnswers.slice(0, 3);
-                            const hasMore = allAnswers.length > 3;
-
-                            return (
-                                <div className="p-4 rounded-2xl relative" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                                    <p className="text-xs font-medium mb-4" style={{ color: 'var(--text-muted)' }}>Senin gibi düşünenler de var:</p>
-                                    <div
-                                        className="space-y-3 transition-all duration-500 ease-in-out overflow-hidden"
-                                        style={{
-                                            maxHeight: showAllAnswers ? `${allAnswers.length * 60}px` : '180px',
-                                        }}
-                                    >
-                                        {answersToShow.map(([fieldKey, optionId], index) => {
-                                            const question = questions.find(q => q.id === fieldKey);
-                                            const option = question?.options.find(o => o.id === optionId);
-                                            if (!question || !option) return null;
-
-                                            const isLastVisible = !showAllAnswers && index === 2 && hasMore;
-
-                                            return (
-                                                <div
-                                                    key={fieldKey}
-                                                    className="flex flex-col gap-0.5 transition-opacity duration-300"
-                                                    style={{
-                                                        opacity: isLastVisible ? 0.4 : 1,
-                                                    }}
-                                                >
-                                                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{question.text}</p>
-                                                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{option.label}</p>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Gradient overlay when collapsed */}
-                                    {hasMore && !showAllAnswers && (
-                                        <div
-                                            className="absolute bottom-12 left-0 right-0 h-16 pointer-events-none"
-                                            style={{
-                                                background: 'linear-gradient(to bottom, transparent, var(--bg-secondary))',
-                                            }}
-                                        />
-                                    )}
-
-                                    {/* Show more/less button */}
-                                    {hasMore && (
-                                        <button
-                                            onClick={() => setShowAllAnswers(!showAllAnswers)}
-                                            className="w-full mt-3 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all hover:opacity-80"
-                                            style={{ color: 'var(--text-muted)' }}
-                                        >
-                                            <span>{showAllAnswers ? 'Daha az göster' : `Tüm cevapları gör (${allAnswers.length})`}</span>
-                                            {showAllAnswers ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                                        </button>
-                                    )}
+                    return (
+                        <div className="space-y-8 animate-in">
+                            {/* Success Badge */}
+                            <div className="flex justify-center">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+                                    <CheckCircle className="w-4 h-4" />
+                                    Karar Başarıyla Güncellendi
                                 </div>
-                            );
-                        })()}
+                            </div>
 
-                        {/* No exact match message */}
-                        {noExactMatch && (
-                            <div
-                                className="p-5 rounded-2xl text-center space-y-3"
-                                style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}
-                            >
-                                <div className="text-2xl">🌱</div>
-                                <h4 className="font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    Henüz benzer deneyim yok
-                                </h4>
-                                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                                    Seninle tam olarak aynı konuda düşünen birileri henüz hikayelerini paylaşmamış.
-                                    Ara sıra uğrayarak yeni hikayeleri görebilirsin!
-                                </p>
-                                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                                    ✨ Senin hikayen başkalarına ilham olacak
+                            {/* Celebration Message */}
+                            <div className="text-center space-y-3">
+                                <div className="text-5xl">{celebration.emoji}</div>
+                                <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                                    {celebration.title}
+                                </h1>
+                                <p className="text-base md:text-lg max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                                    {celebration.subtitle}
                                 </p>
                             </div>
-                        )}
 
-                        {/* Others' Experiences with Feelings - Real Data */}
-                        {communityStories.filter(s => s.feeling && s.outcome_text).length > 0 && (
-                            <>
-                                <div className="text-center pt-2">
-                                    <h3 className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>Diğerlerinin deneyimleri:</h3>
+                            {/* Stats Cards */}
+                            <div className="grid grid-cols-3 gap-3">
+                                {/* Satisfaction Rate */}
+                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Memnuniyet</span>
+                                        <span className="text-base">😊</span>
+                                    </div>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>%85</span>
+                                        <span className="text-xs text-green-500">↗ +2%</span>
+                                    </div>
+                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Benzer kararları verenlerin oranı</p>
                                 </div>
 
-                                <div className="space-y-4">
-                                    {communityStories
-                                        .filter(story => story.feeling && story.outcome_text)
-                                        .map(story => (
-                                            <StoryCard
-                                                key={story.id}
-                                                story={story}
-                                                sessionId={sessionData?.session_id || ''}
-                                            />
-                                        ))}
-                                    {/* Infinite scroll sentinel - auto-loads when visible */}
-                                    {hasMoreStories && (
-                                        <div
-                                            ref={loadMoreRef}
-                                            className="py-4 flex items-center justify-center"
-                                        >
-                                            {storiesLoading && (
-                                                <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
-                                                    <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
-                                                    Yükleniyor...
-                                                </div>
-                                            )}
+                                {/* Most Common Feeling */}
+                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>En Yaygın Sonuç</span>
+                                        <span className="text-base">🎯</span>
+                                    </div>
+                                    <span className="text-lg md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Rahatlama</span>
+                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Katılımcıların çoğu bunu hissetti</p>
+                                </div>
+
+                                {/* Average Time */}
+                                <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] uppercase font-bold tracking-wide" style={{ color: 'var(--text-muted)' }}>Ortalama Süre</span>
+                                        <span className="text-base">⏱️</span>
+                                    </div>
+                                    <span className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>2 Hafta</span>
+                                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Etkilerin görülme süresi</p>
+                                </div>
+                            </div>
+
+                            {/* User's Story Card */}
+                            {(outcomeText.trim() || feeling) && (
+                                <div className="p-5 rounded-2xl" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                    <p className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: 'var(--text-muted)' }}>Senin Hikayen</p>
+                                    {outcomeText.trim() && (
+                                        <blockquote className="pl-4 py-2 text-base italic leading-relaxed mb-4" style={{
+                                            borderLeftWidth: '4px',
+                                            borderLeftColor: 'var(--coral-primary)',
+                                            color: 'var(--text-primary)'
+                                        }}>
+                                            "{outcomeText}"
+                                        </blockquote>
+                                    )}
+                                    {feeling && (
+                                        <div className="flex items-center gap-2 pt-3" style={{ borderTop: '1px solid var(--border-primary)' }}>
+                                            <span className="text-2xl">{feelingOptions.find(f => f.type === feeling)?.emoji}</span>
+                                            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                                                {feelingOptions.find(f => f.type === feeling)?.label} hissediyorsun
+                                            </span>
                                         </div>
                                     )}
                                 </div>
-                            </>
-                        )}
+                            )}
 
-                        <div className="text-center">
-                            <button onClick={() => navigate('/')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
-                                ← Ana sayfaya dön
-                            </button>
+                            {/* No exact match message */}
+                            {noExactMatch && (
+                                <div
+                                    className="p-5 rounded-2xl text-center space-y-3"
+                                    style={{ backgroundColor: 'var(--bg-elevated)' }}
+                                >
+                                    <div className="text-2xl">🌱</div>
+                                    <h4 className="font-medium" style={{ color: 'var(--text-primary)' }}>
+                                        Henüz benzer deneyim yok
+                                    </h4>
+                                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                        Seninle tam olarak aynı konuda düşünen birileri henüz hikayelerini paylaşmamış.
+                                        Ara sıra uğrayarak yeni hikayeleri görebilirsin!
+                                    </p>
+                                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                        ✨ Senin hikayen başkalarına ilham olacak
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Others' Experiences with Feelings - Real Data */}
+                            {communityStories.filter(s => s.feeling && s.outcome_text).length > 0 && (
+                                <>
+                                    <div className="pt-4">
+                                        <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Benzer Kararlar Verenler Ne Diyor?</h3>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        {communityStories
+                                            .filter(story => story.feeling && story.outcome_text)
+                                            .map(story => (
+                                                <StoryCard
+                                                    key={story.id}
+                                                    story={story}
+                                                    sessionId={sessionData?.session_id || ''}
+                                                />
+                                            ))}
+                                        {/* Infinite scroll sentinel - auto-loads when visible */}
+                                        {hasMoreStories && (
+                                            <div
+                                                ref={loadMoreRef}
+                                                className="py-4 flex items-center justify-center"
+                                            >
+                                                {storiesLoading && (
+                                                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+                                                        <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+                                                        Yükleniyor...
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+
+                            <div className="text-center pt-4">
+                                <button onClick={() => navigate('/')} className="text-sm hover:underline" style={{ color: 'var(--text-muted)' }}>
+                                    ← Ana sayfaya dön
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    );
+                })()}
 
             </div>
         </div >

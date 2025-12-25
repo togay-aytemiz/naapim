@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Check, Clock, X, ChevronDown, ChevronUp, Calendar, CheckCircle, Hourglass, XCircle, ArrowRight, Lock } from 'lucide-react';
 
-import { RegistryLoader } from '../services/registryLoader';
+
 import { saveOutcome, type FeelingType } from '../services/saveOutcome';
 import { moderateContent } from '../services/moderateContent';
 import { getArchetypeStats, type ArchetypeStats } from '../services/statsService';
@@ -10,13 +10,15 @@ import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
 
 // Extracted modules
 import { StoryCard } from './returnFlow/StoryCard';
+import { ReturnFlowTabs } from './returnFlow/ReturnFlowTabs';
+import { ReturnFlowBottomNav } from './returnFlow/ReturnFlowBottomNav';
 import {
-
-
     feelingOptions,
     moderationMessages
 } from './returnFlow/constants';
 import type { Outcome, SessionData, FlowStep, OutcomeType } from './returnFlow/types';
+
+type ActiveSection = 'my-story' | 'community';
 
 export const ReturnFlow: React.FC = () => {
     const navigate = useNavigate();
@@ -34,19 +36,6 @@ export const ReturnFlow: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [sessionData, setSessionData] = useState<SessionData | null>(null);
 
-    // Theme detection for gradient
-    const [isDarkMode, setIsDarkMode] = useState(() =>
-        document.documentElement.classList.contains('dark')
-    );
-
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'));
-        });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-        return () => observer.disconnect();
-    }, []);
-
     // Outcome state
     const [outcomeType, setOutcomeType] = useState<OutcomeType>(null);
     const [outcomeText, setOutcomeText] = useState('');
@@ -56,7 +45,7 @@ export const ReturnFlow: React.FC = () => {
 
     // UI state
 
-    const [showAllAnswers, setShowAllAnswers] = useState(false);
+
     const [isModerating, setIsModerating] = useState(false);
     const [moderationError, setModerationError] = useState<string | null>(null);
     const [moderationMessageIndex, setModerationMessageIndex] = useState(0);
@@ -68,6 +57,16 @@ export const ReturnFlow: React.FC = () => {
     const [showValidationShake, setShowValidationShake] = useState(false);
     const [archetypeStats, setArchetypeStats] = useState<ArchetypeStats | null>(null);
     const [statsLoading, setStatsLoading] = useState(false);
+
+    // Navigation state for tab/bottom nav
+    const [activeSection, setActiveSection] = useState<ActiveSection>('my-story');
+    const [showLockedModal, setShowLockedModal] = useState(false);
+
+    // Compute if user can view community (has shared outcome with text)
+    const canViewCommunity = !!(
+        sessionData?.previous_outcomes?.some(o => o.outcome_text && o.outcome_text.length > 0) ||
+        (outcomeText && outcomeText.length >= 50)
+    );
 
     // Inline reminder state for too-early screen
     const [reminderEmail, setReminderEmail] = useState('');
@@ -96,6 +95,24 @@ export const ReturnFlow: React.FC = () => {
             });
         }
     }, [step]);
+
+    // Fetch stats and stories when community tab is opened
+    useEffect(() => {
+        if (activeSection === 'community' && canViewCommunity && sessionData?.archetype_id) {
+            // Fetch stats if not already loaded
+            if (!archetypeStats) {
+                setStatsLoading(true);
+                getArchetypeStats(sessionData.archetype_id).then(stats => {
+                    setArchetypeStats(stats);
+                    setStatsLoading(false);
+                });
+            }
+            // Fetch community stories if not already loaded
+            if (communityStories.length === 0) {
+                fetchCommunityStories(false);
+            }
+        }
+    }, [activeSection, canViewCommunity]);
 
     // Rotating moderation messages
     useEffect(() => {
@@ -781,8 +798,7 @@ export const ReturnFlow: React.FC = () => {
 
                 {/* Step 2b: Returning User (Has Previous Outcomes) */}
                 {step === 'returning-user' && sessionData && lastOutcome && (
-                    <div className="w-full max-w-3xl mx-auto space-y-8 animate-in text-left">
-                        {/* Page Header */}
+                    <div className="w-full max-w-3xl mx-auto space-y-8 animate-in text-left pb-20 md:pb-0">
                         {/* Page Header */}
                         <div className="flex items-center justify-between gap-4 mb-6">
                             <h2 className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>Merhaba 🙌</h2>
@@ -791,207 +807,292 @@ export const ReturnFlow: React.FC = () => {
                             </span>
                         </div>
 
-                        {/* Part 1: Reflection Card (Hero) */}
-                        <div className="rounded-3xl overflow-hidden shadow-xl" style={{ border: '1px solid var(--return-card-border)' }}>
-                            {/* Question Section (Top) */}
-                            <div className="p-6 sm:p-8" style={{ backgroundColor: 'var(--return-card-top)' }}>
-                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg mb-4 text-[10px] font-bold uppercase tracking-wide leading-none" style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', color: 'var(--accent-500)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                                    <Calendar className="w-3.5 h-3.5" />
-                                    <span className="mt-[1px]">
-                                        {(() => {
-                                            const created = new Date(sessionData.created_at);
-                                            const now = new Date();
-                                            const diffTime = Math.abs(now.getTime() - created.getTime());
-                                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                                            return diffDays <= 1 ? 'BUGÜN SORDUN' : `${diffDays} GÜN ÖNCE SORDUN`;
-                                        })()}
-                                    </span>
-                                </div>
-                                <h3 className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--return-card-text-top)' }}>
-                                    "{sessionData.user_question}"
-                                </h3>
-                            </div>
+                        {/* Tab Navigation (Desktop) */}
+                        <ReturnFlowTabs
+                            activeSection={activeSection}
+                            onSectionChange={setActiveSection}
+                            canViewCommunity={canViewCommunity}
+                            onLockedClick={() => setShowLockedModal(true)}
+                        />
 
-                            {/* AI Analysis Summary (Bottom) */}
-                            <div className="p-6 sm:p-8 relative overflow-hidden" style={{ backgroundColor: 'var(--return-card-bottom)', borderTop: '1px solid var(--return-card-border)' }}>
-                                {/* Background Decorative Icon */}
-                                <div className="absolute -bottom-6 -right-6 opacity-[0.03] pointer-events-none">
-                                    <span className="material-symbols-outlined !text-[12rem]" style={{ color: 'var(--text-primary)', fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                                </div>
-
-                                <div className="relative z-10">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold mb-4" style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--accent-text)', border: '1px solid var(--accent-border)' }}>
-                                        <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                                        naapim AI Önerisi
+                        {/* My Story Section */}
+                        {activeSection === 'my-story' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                {/* Part 1: Reflection Card (Hero) */}
+                                <div className="rounded-3xl overflow-hidden shadow-xl" style={{ border: '1px solid var(--return-card-border)' }}>
+                                    {/* Question Section (Top) */}
+                                    <div className="p-6 sm:p-8" style={{ backgroundColor: 'var(--return-card-top)' }}>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg mb-4 text-[10px] font-bold uppercase tracking-wide leading-none" style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', color: 'var(--accent-500)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                                            <Calendar className="w-3.5 h-3.5" />
+                                            <span className="mt-[1px]">
+                                                {(() => {
+                                                    const created = new Date(sessionData.created_at);
+                                                    const now = new Date();
+                                                    const diffTime = Math.abs(now.getTime() - created.getTime());
+                                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                                    return diffDays <= 1 ? 'BUGÜN SORDUN' : `${diffDays} GÜN ÖNCE SORDUN`;
+                                                })()}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--return-card-text-top)' }}>
+                                            "{sessionData.user_question}"
+                                        </h3>
                                     </div>
-                                    <p className="leading-relaxed text-base sm:text-lg font-medium mb-4" style={{ color: 'var(--text-secondary)' }}>
-                                        {sessionData.analysis?.recommendation || "Analiz yüklenemedi."}
-                                    </p>
 
-                                    {/* Collapsible Details */}
-                                    <div className="mt-4">
-                                        {showDetails ? (
-                                            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <div className="my-4 h-px bg-[var(--border-secondary)] opacity-30" />
-                                                <div className="flex flex-col gap-6 text-left">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>NEDEN?</p>
-                                                        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                                            {sessionData.analysis?.reasoning}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>ADIMLAR</p>
-                                                        <ul className="space-y-1.5">
-                                                            {sessionData.analysis?.steps?.map((st: string, i: number) => (
-                                                                <li key={i} className="text-xs flex items-start gap-2" style={{ color: 'var(--text-secondary)' }}>
-                                                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
-                                                                    {st}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <button onClick={() => setShowDetails(false)} className="mt-6 text-xs transition-colors flex items-center gap-1 font-medium" style={{ color: 'var(--text-muted)' }}>
-                                                    <ChevronUp className="w-3 h-3" /> Daha Az Göster
-                                                </button>
+                                    {/* AI Analysis Summary (Bottom) */}
+                                    <div className="p-6 sm:p-8 relative overflow-hidden" style={{ backgroundColor: 'var(--return-card-bottom)', borderTop: '1px solid var(--return-card-border)' }}>
+                                        {/* Background Decorative Icon */}
+                                        <div className="absolute -bottom-6 -right-6 opacity-[0.03] pointer-events-none">
+                                            <span className="material-symbols-outlined !text-[12rem]" style={{ color: 'var(--text-primary)', fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                                        </div>
+
+                                        <div className="relative z-10">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold mb-4" style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--accent-text)', border: '1px solid var(--accent-border)' }}>
+                                                <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                                                naapim AI Önerisi
                                             </div>
-                                        ) : (
-                                            <button onClick={() => setShowDetails(true)} className="flex items-center gap-1 text-xs font-bold transition-all hover:gap-2" style={{ color: 'var(--coral-500)' }}>
-                                                <span>Detayları gör</span>
-                                                <ChevronDown className="w-3 h-3" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                            <p className="leading-relaxed text-base sm:text-lg font-medium mb-4" style={{ color: 'var(--text-secondary)' }}>
+                                                {sessionData.analysis?.recommendation || "Analiz yüklenemedi."}
+                                            </p>
 
-                        {/* Part 2: Current Status Card */}
-                        <div className="space-y-6 pt-4">
-                            {/* Section Header */}
-                            <div className="flex items-center gap-3">
-                                <Clock className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
-                                <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Karar Durumunuz</h3>
-                            </div>
-
-                            {/* Current Status Card */}
-                            <div className="p-5 rounded-2xl" style={{ backgroundColor: 'var(--bg-elevated)' }}>
-                                {/* Status Header */}
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className={`p-3 rounded-xl ${lastOutcome?.outcome_type === 'decided' ? 'bg-green-500/10' :
-                                        lastOutcome?.outcome_type === 'thinking' ? 'bg-amber-500/10' :
-                                            'bg-slate-500/10'
-                                        }`}>
-                                        {lastOutcome?.outcome_type === 'decided' && <CheckCircle className="w-7 h-7 text-green-600 dark:text-green-500" />}
-                                        {lastOutcome?.outcome_type === 'thinking' && <Hourglass className="w-7 h-7 text-amber-600 dark:text-amber-500" />}
-                                        {lastOutcome?.outcome_type === 'cancelled' && <XCircle className="w-7 h-7 text-slate-600 dark:text-slate-400" />}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>
-                                            {lastOutcome?.outcome_type === 'decided' && 'Karar Verildi'}
-                                            {lastOutcome?.outcome_type === 'thinking' && 'Hala Düşünüyorum'}
-                                            {lastOutcome?.outcome_type === 'cancelled' && 'Vazgeçildi'}
-                                        </h4>
-                                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                                            {lastOutcome?.outcome_type === 'decided' && 'Bir seçeneği seçtim, uygulamaya başladım.'}
-                                            {lastOutcome?.outcome_type === 'thinking' && 'Karar verme süreci devam ediyor.'}
-                                            {lastOutcome?.outcome_type === 'cancelled' && 'Bu kararı vermeme gerek kalmadı.'}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Last Comment Quote */}
-                                {lastOutcome?.outcome_text && (
-                                    <div className="mb-4">
-                                        <blockquote className="pl-4 py-2 text-base italic leading-relaxed" style={{
-                                            borderLeftWidth: '4px',
-                                            borderLeftColor: 'var(--coral-primary)',
-                                            color: 'var(--text-primary)'
-                                        }}>
-                                            "{lastOutcome.outcome_text}"
-                                        </blockquote>
-                                    </div>
-                                )}
-
-                                {/* Last Update Time */}
-                                {lastOutcome?.created_at && (
-                                    <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
-                                        <Calendar className="w-4 h-4" />
-                                        <span>Son güncelleme: {new Date(lastOutcome.created_at).toLocaleDateString('tr-TR', {
-                                            day: 'numeric',
-                                            month: 'long',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Process History Timeline */}
-                            {sessionData.previous_outcomes && sessionData.previous_outcomes.length > 0 && (
-                                <div className="space-y-4">
-                                    <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                                        Süreç Geçmişi
-                                    </h4>
-                                    <div className="space-y-3">
-                                        {sessionData.previous_outcomes.map((outcome, index) => (
-                                            <div key={outcome.id || index} className="flex items-start gap-3">
-                                                <div className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${index === 0 ? 'bg-[var(--coral-primary)]' : 'bg-slate-400 dark:bg-slate-600'}`} />
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                                                        {outcome.outcome_type === 'decided' && 'Durum güncellendi: Karar Verildi'}
-                                                        {outcome.outcome_type === 'thinking' && 'Durum güncellendi: Hala Düşünüyorum'}
-                                                        {outcome.outcome_type === 'cancelled' && 'Durum güncellendi: Vazgeçildi'}
-                                                    </p>
-                                                    {outcome.outcome_text && (
-                                                        <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
-                                                            Not eklendi: "{outcome.outcome_text.substring(0, 50)}{outcome.outcome_text.length > 50 ? '...' : ''}"
-                                                        </p>
-                                                    )}
-                                                    {outcome.created_at && (
-                                                        <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                                                            {new Date(outcome.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                        {/* Session Creation */}
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 bg-slate-400 dark:bg-slate-600" />
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Karar oluşturuldu</p>
-                                                <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
-                                                    Soru: {sessionData.user_question?.substring(0, 40)}{sessionData.user_question?.length > 40 ? '...' : ''}
-                                                </p>
-                                                {sessionData.created_at && (
-                                                    <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                                                        {new Date(sessionData.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                                    </p>
+                                            {/* Collapsible Details */}
+                                            <div className="mt-4">
+                                                {showDetails ? (
+                                                    <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        <div className="my-4 h-px bg-[var(--border-secondary)] opacity-30" />
+                                                        <div className="flex flex-col gap-6 text-left">
+                                                            <div>
+                                                                <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>NEDEN?</p>
+                                                                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                                                    {sessionData.analysis?.reasoning}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>ADIMLAR</p>
+                                                                <ul className="space-y-1.5">
+                                                                    {sessionData.analysis?.steps?.map((st: string, i: number) => (
+                                                                        <li key={i} className="text-xs flex items-start gap-2" style={{ color: 'var(--text-secondary)' }}>
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                                                                            {st}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <button onClick={() => setShowDetails(false)} className="mt-6 text-xs transition-colors flex items-center gap-1 font-medium" style={{ color: 'var(--text-muted)' }}>
+                                                            <ChevronUp className="w-3 h-3" /> Daha Az Göster
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <button onClick={() => setShowDetails(true)} className="flex items-center gap-1 text-xs font-bold transition-all hover:gap-2" style={{ color: 'var(--coral-500)' }}>
+                                                        <span>Detayları gör</span>
+                                                        <ChevronDown className="w-3 h-3" />
+                                                    </button>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Update Button */}
-                            <button
-                                onClick={() => setStep('choose-outcome')}
-                                className="w-full py-4 px-6 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
-                                style={{
-                                    backgroundColor: 'var(--btn-primary-bg)',
-                                    color: 'var(--btn-primary-text)'
-                                }}
-                            >
-                                <Check className="w-5 h-5" />
-                                Kararımı Güncelle
-                            </button>
-                            <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
-                                Yeni bir gelişme mi var? Durumu değiştir veya not ekle.
-                            </p>
-                        </div>
+                                {/* Part 2: Current Status Card */}
+                                <div className="space-y-6 pt-4">
+                                    {/* Section Header */}
+                                    <div className="flex items-center gap-3">
+                                        <Clock className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
+                                        <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Karar Durumunuz</h3>
+                                    </div>
+
+                                    {/* Current Status Card */}
+                                    <div className="p-5 rounded-2xl" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                        {/* Status Header */}
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className={`p-3 rounded-xl ${lastOutcome?.outcome_type === 'decided' ? 'bg-green-500/10' :
+                                                lastOutcome?.outcome_type === 'thinking' ? 'bg-amber-500/10' :
+                                                    'bg-slate-500/10'
+                                                }`}>
+                                                {lastOutcome?.outcome_type === 'decided' && <CheckCircle className="w-7 h-7 text-green-600 dark:text-green-500" />}
+                                                {lastOutcome?.outcome_type === 'thinking' && <Hourglass className="w-7 h-7 text-amber-600 dark:text-amber-500" />}
+                                                {lastOutcome?.outcome_type === 'cancelled' && <XCircle className="w-7 h-7 text-slate-600 dark:text-slate-400" />}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>
+                                                    {lastOutcome?.outcome_type === 'decided' && 'Karar Verildi'}
+                                                    {lastOutcome?.outcome_type === 'thinking' && 'Hala Düşünüyorum'}
+                                                    {lastOutcome?.outcome_type === 'cancelled' && 'Vazgeçildi'}
+                                                </h4>
+                                                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                                    {lastOutcome?.outcome_type === 'decided' && 'Bir seçeneği seçtim, uygulamaya başladım.'}
+                                                    {lastOutcome?.outcome_type === 'thinking' && 'Karar verme süreci devam ediyor.'}
+                                                    {lastOutcome?.outcome_type === 'cancelled' && 'Bu kararı vermeme gerek kalmadı.'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Last Comment Quote */}
+                                        {lastOutcome?.outcome_text && (
+                                            <div className="mb-4">
+                                                <blockquote className="pl-4 py-2 text-base italic leading-relaxed" style={{
+                                                    borderLeftWidth: '4px',
+                                                    borderLeftColor: 'var(--coral-primary)',
+                                                    color: 'var(--text-primary)'
+                                                }}>
+                                                    "{lastOutcome.outcome_text}"
+                                                </blockquote>
+                                            </div>
+                                        )}
+
+                                        {/* Last Update Time */}
+                                        {lastOutcome?.created_at && (
+                                            <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+                                                <Calendar className="w-4 h-4" />
+                                                <span>Son güncelleme: {new Date(lastOutcome.created_at).toLocaleDateString('tr-TR', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Update Button */}
+                                    <button
+                                        onClick={() => setStep('choose-outcome')}
+                                        className="w-full py-4 px-6 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                                        style={{
+                                            backgroundColor: 'var(--btn-primary-bg)',
+                                            color: 'var(--btn-primary-text)'
+                                        }}
+                                    >
+                                        <Check className="w-5 h-5" />
+                                        Kararımı Güncelle
+                                    </button>
+
+                                    {/* Process History Timeline */}
+                                    {sessionData.previous_outcomes && sessionData.previous_outcomes.length > 0 && (
+                                        <div className="space-y-4 pt-4">
+                                            <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                                                Süreç Geçmişi
+                                            </h4>
+                                            <div className="space-y-3">
+                                                {sessionData.previous_outcomes.map((outcome, index) => (
+                                                    <div key={outcome.id || index} className="flex items-start gap-3">
+                                                        <div className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${index === 0 ? 'bg-[var(--coral-primary)]' : 'bg-slate-400 dark:bg-slate-600'}`} />
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                                                                {outcome.outcome_type === 'decided' && 'Durum güncellendi: Karar Verildi'}
+                                                                {outcome.outcome_type === 'thinking' && 'Durum güncellendi: Hala Düşünüyorum'}
+                                                                {outcome.outcome_type === 'cancelled' && 'Durum güncellendi: Vazgeçildi'}
+                                                            </p>
+                                                            {outcome.outcome_text && (
+                                                                <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
+                                                                    Not eklendi: "{outcome.outcome_text.substring(0, 50)}{outcome.outcome_text.length > 50 ? '...' : ''}"
+                                                                </p>
+                                                            )}
+                                                            {outcome.created_at && (
+                                                                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                                                                    {new Date(outcome.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {/* Session Creation */}
+                                                <div className="flex items-start gap-3">
+                                                    <div className="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 bg-slate-400 dark:bg-slate-600" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Karar oluşturuldu</p>
+                                                        <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
+                                                            Soru: {sessionData.user_question?.substring(0, 40)}{sessionData.user_question?.length > 40 ? '...' : ''}
+                                                        </p>
+                                                        {sessionData.created_at && (
+                                                            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                                                                {new Date(sessionData.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Community Section */}
+                        {activeSection === 'community' && canViewCommunity && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                {/* Stats Cards */}
+                                <div className="grid grid-cols-3 gap-3">
+                                    {statsLoading ? (
+                                        <>
+                                            {[1, 2, 3].map(i => (
+                                                <div key={i} className="p-4 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                                    <div className="h-2 w-16 rounded bg-slate-300 dark:bg-slate-700 mb-2" />
+                                                    <div className="h-8 w-20 rounded bg-slate-300 dark:bg-slate-700 mx-auto" />
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                                <span className="text-[10px] uppercase font-bold tracking-wide block mb-1" style={{ color: 'var(--text-muted)' }}>Memnuniyet</span>
+                                                <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>%{archetypeStats?.satisfaction_rate ?? 85}</span>
+                                            </div>
+                                            <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                                <span className="text-[10px] uppercase font-bold tracking-wide block mb-1" style={{ color: 'var(--text-muted)' }}>En Yaygın</span>
+                                                <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{archetypeStats?.most_common_feeling ?? 'Rahatlama'}</span>
+                                            </div>
+                                            <div className="p-4 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                                <span className="text-[10px] uppercase font-bold tracking-wide block mb-1" style={{ color: 'var(--text-muted)' }}>Ort. Süre</span>
+                                                <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                                    {(archetypeStats?.average_decision_days ?? 14) >= 7
+                                                        ? `${Math.round((archetypeStats?.average_decision_days ?? 14) / 7)} Hf`
+                                                        : `${archetypeStats?.average_decision_days ?? 14} Gn`
+                                                    }
+                                                </span>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Community Stories */}
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Benzer Kararlar Verenler</h3>
+
+                                    {communityStories.length === 0 && !storiesLoading ? (
+                                        <div className="p-6 rounded-2xl text-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                                            <div className="text-3xl mb-2">🌱</div>
+                                            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                                Henüz benzer deneyim paylaşılmamış. Sen ilk ol!
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            {communityStories
+                                                .filter(story => story.feeling && story.outcome_text)
+                                                .map(story => (
+                                                    <StoryCard
+                                                        key={story.id}
+                                                        story={story}
+                                                        sessionId={sessionData?.session_id || ''}
+                                                    />
+                                                ))}
+                                            {hasMoreStories && (
+                                                <div ref={loadMoreRef} className="py-4 flex items-center justify-center">
+                                                    {storiesLoading && (
+                                                        <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+                                                            <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+                                                            Yükleniyor...
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -1654,6 +1755,49 @@ export const ReturnFlow: React.FC = () => {
                 })()}
 
             </div>
+
+            {/* Global Elements */}
+            {step === 'returning-user' && sessionData && (
+                <>
+                    <ReturnFlowBottomNav
+                        activeSection={activeSection}
+                        onSectionChange={setActiveSection}
+                        canViewCommunity={canViewCommunity}
+                        onLockedClick={() => setShowLockedModal(true)}
+                    />
+
+                    {showLockedModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in" onClick={() => setShowLockedModal(false)}>
+                            <div className="bg-[var(--bg-primary)] rounded-2xl p-6 max-w-sm mx-4 shadow-2xl border border-[var(--border-primary)] animate-in zoom-in-95" onClick={e => e.stopPropagation()}>
+                                <div className="text-center space-y-4">
+                                    <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center">
+                                        <Lock className="w-8 h-8 text-amber-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Topluluk Kilitli</h3>
+                                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                        Başkalarının deneyimlerini görmek için önce kendi hikayeni paylaş. Bu karşılıklı bir paylaşım!
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setShowLockedModal(false);
+                                            setStep('choose-outcome');
+                                        }}
+                                        className="w-full py-3 px-4 rounded-xl font-medium text-white bg-[var(--coral-primary)] hover:opacity-90 transition-opacity"
+                                    >
+                                        Hikayemi Paylaş
+                                    </button>
+                                    <button
+                                        onClick={() => setShowLockedModal(false)}
+                                        className="text-sm" style={{ color: 'var(--text-muted)' }}
+                                    >
+                                        Şimdi değil
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
         </div >
     );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, X, Clock, Lock, KeyRound } from 'lucide-react';
+import { OutcomeExpansionBanner } from './OutcomeExpansionBanner';
 
 interface SeededOutcome {
     outcome_type: 'decided' | 'cancelled' | 'thinking';
@@ -76,9 +77,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 }) => {
     const [showUnlockModal, setShowUnlockModal] = React.useState(false);
 
-    const scrollToRecoveryCode = () => {
-        document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
-    };
+
 
     // Skeleton Loading Card
     const SkeletonCard = ({ delay = 0 }: { delay?: number }) => (
@@ -286,17 +285,10 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                     </p>
                                 )}
 
-                                {/* CTA to share */}
-                                <div className="pt-2 text-center">
-                                    <button
-                                        onClick={scrollToRecoveryCode}
-                                        className="text-sm underline font-medium"
-                                        style={{ color: 'var(--coral-primary)' }}
-                                    >
-                                        Hepsini görmek için kararını paylaş
-                                    </button>
-                                </div>
+                                {/* Banner encouraging future sharing */}
+                                <OutcomeExpansionBanner />
                             </div>
+
                         ) : (
                             /* LOCKED STATE - Animated Story Capsules */
                             <>
@@ -436,7 +428,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 seededOutcomes={seededOutcomes}
                 followupQuestion={followupQuestion}
             />
-        </div>
+        </div >
     );
 };
 import { UnlockModal } from './UnlockModal';

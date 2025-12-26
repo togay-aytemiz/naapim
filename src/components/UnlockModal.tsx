@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, CheckCircle, ShieldCheck } from 'lucide-react';
+import { X, Lock, CheckCircle } from 'lucide-react';
 import { sendCodeEmail, scheduleReminder } from '../services/emailService';
 
 import { isValidEmail } from '../utils/validation';
@@ -31,7 +31,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [step, setStep] = useState<'input' | 'success'>('input');
-    const [reminderTime, setReminderTime] = useState<'tomorrow' | '1_week' | '2_weeks'>('1_week');
+    const reminderTime = '1_week' as const; // Fixed to 1 week
 
     // Advanced email validation
     const validEmail = isValidEmail(email);
@@ -143,9 +143,12 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                         {/* Email Section */}
                         <div className="space-y-3">
                             <div>
-                                <p className="text-xs text-[var(--text-muted)] mb-2">
-                                    ⏰ 1 hafta sonra sana kısa bir hatırlatma göndereceğiz, istersen kararını o zaman paylaşabilirsin.
-                                </p>
+                                <div className="flex items-start gap-2">
+                                    <span className="flex-shrink-0">⏰</span>
+                                    <p className="text-xs text-[var(--text-muted)]">
+                                        1 hafta sonra sana kısa bir hatırlatma göndereceğiz, istersen kararını o zaman paylaşabilirsin.
+                                    </p>
+                                </div>
                                 <input
                                     type="email"
                                     value={email}
@@ -159,10 +162,10 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                                 <p className="text-xs text-red-500 text-center">{error}</p>
                             )}
 
-                            {/* Privacy Disclaimer with Shield */}
-                            <div className="flex items-center gap-2 text-left">
-                                <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                <p className="text-[11px] text-[var(--text-muted)]">
+                            {/* Privacy Disclaimer */}
+                            <div className="flex items-start gap-2">
+                                <span className="flex-shrink-0">🔒</span>
+                                <p className="text-xs text-[var(--text-muted)]">
                                     Sadece bu karar için kullanılır, reklam yok, spam yok.
                                 </p>
                             </div>

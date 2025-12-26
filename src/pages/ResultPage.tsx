@@ -535,7 +535,6 @@ export const ResultPage = () => {
                     </p>
                 </div>
 
-                <div className="divider mx-5 opacity-50" />
 
                 <FollowUpSection
                     seededOutcomes={seededOutcomes}
@@ -558,15 +557,17 @@ export const ResultPage = () => {
                 />
 
                 {showRecoveryCode && (
-                    <RecoveryCode
-                        onReminderSet={handleReminderSet}
-                        initialCode={code}
-                        onStartInteraction={() => { }}
-                        userQuestion={sessionUserInput}
-                        seededOutcomes={seededOutcomes}
-                        followupQuestion={analysis?.followup_question}
-                        unlockEmail={unlockEmail}
-                    />
+                    <div className="-mt-4">
+                        <RecoveryCode
+                            onReminderSet={handleReminderSet}
+                            initialCode={code}
+                            onStartInteraction={() => { }}
+                            userQuestion={sessionUserInput}
+                            seededOutcomes={seededOutcomes}
+                            followupQuestion={analysis?.followup_question}
+                            unlockEmail={unlockEmail}
+                        />
+                    </div>
                 )}
 
                 {/* Start over button */}

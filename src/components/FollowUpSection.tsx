@@ -207,7 +207,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     };
 
     return (
-        <div id="follow-up-section" className="flex flex-col items-center px-5 scroll-mt-24">
+        <div id="follow-up-section" className="flex flex-col items-center px-5 scroll-mt-24 pt-6">
             <div className="w-full max-w-md space-y-8">
                 {/* Community Stories Preview */}
                 <div className="space-y-4">

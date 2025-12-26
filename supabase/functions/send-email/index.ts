@@ -159,30 +159,63 @@ function generateEmailContent(type: string, data: SendEmailRequest['data']): { s
                 </p>
 
                 ${hasSocialProof ? `
-                <!-- Social Proof Section - Only shown when we have data -->
+                <!-- Social Proof Section - More balanced design -->
                 <div style="margin: 32px 0 32px 0; text-align: center;">
                     <h3 style="color: #1a1a1a; margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Başkaları ne yaşıyor?</h3>
                     <p style="color: #888888; font-size: 12px; margin: 0 0 20px 0;">Benzer kararlar veren insanların deneyimleri</p>
                     
-                    <!-- Card 1 -->
-                    <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #ef4444; display: flex; align-items: center; gap: 6px;">
-                            ✕ Vazgeçti <span style="font-size: 16px; margin-left: 4px;">😐</span>
-                        </div>
-                        <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
-                            <p style="margin: 0;">Uzun süre düşündüm ama sonunda almaktan vazgeçtim çünkü...</p>
-                        </div>
-                    </div>
+                    ${data.social_proof_data!.map((story: any) => {
+                // Helper for outcome styles
+                const getOutcomeStyle = (type: string) => {
+                    switch (type) {
+                        case 'decided': return { label: '✓ Karar verdi', color: '#16a34a', bg: '#dcfce7' };
+                        case 'cancelled': return { label: '✕ Vazgeçti', color: '#ef4444', bg: '#fee2e2' };
+                        default: return { label: '⏳ Düşünüyor', color: '#d97706', bg: '#fef3c7' };
+                    }
+                };
 
-                    <!-- Card 2 -->
-                    <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #22c55e; display: flex; align-items: center; gap: 6px;">
-                            ✓ Satın Aldı <span style="font-size: 16px; margin-left: 4px;">🚀</span>
+                // Helper for feeling info
+                const getFeelingInfo = (feeling: string) => {
+                    const map: Record<string, { emoji: string; label: string }> = {
+                        happy: { emoji: '😊', label: 'Mutlu' },
+                        neutral: { emoji: '😐', label: 'Nötr' },
+                        uncertain: { emoji: '🤔', label: 'Kararsız' },
+                        regret: { emoji: '😔', label: 'Pişman' }
+                    };
+                    return map[feeling] || { emoji: '😐', label: 'Nötr' };
+                };
+
+                const style = getOutcomeStyle(story.outcome_type);
+                const feeling = getFeelingInfo(story.feeling);
+
+                return `
+                        <!-- Dynamic Card -->
+                        <div style="background-color: #f8f9fa; border: 1px solid #eeeeee; border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            <!-- 1. Top: Subtle Anonymous User -->
+                            <div style="margin-bottom: 8px; font-size: 11px; color: #9ca3af;">
+                                Anonim Kullanıcı
+                            </div>
+                            
+                            <!-- 2. Middle: Status Chip & Feeling -->
+                            <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <span style="background-color: ${style.bg}; color: ${style.color}; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 4px;">
+                                    ${style.label}
+                                </span>
+                                <span style="padding: 2px 6px; border-radius: 9999px; font-size: 16px;">
+                                    ${feeling.emoji}
+                                </span>
+                                <span style="font-size: 11px; color: #6b7280; font-weight: 500;">
+                                    ${feeling.label}
+                                </span>
+                            </div>
+
+                            <!-- 3. Bottom: Teaser Text -->
+                            <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden; font-style: italic;">
+                                "${story.outcome_text}"
+                            </div>
                         </div>
-                        <div style="color: #4b5563; font-size: 14px; line-height: 1.5; position: relative; max-height: 42px; overflow: hidden;">
-                            <p style="margin: 0;">Kesinlikle değer, hayatımı o kadar kolaylaştırdı ki anlatamam...</p>
-                        </div>
-                    </div>
+                        `;
+            }).join('')}
                 </div>
                 ` : ''}
 

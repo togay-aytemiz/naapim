@@ -33,7 +33,7 @@ serve(async (req) => {
     }
 
     try {
-        const { user_question, archetype_id, context = '', count = 3 } = await req.json()
+        const { user_question, archetype_id, context = '', count = 3, recovery_code } = await req.json()
 
         if (!user_question) {
             return new Response(
@@ -43,12 +43,45 @@ serve(async (req) => {
         }
 
         const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
         if (!openaiApiKey) {
             console.error('OPENAI_API_KEY not found')
             return new Response(
                 JSON.stringify({ error: 'API key not configured' }),
                 { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             )
+        }
+
+        // Check cache: if recovery_code is provided, look for existing outcomes
+        if (recovery_code && supabaseUrl && supabaseKey) {
+            console.log('🔍 Checking cache for recovery_code:', recovery_code)
+
+            const cacheCheckResponse = await fetch(
+                `${supabaseUrl}/rest/v1/outcomes?recovery_code=eq.${encodeURIComponent(recovery_code)}&select=*&order=created_at.asc`,
+                {
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`,
+                    }
+                }
+            )
+
+            if (cacheCheckResponse.ok) {
+                const cachedOutcomes = await cacheCheckResponse.json()
+                if (cachedOutcomes && cachedOutcomes.length > 0) {
+                    console.log(`✅ Found ${cachedOutcomes.length} cached outcomes for recovery_code, returning from cache`)
+                    return new Response(
+                        JSON.stringify({
+                            outcomes: cachedOutcomes,
+                            source: 'cache'
+                        }),
+                        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+                    )
+                }
+            }
+            console.log('📝 No cached outcomes found, generating new ones')
         }
 
         // Pick outcome_type: 70% decided, 30% cancelled (no thinking - they don't write comments)
@@ -629,7 +662,8 @@ KATI KURALLAR - İHLAL ETME:
                     archetype_id: archetype_id || null,
                     is_generated: true,
                     embedding,
-                    metadata // Store additional structured data
+                    metadata, // Store additional structured data
+                    recovery_code: recovery_code || null // Link to session for caching
                 }
             })
         )

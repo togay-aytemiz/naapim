@@ -107,8 +107,9 @@ export class AnalysisService {
     static async generateSeededOutcomes(
         userQuestion: string,
         archetypeId: string,
-        context: string
-    ): Promise<{ outcomes: any[] } | null> {
+        context: string,
+        recoveryCode?: string
+    ): Promise<{ outcomes: any[], source?: string } | null> {
         if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping seeded outcomes');
             return null;
@@ -125,7 +126,8 @@ export class AnalysisService {
                     user_question: userQuestion,
                     archetype_id: archetypeId,
                     context: context,  // Pass user's answers for better matching
-                    count: 3
+                    count: 3,
+                    recovery_code: recoveryCode // For caching - reuse existing outcomes
                 })
             });
 

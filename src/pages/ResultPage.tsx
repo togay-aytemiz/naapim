@@ -164,7 +164,7 @@ export const ResultPage = () => {
                 const context = sessionArchetypeId && sessionAnswers
                     ? AnalysisService.getReadableContext(sessionArchetypeId, sessionAnswers)
                     : '';
-                const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context);
+                const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context, code);
                 setSeededOutcomes(outcomes?.outcomes || []);
             } catch (err) {
                 console.warn('Seeded outcomes error:', err);

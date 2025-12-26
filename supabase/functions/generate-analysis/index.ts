@@ -99,7 +99,34 @@ RULES:
                 ],
                 temperature: 0.7,
                 max_tokens: 1500,
-                response_format: { type: 'json_object' }
+                response_format: {
+                    type: 'json_schema',
+                    json_schema: {
+                        name: 'analysis_response',
+                        strict: true,
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                title: { type: 'string', description: 'Spesifik başlık' },
+                                recommendation: { type: 'string', description: '1-2 cümle tavsiye' },
+                                reasoning: { type: 'string', description: '2-3 cümle gerekçe' },
+                                steps: {
+                                    type: 'array',
+                                    items: { type: 'string' },
+                                    description: 'Maksimum 5 adım'
+                                },
+                                sentiment: {
+                                    type: 'string',
+                                    enum: ['positive', 'cautious', 'warning', 'negative', 'neutral'],
+                                    description: 'Genel tavsiye tonu'
+                                },
+                                followup_question: { type: 'string', description: 'Takip sorusu' }
+                            },
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'sentiment', 'followup_question'],
+                            additionalProperties: false
+                        }
+                    }
+                }
             })
         })
 

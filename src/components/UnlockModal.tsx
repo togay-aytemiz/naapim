@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, CheckCircle } from 'lucide-react';
+import { X, Lock, CheckCircle, ShieldCheck } from 'lucide-react';
 import { sendCodeEmail, scheduleReminder } from '../services/emailService';
 
 import { isValidEmail } from '../utils/validation';
@@ -87,66 +87,65 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 animate-in fade-in duration-300 backdrop-blur-sm"
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-sm rounded-2xl overflow-hidden bg-[var(--bg-primary)] shadow-2xl"
+                className="relative w-full sm:max-w-sm sm:rounded-2xl rounded-t-2xl overflow-hidden bg-[var(--bg-primary)] shadow-2xl max-h-[95vh] sm:max-h-none overflow-y-auto"
                 onClick={e => e.stopPropagation()}
                 style={{ border: '1px solid var(--border-secondary)' }}
             >
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-[var(--bg-secondary)]"
+                    className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-[var(--bg-secondary)] z-10"
                 >
                     <X className="w-5 h-5 text-[var(--text-muted)]" />
                 </button>
 
                 {step === 'input' ? (
-                    <div className="p-6">
+                    <div className="p-6 pb-8 sm:pb-6">
                         {/* Header */}
-                        <div className="text-center mb-6">
+                        <div className="text-center mb-5">
                             <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center bg-amber-100">
                                 <Lock className="w-6 h-6 text-amber-600" />
                             </div>
                             <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                                 Hikayelerin Kilidini Aç
                             </h3>
-                            <p className="text-sm mt-1 text-[var(--text-secondary)]">
-                                Karar vermekte zorlanıyor musun? <br />
-                                Kendine bir hatırlatma kur, başkalarının ne yaptığını <strong>hemen gör.</strong>
+                            <p className="text-sm mt-1.5 text-[var(--text-secondary)]">
+                                E-postanı gir, başkalarının hikayelerini <strong>hemen gör</strong>.
                             </p>
                         </div>
 
-                        {/* Form */}
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-medium mb-1.5 text-[var(--text-muted)]">
-                                    Hatırlatma Zamanı
-                                </label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {[
-                                        { id: 'tomorrow', label: 'Yarın' },
-                                        { id: '1_week', label: '1 Hafta' },
-                                        { id: '2_weeks', label: '2 Hafta' }
-                                    ].map((opt) => (
-                                        <button
-                                            key={opt.id}
-                                            onClick={() => setReminderTime(opt.id as any)}
-                                            className={`py-2 rounded-lg text-xs font-medium transition-all ${reminderTime === opt.id
-                                                ? 'bg-amber-100 text-amber-700 border border-amber-200'
-                                                : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-transparent hover:border-[var(--border-secondary)]'
-                                                }`}
-                                        >
-                                            {opt.label}
-                                        </button>
-                                    ))}
+                        {/* Community Banner */}
+                        <div
+                            className="mb-5 p-3 rounded-xl"
+                            style={{
+                                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                                border: '1px solid rgba(59, 130, 246, 0.25)'
+                            }}
+                        >
+                            <div className="flex gap-3 items-start">
+                                <span className="text-xl flex-shrink-0">🤝</span>
+                                <div>
+                                    <p className="text-xs font-medium text-[var(--text-primary)] mb-0.5">
+                                        Topluluk nasıl büyüyor?
+                                    </p>
+                                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                                        Bu hikayeler, zamanla deneyimlerini paylaşan insanlardan oluşuyor. İstersen sen de daha sonra katkıda bulunabilirsin.
+                                    </p>
                                 </div>
                             </div>
+                        </div>
 
+                        {/* Email Section */}
+                        <div className="space-y-3">
                             <div>
+                                <p className="text-xs text-[var(--text-muted)] mb-2">
+                                    ⏰ 1 hafta sonra sana kısa bir hatırlatma göndereceğiz, istersen kararını o zaman paylaşabilirsin.
+                                </p>
                                 <input
                                     type="email"
                                     value={email}
@@ -160,10 +159,13 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                                 <p className="text-xs text-red-500 text-center">{error}</p>
                             )}
 
-                            <p className="text-[10px] text-center text-[var(--text-muted)] leading-tight px-2">
-                                E-postan sadece tek seferlik hatırlatma için kullanılacak. <br />
-                                Spam yok, söz veriyoruz. ✌️
-                            </p>
+                            {/* Privacy Disclaimer with Shield */}
+                            <div className="flex items-center gap-2 text-left">
+                                <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                                <p className="text-[11px] text-[var(--text-muted)]">
+                                    Sadece bu karar için kullanılır, reklam yok, spam yok.
+                                </p>
+                            </div>
 
                             <button
                                 onClick={handleSubmit}
@@ -174,12 +176,12 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                                     color: validEmail && !isLoading ? 'white' : '#a3a3a3'
                                 }}
                             >
-                                {isLoading ? 'Açılıyor...' : 'Kilidi Aç ve Hatırlat'}
+                                {isLoading ? 'Açılıyor...' : 'Hikayeleri Göster'}
                             </button>
                         </div>
                     </div>
                 ) : (
-                    <div className="p-8 text-center bg-emerald-50">
+                    <div className="p-8 pb-12 sm:pb-8 text-center bg-emerald-50">
                         <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-emerald-100">
                             <CheckCircle className="w-8 h-8 text-emerald-600 animate-in zoom-in duration-300" />
                         </div>

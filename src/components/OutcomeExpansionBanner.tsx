@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, BarChart3, Brain, Clock } from 'lucide-react';
+import { Sparkles, BarChart3, Brain } from 'lucide-react';
 
 export const OutcomeExpansionBanner: React.FC = () => {
     return (
@@ -26,86 +26,86 @@ export const OutcomeExpansionBanner: React.FC = () => {
 
                 {/* Header */}
                 <h3
-                    className="text-lg md:text-xl font-bold mb-8 text-center"
+                    className="text-lg md:text-xl font-bold mb-4 text-center"
                     style={{ color: 'var(--text-primary)' }}
                 >
-                    Harika! Bu sadece başlangıç.<br />Daha fazlası seni bekliyor!
+                    Keşfetmeye devam et
                 </h3>
 
-                {/* Sub-Header */}
-                <h3
-                    className="text-base font-semibold mb-6 text-left"
-                    style={{ color: 'var(--text-primary)' }}
+                <p
+                    className="text-sm text-center mb-8 max-w-sm mx-auto leading-relaxed"
+                    style={{ color: 'var(--text-secondary)' }}
                 >
-                    Paylaştığında neler olur?
-                </h3>
+                    Benzer durumlardan <span className="font-medium" style={{ color: 'var(--coral-primary)' }}>ufak bir seçki</span> gördün. <br className="hidden md:block" />
+                    Sırada, binlerce hikaye arasından senin için yaptığımız <span className="font-medium" style={{ color: 'var(--text-primary)' }}>özel eşleşmeyi</span> keşfetmek var.
+                </p>
 
-                {/* Features List */}
-                <div className="space-y-6">
-                    {/* Feature 1 */}
-                    <div className="flex gap-4">
-                        <div className="flex-shrink-0 mt-0.5">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)', color: 'var(--coral-primary)' }}>
-                                <Sparkles className="w-4 h-4" />
-                            </span>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>Sana özel eşleşmeler</h4>
-                            <p className="text-xs leading-relaxed opacity-90" style={{ color: 'var(--text-muted)' }}>
-                                Binlerce yaşanmış hikaye arasından, durumuna en uygun olanları görürsün.
-                            </p>
-                        </div>
-                    </div>
+                {/* Access Section Wrapper */}
+                <div
+                    className="rounded-2xl p-5"
+                    style={{ backgroundColor: '#F9FAFB' }}
+                >
+                    {/* Sub-Header */}
+                    <h3
+                        className="text-sm font-bold mb-4 text-left"
+                        style={{ color: 'var(--text-primary)' }}
+                    >
+                        Kendi hikayeni paylaşarak eriş:
+                    </h3>
 
-                    {/* Feature 2 */}
-                    <div className="flex gap-4">
-                        <div className="flex-shrink-0 mt-0.5">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'var(--blue-50)', color: 'var(--blue-600)' }}>
-                                <BarChart3 className="w-4 h-4" />
-                            </span>
+                    {/* Features List */}
+                    <div className="space-y-4">
+                        {/* Feature 1 */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)', color: 'var(--coral-primary)' }}>
+                                    <Sparkles className="w-4 h-4" />
+                                </span>
+                            </div>
+                            <h4 className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Sana Özel İçerik</h4>
                         </div>
-                        <div>
-                            <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>Gelişmiş istatistikler</h4>
-                            <p className="text-xs leading-relaxed opacity-90" style={{ color: 'var(--text-muted)' }}>
-                                Memnuniyet oranı, pişmanlık durumu ve ortalama karar süresi gibi kritik verileri incelersin.
-                            </p>
-                        </div>
-                    </div>
 
-                    {/* Feature 3 */}
-                    <div className="flex gap-4">
-                        <div className="flex-shrink-0 mt-0.5">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'var(--purple-50)', color: 'var(--purple-600)' }}>
-                                <Brain className="w-4 h-4" />
-                            </span>
+                        {/* Feature 2 */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'var(--blue-50)', color: 'var(--blue-600)' }}>
+                                    <BarChart3 className="w-4 h-4" />
+                                </span>
+                            </div>
+                            <h4 className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Derinlemesine İstatistikler</h4>
                         </div>
-                        <div>
-                            <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>Topluluğa katkı</h4>
-                            <p className="text-xs leading-relaxed opacity-90" style={{ color: 'var(--text-muted)' }}>
-                                Deneyimin, benzer durumdaki başkalarına yol gösterir.
-                            </p>
+
+                        {/* Feature 3 */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'var(--purple-50)', color: 'var(--purple-600)' }}>
+                                    <Brain className="w-4 h-4" />
+                                </span>
+                            </div>
+                            <h4 className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Topluluk Gücü</h4>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Footer Banner Section */}
-            <div
-                className="p-5 text-center relative"
-                style={{
-                    backgroundColor: 'var(--bg-secondary)',
-                    borderTop: '1px solid var(--border-secondary)'
-                }}
-            >
-                <div className="flex flex-col items-center gap-3 max-w-sm mx-auto">
-                    <p className="text-xs leading-relaxed opacity-80" style={{ color: 'var(--text-muted)' }}>
-                        <Clock className="w-3 h-3 inline-block mr-1.5 -mt-0.5" />
-                        E-postana gönderdiğimiz kodla ister yarın, ister 1 hafta sonra gelip kilidi tamamen açabilirsin.
-                    </p>
-
-                    <p className="font-bold text-sm mt-1" style={{ color: 'var(--coral-primary)' }}>
-                        Sen de kendi hikayeni paylaş, tüm kapıları arala!
-                    </p>
+                {/* How to Share Banner */}
+                <div
+                    className="mt-5 p-3 rounded-xl"
+                    style={{
+                        backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                        border: '1px solid rgba(59, 130, 246, 0.25)'
+                    }}
+                >
+                    <div className="flex gap-3 items-start">
+                        <span className="text-xl flex-shrink-0">📬</span>
+                        <div>
+                            <p className="text-xs font-medium text-[var(--text-primary)] mb-0.5">
+                                Nasıl paylaşım yaparım?
+                            </p>
+                            <p className="text-xs text-[var(--text-secondary)] leading-relaxed opacity-90">
+                                Hiç dert etme. Gönderdiğimiz e-postadaki talimatları izleyerek dilediğin zaman hikayeni ekleyebilirsin. Ayrıca 1 hafta sonra sana kısa bir hatırlatma yapacağız.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

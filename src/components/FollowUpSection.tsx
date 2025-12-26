@@ -64,6 +64,7 @@ const sampleQuestions = [
 
 export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     seededOutcomes = [],
+    isLoadingSeeds = false,
     isUnlocked = false,
     onUnlock,
     onUnlockWithEmail,
@@ -78,6 +79,46 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     const scrollToRecoveryCode = () => {
         document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    // Skeleton Loading Card
+    const SkeletonCard = ({ delay = 0 }: { delay?: number }) => (
+        <div
+            className="p-5 rounded-2xl animate-pulse"
+            style={{
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-secondary)',
+                animationDelay: `${delay}ms`
+            }}
+        >
+            {/* Header skeleton */}
+            <div className="flex items-center gap-2 mb-3">
+                <div
+                    className="h-6 w-24 rounded-full"
+                    style={{ backgroundColor: 'var(--border-secondary)' }}
+                />
+                <div
+                    className="h-6 w-6 rounded-full"
+                    style={{ backgroundColor: 'var(--border-secondary)' }}
+                />
+            </div>
+
+            {/* Text skeleton lines */}
+            <div className="space-y-2">
+                <div
+                    className="h-4 rounded"
+                    style={{ backgroundColor: 'var(--border-secondary)', width: '100%' }}
+                />
+                <div
+                    className="h-4 rounded"
+                    style={{ backgroundColor: 'var(--border-secondary)', width: '85%' }}
+                />
+                <div
+                    className="h-4 rounded"
+                    style={{ backgroundColor: 'var(--border-secondary)', width: '65%' }}
+                />
+            </div>
+        </div>
+    );
 
 
     // Story Capsule - Blurred card with 1-line text and skeleton lines
@@ -222,8 +263,17 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 
                     {/* Cards container */}
                     <div className="space-y-3 relative">
-                        {/* UNLOCKED STATE: Show 3 real outcomes */}
-                        {isUnlocked ? (
+                        {/* LOADING STATE: Show skeleton cards */}
+                        {isLoadingSeeds ? (
+                            <div className="space-y-3">
+                                <SkeletonCard delay={0} />
+                                <SkeletonCard delay={100} />
+                                <SkeletonCard delay={200} />
+                                <p className="text-center text-xs pt-2" style={{ color: 'var(--text-muted)' }}>
+                                    Hikayeler yükleniyor...
+                                </p>
+                            </div>
+                        ) : isUnlocked ? (
                             <div className="space-y-3 animate-in fade-in duration-500">
                                 {seededOutcomes.slice(0, 3).map((outcome, idx) => (
                                     <RealOutcomeCard key={idx} outcome={outcome} showFull={true} />

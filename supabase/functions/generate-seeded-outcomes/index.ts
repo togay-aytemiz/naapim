@@ -8,7 +8,7 @@ const corsHeaders = {
 
 // Persona pool for diversity - format: "role; constraints/context; priorities"
 const PERSONA_POOL = [
-    'bütçe odaklı üniversite öğrencisi; 35-45k bütçe; ikinci el bakıyor; taşınabilirlik önemli',
+    'bütçe odaklı üniversite öğrencisi; kısıtlı bütçe; ikinci el bakıyor; taşınabilirlik önemli',
     'uzaktan çalışan; günlük toplantı yoğun; pil ve sessizlik kritik; uzun kullanım',
     'hafif içerik üreticisi; Lightroom Canva; depolama ve ekran önemli; dosya yönetimi',
     'kurumsal profesyonel; Office Slack Zoom; stabilite ve garanti önemli; az sürpriz',
@@ -143,6 +143,11 @@ HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
 YASAK İFADELER (bunları ASLA kullanma - tavsiye veren dil):
 "şunu almalısın", "kesinlikle tavsiye ederim", "en iyisi budur", "tavsiye ederim", "garanti ederim", "kesin sonuç alırsın"
 
+SAYISAL TUTAR YASAĞI (enflasyon nedeniyle):
+- Spesifik TL tutarı KULLANMA (örn: "45 bin TL", "30.000 TL", "50k")
+- Bunun yerine göreceli ifadeler kullan: "bütçemin üst sınırı", "orta segment", "üst segment", "ekonomik seçenek", "premium fiyat"
+- Taksit sayısı kullanabilirsin ama tutar verme
+
 SERBEST İFADELER (bunları kullanabilirsin - teknik/somut terimler):
 "garanti süresi", "resmi distribütör", "yetkili servis", "garanti kapsamı"
 
@@ -224,13 +229,54 @@ STİL KURALLARI:
                 messages: [
                     {
                         role: 'system',
-                        content: 'Sen Türkçe deneyim hikayeleri üreten bir asistansın. SADECE geçerli JSON formatında yanıt ver. Tavsiye verme, yaşanmış deneyim anlat. Doğal ve samimi bir dil kullan.'
+                        content: 'Sen Türkçe deneyim hikayeleri üreten bir asistansın. Tavsiye verme, yaşanmış deneyim anlat. Doğal ve samimi bir dil kullan.'
                     },
                     { role: 'user', content: prompt }
                 ],
                 temperature: 0.9,
                 max_tokens: 3000,
-                response_format: { type: 'json_object' }
+                response_format: {
+                    type: 'json_schema',
+                    json_schema: {
+                        name: 'seeded_outcomes',
+                        strict: true,
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                outcomes: {
+                                    type: 'array',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            similar_question: { type: 'string', description: 'Kısa, spesifik başlık' },
+                                            persona: { type: 'string', description: 'Persona etiketi' },
+                                            options_considered: { type: 'array', items: { type: 'string' }, description: 'Değerlendirilen alternatifler' },
+                                            constraints: { type: 'array', items: { type: 'string' }, description: 'Kısıtlar' },
+                                            trigger: { type: 'string', description: 'Kararı tetikleyen olay' },
+                                            tradeoffs: {
+                                                type: 'object',
+                                                properties: {
+                                                    pros: { type: 'array', items: { type: 'string' } },
+                                                    cons: { type: 'array', items: { type: 'string' } }
+                                                },
+                                                required: ['pros', 'cons'],
+                                                additionalProperties: false
+                                            },
+                                            what_happened_after: { type: 'string', description: 'Karardan sonra ne oldu' },
+                                            outcome_text: { type: 'string', description: '1-2 paragraf detaylı hikaye' },
+                                            feeling: { type: 'string', enum: ['happy', 'neutral', 'uncertain', 'regret'] },
+                                            outcome_type: { type: 'string', enum: ['decided', 'cancelled'] }
+                                        },
+                                        required: ['similar_question', 'persona', 'options_considered', 'constraints', 'trigger', 'tradeoffs', 'what_happened_after', 'outcome_text', 'feeling', 'outcome_type'],
+                                        additionalProperties: false
+                                    }
+                                }
+                            },
+                            required: ['outcomes'],
+                            additionalProperties: false
+                        }
+                    }
+                }
             })
         });
 
@@ -345,7 +391,48 @@ KATI KURALLAR - İHLAL ETME:
                         ],
                         temperature: 0.5,
                         max_tokens: 3000,
-                        response_format: { type: 'json_object' }
+                        response_format: {
+                            type: 'json_schema',
+                            json_schema: {
+                                name: 'fixed_outcomes',
+                                strict: true,
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        outcomes: {
+                                            type: 'array',
+                                            items: {
+                                                type: 'object',
+                                                properties: {
+                                                    similar_question: { type: 'string' },
+                                                    persona: { type: 'string' },
+                                                    options_considered: { type: 'array', items: { type: 'string' } },
+                                                    constraints: { type: 'array', items: { type: 'string' } },
+                                                    trigger: { type: 'string' },
+                                                    tradeoffs: {
+                                                        type: 'object',
+                                                        properties: {
+                                                            pros: { type: 'array', items: { type: 'string' } },
+                                                            cons: { type: 'array', items: { type: 'string' } }
+                                                        },
+                                                        required: ['pros', 'cons'],
+                                                        additionalProperties: false
+                                                    },
+                                                    what_happened_after: { type: 'string' },
+                                                    outcome_text: { type: 'string' },
+                                                    feeling: { type: 'string', enum: ['happy', 'neutral', 'uncertain', 'regret'] },
+                                                    outcome_type: { type: 'string', enum: ['decided', 'cancelled'] }
+                                                },
+                                                required: ['similar_question', 'persona', 'options_considered', 'constraints', 'trigger', 'tradeoffs', 'what_happened_after', 'outcome_text', 'feeling', 'outcome_type'],
+                                                additionalProperties: false
+                                            }
+                                        }
+                                    },
+                                    required: ['outcomes'],
+                                    additionalProperties: false
+                                }
+                            }
+                        }
                     })
                 })
 

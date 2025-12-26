@@ -324,7 +324,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                             onClick={() => setShowUnlockModal(true)}
                                             className="group flex items-center justify-center gap-2 py-4 px-8 rounded-2xl font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 active:translate-y-0 text-lg w-full max-w-xs"
                                             style={{
-                                                backgroundColor: '#FF6F61',
+                                                background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
                                                 boxShadow: '0 4px 20px rgba(255, 111, 97, 0.4)'
                                             }}
                                         >
@@ -332,29 +332,39 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                             <span>Hikayelerin Kilidini Aç</span>
                                         </button>
 
-                                        {/* Secondary Button - Share Story */}
+                                        {/* YA DA Divider + Secondary Button */}
                                         {onShareStory && (
-                                            <button
-                                                onClick={() => {
-                                                    onShareStory();
-                                                    // Scroll to recovery code after a small delay
-                                                    setTimeout(() => {
-                                                        document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
-                                                    }, 100);
-                                                }}
-                                                className="group flex items-center justify-center gap-2 py-3 px-6 rounded-2xl font-medium transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-sm w-full max-w-xs"
-                                                style={{
-                                                    backgroundColor: 'var(--bg-elevated)',
-                                                    border: '1px solid var(--border-secondary)',
-                                                    color: 'var(--text-secondary)',
-                                                    boxShadow: '0 2px 10px rgba(0,0,0,0.06)'
-                                                }}
-                                            >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                                </svg>
-                                                <span>Diğer kullanıcılara ilham ol</span>
-                                            </button>
+                                            <>
+                                                {/* YA DA Eyebrow */}
+                                                <div className="flex items-center w-full max-w-xs">
+                                                    <div className="flex-grow border-t" style={{ borderColor: 'var(--border-secondary)' }} />
+                                                    <span className="flex-shrink-0 mx-3 text-[10px] font-bold tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>YA DA</span>
+                                                    <div className="flex-grow border-t" style={{ borderColor: 'var(--border-secondary)' }} />
+                                                </div>
+
+                                                {/* Secondary Button - Share Story */}
+                                                <button
+                                                    onClick={() => {
+                                                        onShareStory();
+                                                        // Scroll to recovery code after a small delay
+                                                        setTimeout(() => {
+                                                            document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
+                                                        }, 100);
+                                                    }}
+                                                    className="group flex items-center justify-center gap-2 py-3 px-6 rounded-2xl font-medium transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-sm w-full max-w-xs"
+                                                    style={{
+                                                        backgroundColor: 'var(--bg-elevated)',
+                                                        border: '1.5px solid var(--coral-primary)',
+                                                        color: 'var(--text-secondary)',
+                                                        boxShadow: '0 2px 10px rgba(255, 107, 107, 0.1)'
+                                                    }}
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                                    </svg>
+                                                    <span>Diğer kullanıcılara ilham ol</span>
+                                                </button>
+                                            </>
                                         )}
                                     </div>
                                 </div>

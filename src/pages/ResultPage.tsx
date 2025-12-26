@@ -306,16 +306,36 @@ export const ResultPage = () => {
     return (
         <div className="flex flex-col items-center pb-16 pt-8">
             <div className="w-full max-w-lg space-y-8">
-                {/* User's decision context */}
+                {/* User's question - Chat bubble style */}
                 {sessionUserInput && (
-                    <div className="pt-4 text-center px-5">
-                        <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>Düşündüğün konu</p>
-                        <p className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>"{sessionUserInput}"</p>
+                    <div className="px-5 flex flex-col items-end gap-1 mb-6">
+                        {/* Eyebrow */}
+                        <span className="text-[10px] font-medium uppercase tracking-wider mr-1" style={{ color: 'var(--text-muted)' }}>
+                            Düşündüğün konu
+                        </span>
+                        {/* Bubble - theme aware */}
+                        <div
+                            className="chat-bubble max-w-[85%] px-4 py-3 rounded-2xl rounded-tr-md"
+                            style={{
+                                backgroundColor: 'var(--chat-bubble-bg, #E9EBF0)',
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
+                            }}
+                        >
+                            <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--chat-bubble-text, #1a1a1a)' }}>
+                                {sessionUserInput}
+                            </p>
+                        </div>
                     </div>
                 )}
 
                 {/* Analysis Result Section */}
                 <div className="px-5">
+                    {/* naapim eyebrow */}
+                    {analysis && (
+                        <span className="text-xs font-medium tracking-wider ml-1 mb-2 block" style={{ color: 'var(--text-muted)' }}>
+                            naapim
+                        </span>
+                    )}
                     {analysis ? (
                         <div
                             className="rounded-3xl p-6 md:p-8"
@@ -473,10 +493,10 @@ export const ResultPage = () => {
                                 )}
                             </div>
 
-                            {/* YA DA Divider */}
+                            {/* AYRICA Divider */}
                             <div className="relative flex py-8 items-center">
                                 <div className="flex-grow border-t border-gray-200 opacity-50"></div>
-                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">YA DA</span>
+                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">AYRICA</span>
                                 <div className="flex-grow border-t border-gray-200 opacity-50"></div>
                             </div>
 
@@ -485,13 +505,13 @@ export const ResultPage = () => {
                                 onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
                                 className="w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
                                 style={{
-                                    backgroundColor: 'var(--coral-primary)',
+                                    background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
                                     color: 'white',
                                     boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
                                 }}
                             >
                                 <Users className="w-4 h-4" />
-                                <span>Başkaları neler yapıyor? Öğren</span>
+                                <span>Başkaları neler yapıyor?</span>
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                 </svg>

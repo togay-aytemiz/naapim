@@ -129,6 +129,10 @@
   --return-card-text-top: #ffffff;
   --return-card-bottom: #f1f5f9;
   --return-card-border: var(--neutral-200);
+
+  /* Chat Bubble */
+  --chat-bubble-bg: #DCE3ED;
+  --chat-bubble-text: #1e3a5f;
 }
 
 /* ========================================
@@ -185,6 +189,10 @@
   --return-card-text-top: var(--neutral-100);
   --return-card-bottom: #141f2a;
   --return-card-border: #26384a;
+
+  /* Chat Bubble */
+  --chat-bubble-bg: #3B3B3B;
+  --chat-bubble-text: #ffffff;
 }
 
 /* ========================================

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FollowUpSection } from '../components/FollowUpSection';
 import { RecoveryCode } from '../components/RecoveryCode';
-import { ReminderOptIn } from '../components/ReminderOptIn';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
@@ -31,7 +30,7 @@ export const ResultPage = () => {
 
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [showReminderOptIn, setShowReminderOptIn] = useState(true);
+    const [showRecoveryCode, setShowRecoveryCode] = useState(false);
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
     const [showFullAnalysis, setShowFullAnalysis] = useState(false);
@@ -531,35 +530,23 @@ export const ResultPage = () => {
                             localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
                         }
                     }}
+                    onShareStory={() => setShowRecoveryCode(true)}
                     code={code}
                     userQuestion={sessionUserInput}
                     sessionId={sessionId}
                     followupQuestion={analysis?.followup_question}
                 />
 
-                <RecoveryCode
-                    onReminderSet={handleReminderSet}
-                    initialCode={code}
-                    onStartInteraction={() => setShowReminderOptIn(false)}
-                    userQuestion={sessionUserInput}
-                    seededOutcomes={seededOutcomes}
-                    followupQuestion={analysis?.followup_question}
-                    unlockEmail={unlockEmail}
-                />
-
-                {showReminderOptIn && (
-                    <>
-                        <div className="divider mx-5 opacity-50" />
-                        <ReminderOptIn
-                            code={code}
-                            userQuestion={sessionUserInput}
-                            onReminderSet={handleReminderSet}
-                            seededOutcomes={seededOutcomes}
-                            followupQuestion={analysis?.followup_question}
-                            unlockEmail={unlockEmail}
-                            unlockReminderTime={unlockReminderTime}
-                        />
-                    </>
+                {showRecoveryCode && (
+                    <RecoveryCode
+                        onReminderSet={handleReminderSet}
+                        initialCode={code}
+                        onStartInteraction={() => { }}
+                        userQuestion={sessionUserInput}
+                        seededOutcomes={seededOutcomes}
+                        followupQuestion={analysis?.followup_question}
+                        unlockEmail={unlockEmail}
+                    />
                 )}
 
                 {/* Start over button */}

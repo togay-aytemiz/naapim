@@ -69,6 +69,12 @@ export const RecoveryCode: React.FC<RecoveryCodeProps> = ({ onReminderSet, initi
             onStartInteraction();
         }
         setShowSendOptions(!showSendOptions);
+        // Scroll to show the expanded options
+        if (!showSendOptions) {
+            setTimeout(() => {
+                document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
     };
 
     const handleSend = async () => {

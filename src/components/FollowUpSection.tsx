@@ -1,10 +1,11 @@
 import React from 'react';
-import { Check, X, Clock } from 'lucide-react';
+import { Check, X, Clock, Lock, KeyRound } from 'lucide-react';
 
 interface SeededOutcome {
     outcome_type: 'decided' | 'cancelled' | 'thinking';
     feeling: 'happy' | 'neutral' | 'uncertain' | 'regret';
     outcome_text: string;
+    related_question?: string;
 }
 
 interface FollowUpSectionProps {
@@ -14,6 +15,7 @@ interface FollowUpSectionProps {
     isUnlocked?: boolean;
     onUnlock: () => void;
     onUnlockWithEmail?: (email: string, reminderTime: 'tomorrow' | '1_week' | '2_weeks') => void;
+    onShareStory?: () => void;
     // Data for modal
     code?: string;
     userQuestion?: string;
@@ -53,18 +55,19 @@ const outcomeStyles: Record<string, { icon: React.ReactNode; label: string; colo
     }
 };
 
-// Static fake texts for cards 2-3 (security: dev tools can't reveal real content)
-const fakeTexts = [
-    "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-    "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+// Sample questions for locked cards
+const sampleQuestions = [
+    "Uzun bir araştırmadan sonra araba almaya karar verdim...",
+    "İş teklifini kabul etmeli miyim?",
+    "Taşınmayı düşünüyorum ama emin olamıyorum..."
 ];
 
 export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     seededOutcomes = [],
-    isLoadingSeeds = false,
     isUnlocked = false,
     onUnlock,
     onUnlockWithEmail,
+    onShareStory,
     code = '',
     userQuestion = '',
     sessionId,
@@ -76,26 +79,78 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
         document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Get first seeded outcome for the visible card
-    const realOutcome = seededOutcomes[0];
 
-    // Skeleton Card Component
-    const SkeletonCard = () => (
-        <div
-            className="p-4 rounded-2xl animate-pulse"
-            style={{ backgroundColor: 'var(--bg-tertiary)' }}
-        >
-            <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-gray-300/50" />
-                <div className="h-4 w-20 bg-gray-300/50 rounded" />
-                <div className="text-xl opacity-30">😊</div>
+    // Story Capsule - Blurred card with 1-line text and skeleton lines
+    const StoryCapsule = ({
+        outcome,
+        animationClass,
+        showFeeling = true,
+        fallbackText = ''
+    }: {
+        outcome?: SeededOutcome;
+        animationClass: string;
+        showFeeling?: boolean;
+        fallbackText?: string;
+    }) => {
+        const style = outcome ? (outcomeStyles[outcome.outcome_type] || outcomeStyles.decided) : outcomeStyles.decided;
+        const feeling = outcome?.feeling || 'happy';
+        const displayText = outcome?.outcome_text || fallbackText;
+
+        return (
+            <div
+                className={`story-capsule ${animationClass} p-5 rounded-2xl text-left pointer-events-none select-none`}
+                style={{
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-secondary)',
+                    opacity: 0.6,
+                    filter: 'blur(2px)',
+                }}
+            >
+                {/* Header: outcome type + feeling */}
+                <div className="flex items-center gap-2 mb-3">
+                    <div
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
+                        style={{
+                            backgroundColor: `${style.color}15`,
+                            color: style.color
+                        }}
+                    >
+                        {style.icon}
+                        <span>{style.label}</span>
+                    </div>
+                    {showFeeling && (
+                        <span className="text-lg">{feelingEmojis[feeling]}</span>
+                    )}
+                </div>
+
+                {/* 1-line text from outcome_text - truncated */}
+                <p
+                    className="text-sm font-medium mb-3 truncate"
+                    style={{ color: 'var(--text-primary)' }}
+                >
+                    {displayText}
+                </p>
+
+                {/* Skeleton text lines */}
+                <div className="space-y-2">
+                    <div
+                        className="h-2.5 rounded"
+                        style={{
+                            backgroundColor: 'var(--border-secondary)',
+                            width: '100%'
+                        }}
+                    />
+                    <div
+                        className="h-2.5 rounded"
+                        style={{
+                            backgroundColor: 'var(--border-secondary)',
+                            width: '80%'
+                        }}
+                    />
+                </div>
             </div>
-            <div className="space-y-2">
-                <div className="h-3 w-full bg-gray-300/50 rounded" />
-                <div className="h-3 w-3/4 bg-gray-300/50 rounded" />
-            </div>
-        </div>
-    );
+        );
+    };
 
     // Real Outcome Card (first line visible, rest blurred - unless showFull is true)
     const RealOutcomeCard = ({ outcome, showFull = false }: { outcome: SeededOutcome; showFull?: boolean }) => {
@@ -151,122 +206,17 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
         );
     };
 
-    // Fake Blurred Card (static text, lightly blurred - text visible but not readable)
-    const FakeBlurredCard = ({ text }: { text: string }) => (
-        <div
-            className="p-4 rounded-2xl relative overflow-hidden"
-            style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                opacity: 0.7
-            }}
-        >
-            <div className="flex items-center gap-2 mb-3" style={{ filter: 'blur(3px)' }}>
-                <div
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
-                    style={{ backgroundColor: 'var(--border-secondary)' }}
-                >
-                    <div className="w-3 h-3 rounded-full bg-gray-400/50" />
-                    <div className="w-12 h-2 rounded bg-gray-400/50" />
-                </div>
-                <span className="text-lg opacity-50">😊</span>
-            </div>
-            <p
-                className="text-sm leading-relaxed select-none"
-                style={{ color: 'var(--text-secondary)', filter: 'blur(3px)' }}
-            >
-                {text}
-            </p>
-            {/* Bottom fade gradient inside card */}
-            <div
-                className="absolute inset-x-0 bottom-0 h-full pointer-events-none rounded-b-2xl"
-                style={{
-                    background: 'linear-gradient(to top, var(--bg-tertiary) 0%, transparent 60%)'
-                }}
-            />
-        </div>
-    );
-
     return (
         <div id="follow-up-section" className="flex flex-col items-center px-5 scroll-mt-24">
             <div className="w-full max-w-md space-y-8">
-                {/* Conversational intro */}
-                <div className="text-center space-y-3">
-                    <h3 className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                        Hikaye burada bitmiyor.
-                    </h3>
-                    <p className="leading-relaxed max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                        Kararını paylaş, benzer durumları yaşayan<br />diğer insanların hikayelerini gör.
-                    </p>
-                </div>
-
-                {/* Simple exchange card */}
-                <div
-                    className="rounded-3xl p-6 md:p-8"
-                    style={{
-                        backgroundColor: 'var(--bg-elevated)',
-                        border: '1px solid var(--border-secondary)',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)'
-                    }}
-                >
-                    {/* How it works */}
-                    <div className="space-y-4">
-                        <div className="flex items-start gap-4">
-                            <div
-                                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                                style={{ backgroundColor: 'var(--emerald-100)', color: 'var(--emerald-600)' }}
-                            >
-                                1
-                            </div>
-                            <div>
-                                <p className="font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    Kararını paylaş
-                                </p>
-                                <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                                    Ne yaptığını veya ne yapmaya karar verdiğini anlat
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-start gap-4">
-                            <div
-                                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                                style={{ backgroundColor: 'var(--emerald-100)', color: 'var(--emerald-600)' }}
-                            >
-                                2
-                            </div>
-                            <div>
-                                <p className="font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    Başkalarını gör
-                                </p>
-                                <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                                    Benzer durumları yaşayan insanların hikayeleri açılsın
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-5 pt-5 border-t" style={{ borderColor: 'var(--border-secondary)' }}>
-                        <p className="text-center text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                            Yarından itibaren deneyimini paylaşabilirsin.
-                        </p>
-                        <button
-                            onClick={scrollToRecoveryCode}
-                            className="mt-2 w-full text-center text-sm font-medium hover:underline"
-                            style={{ color: 'var(--coral-primary)' }}
-                        >
-                            Nasıl paylaşırım? ↓
-                        </button>
-                    </div>
-                </div>
-
                 {/* Community Stories Preview */}
                 <div className="space-y-4">
-                    <div className="text-center">
-                        <h3 className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>
-                            {isUnlocked ? 'Topluluktan Hikayeler' : 'Başkaları ne yaşıyor?'}
+                    <div className="text-center space-y-3">
+                        <h3 className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                            {isUnlocked ? 'Topluluktan Hikayeler' : (<>Başkalarının Deneyimlerinden<br />İlham Al</>)}
                         </h3>
-                        <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-                            {isUnlocked ? 'Seninle benzer durumda olanların paylaşımları' : 'Benzer kararlar veren insanların deneyimleri'}
+                        <p className="leading-relaxed max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                            {isUnlocked ? 'Seninle benzer durumda olanların paylaşımları' : 'Seninle benzer durumda olan insanların hikayelerini keşfet.'}
                         </p>
                     </div>
 
@@ -298,80 +248,114 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                 </div>
                             </div>
                         ) : (
-                            /* LOCKED STATE */
+                            /* LOCKED STATE - Animated Story Capsules */
                             <>
-                                {/* Card 1: Real outcome (partially visible) */}
-                                {isLoadingSeeds ? (
-                                    <SkeletonCard />
-                                ) : realOutcome ? (
-                                    <RealOutcomeCard outcome={realOutcome} />
-                                ) : (
-                                    <SkeletonCard />
-                                )}
+                                {/* CSS for animations - only float, no glow */}
+                                <style>{`
+                                    @keyframes moveUp1 {
+                                        0% { transform: translateY(0); }
+                                        100% { transform: translateY(-4px); }
+                                    }
+                                    @keyframes moveUp2 {
+                                        0% { transform: translateY(0); }
+                                        100% { transform: translateY(-6px); }
+                                    }
+                                    @keyframes moveUp3 {
+                                        0% { transform: translateY(0); }
+                                        100% { transform: translateY(-8px); }
+                                    }
+                                    .story-capsule-1 {
+                                        animation: moveUp1 2s ease-in-out infinite alternate;
+                                    }
+                                    .story-capsule-2 {
+                                        animation: moveUp2 2s ease-in-out infinite alternate 0.3s;
+                                    }
+                                    .story-capsule-3 {
+                                        animation: moveUp3 2s ease-in-out infinite alternate 0.6s;
+                                    }
+                                `}</style>
 
-                                {/* Card 2: Blurred */}
-                                <FakeBlurredCard text={fakeTexts[0]} />
+                                {/* Story Capsules */}
+                                <StoryCapsule
+                                    outcome={seededOutcomes[0]}
+                                    animationClass="story-capsule-1"
+                                    showFeeling={true}
+                                    fallbackText={sampleQuestions[0]}
+                                />
+                                <StoryCapsule
+                                    outcome={seededOutcomes[1]}
+                                    animationClass="story-capsule-2"
+                                    showFeeling={true}
+                                    fallbackText={sampleQuestions[1]}
+                                />
+                                <StoryCapsule
+                                    outcome={seededOutcomes[2]}
+                                    animationClass="story-capsule-3"
+                                    showFeeling={false}
+                                    fallbackText={sampleQuestions[2]}
+                                />
 
-                                {/* Card 3: Blurred (Added one more for stack effect) */}
-                                <FakeBlurredCard text={fakeTexts[1]} />
+                                {/* Full gradient overlay - fades cards from top to bottom */}
+                                <div
+                                    className="absolute inset-0 pointer-events-none z-10"
+                                    style={{
+                                        background: 'linear-gradient(to bottom, transparent 0%, transparent 15%, var(--bg-primary) 85%, var(--bg-primary) 100%)'
+                                    }}
+                                />
 
                                 {/* CTA Overlay */}
                                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
 
-                                    {/* Primary CTA: Share Decision */}
-                                    <div className="mb-4 w-full max-w-xs">
+                                    {/* CTA Content */}
+                                    <div className="relative z-30 flex flex-col items-center space-y-4">
+                                        {/* Lock Icon */}
                                         <div
-                                            className="mx-auto w-14 h-14 rounded-2xl shadow-xl mb-3 flex items-center justify-center relative"
+                                            className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl transform -rotate-6"
                                             style={{
                                                 background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A80 100%)',
-                                                boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)'
+                                                boxShadow: '0 0 15px rgba(255, 107, 107, 0.4)'
                                             }}
                                         >
-                                            {/* Subtle pulse ring */}
-                                            <div
-                                                className="absolute inset-0 rounded-2xl animate-ping opacity-20"
-                                                style={{ backgroundColor: 'var(--coral-primary)' }}
-                                            />
-                                            <svg className="w-6 h-6 text-white relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                            </svg>
+                                            <Lock className="w-7 h-7 text-white" />
                                         </div>
-                                        <button
-                                            onClick={scrollToRecoveryCode}
-                                            className="w-full py-3 px-6 rounded-xl font-medium text-white shadow-lg transition-transform active:scale-[0.98] text-sm"
-                                            style={{
-                                                backgroundColor: '#FF6F61', // Coral
-                                                boxShadow: '0 4px 15px rgba(255, 111, 97, 0.4)'
-                                            }}
-                                        >
-                                            Hikayeni paylaş, hepsini gör
-                                        </button>
-                                    </div>
 
-                                    {/* Secondary CTA: Undecided / Unlock */}
-                                    <div className="w-full max-w-xs">
+                                        {/* Unlock Button */}
                                         <button
                                             onClick={() => setShowUnlockModal(true)}
-                                            className="group w-full py-3 px-5 rounded-2xl font-medium text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                                            className="group flex items-center justify-center gap-2 py-4 px-8 rounded-2xl font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 active:translate-y-0 text-lg w-full max-w-xs"
                                             style={{
-                                                backgroundColor: 'var(--bg-elevated)',
-                                                border: '1px solid var(--border-primary)',
-                                                boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+                                                backgroundColor: '#FF6F61',
+                                                boxShadow: '0 4px 20px rgba(255, 111, 97, 0.4)'
                                             }}
                                         >
-                                            <div className="flex items-center justify-center gap-2">
-                                                <span className="text-lg">🤔</span>
-                                                <div className="text-left">
-                                                    <span style={{ color: 'var(--text-secondary)' }}>Henüz karar veremedim</span>
-                                                    <span
-                                                        className="block text-xs font-semibold group-hover:underline"
-                                                        style={{ color: 'var(--coral-primary)' }}
-                                                    >
-                                                        → 3 hikayeyle ilham al
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            <KeyRound className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                                            <span>Hikayelerin Kilidini Aç</span>
                                         </button>
+
+                                        {/* Secondary Button - Share Story */}
+                                        {onShareStory && (
+                                            <button
+                                                onClick={() => {
+                                                    onShareStory();
+                                                    // Scroll to recovery code after a small delay
+                                                    setTimeout(() => {
+                                                        document.getElementById('recovery-code-section')?.scrollIntoView({ behavior: 'smooth' });
+                                                    }, 100);
+                                                }}
+                                                className="group flex items-center justify-center gap-2 py-3 px-6 rounded-2xl font-medium transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-sm w-full max-w-xs"
+                                                style={{
+                                                    backgroundColor: 'var(--bg-elevated)',
+                                                    border: '1px solid var(--border-secondary)',
+                                                    color: 'var(--text-secondary)',
+                                                    boxShadow: '0 2px 10px rgba(0,0,0,0.06)'
+                                                }}
+                                            >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                                </svg>
+                                                <span>Diğer kullanıcılara ilham ol</span>
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </>

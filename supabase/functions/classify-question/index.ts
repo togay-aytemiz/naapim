@@ -64,12 +64,25 @@ GÖREV:
 - Net ifadelerde confidence yüksek olmalı (0.7-1.0)
 
 GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
-Aşağıdaki durumlarda MUTLAKA needs_clarification: true döndür ve is_unrealistic: true ekle:
-- Hayali varlıklar (unicorn, ejderha, süperman, batman, peri, vs.)
+Aşağıdaki durumlarda MUTLAKA is_unrealistic: true olmalı:
+
+SÜPER KAHRAMANLAR VE KURGUSAL KARAKTERLER:
+- Superman, Batman, Spiderman, Iron Man, Thor, Hulk, Wonder Woman
+- Unicorn, ejderha, peri, cin, büyücü, vampir, kurt adam
+- Anime/manga karakterleri, çizgi roman kahramanları
+- Film/dizi karakterleri (Darth Vader, Harry Potter, Gandalf, vs.)
+
+SAÇMA/TROLL SORU KALIPLARI:
+- "Hangisi kazanır?", "Kim daha güçlü?", "Kim yener?"
+- Gerçek olmayan şeyleri karşılaştırma
 - İmkansız senaryolar (zamanda yolculuk, uçma yeteneği, ölümsüzlük)
-- Var olmayan ürünler/kavramlar
-- Trolleme/şaka amaçlı saçma sorular
-- Aşırı absürt veya mantıksız karşılaştırmalar
+- Şaka/trolleme amaçlı absürt sorular
+
+ÖRNEKLER (HEPSİ is_unrealistic: true OLMALI):
+- "Superman mı kazanır Batman mi?" → is_unrealistic: true
+- "Unicorn mu alsam ejderha mı?" → is_unrealistic: true  
+- "Thor mu güçlü Hulk mu?" → is_unrealistic: true
+- "Harry Potter olsam mı Gandalf mı?" → is_unrealistic: true
 
 Bu durumlarda clarification_prompt şöyle olmalı:
 "Bu soru gerçek bir karar durumunu yansıtmıyor gibi görünüyor. Naapim gerçek hayat kararlarında yardımcı olabilir. Lütfen gerçek bir karar veya ikilem paylaşır mısın?"

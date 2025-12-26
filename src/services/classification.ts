@@ -49,11 +49,16 @@ export class ClassificationService {
             }
 
             const result = await response.json();
+
+            // Fallback: if clarification_prompt mentions "gerçek bir karar", treat as unrealistic
+            const promptIndicatesUnrealistic = result.clarification_prompt?.includes('gerçek bir karar') ||
+                result.clarification_prompt?.includes('gerçek hayat');
+
             return {
                 archetype_id: result.archetype_id || archetypes[0]?.id || 'career_decisions',
                 confidence: result.confidence || 0,
                 needs_clarification: result.needs_clarification || false,
-                is_unrealistic: result.is_unrealistic || false,
+                is_unrealistic: result.is_unrealistic || promptIndicatesUnrealistic || false,
                 clarification_prompt: result.clarification_prompt || undefined,
                 interpreted_question: result.interpreted_question || undefined
             };

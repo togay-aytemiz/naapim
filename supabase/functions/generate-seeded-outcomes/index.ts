@@ -97,9 +97,16 @@ serve(async (req) => {
             outcomeCombos[1].feeling = alternatives[Math.floor(Math.random() * alternatives.length)]
         }
 
-        // Assign distinct personas
-        const shuffledPersonas = [...PERSONA_POOL].sort(() => Math.random() - 0.5)
-        const assignedPersonas = shuffledPersonas.slice(0, count)
+        // Assign distinct personas with Fisher-Yates shuffle (unbiased)
+        const pickDistinct = (pool: string[], n: number): string[] => {
+            const arr = [...pool]
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1))
+                    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+            }
+            return arr.slice(0, Math.min(n, arr.length))
+        }
+        const assignedPersonas = pickDistinct(PERSONA_POOL, count)
 
         const feelingDescriptions: Record<string, Record<string, string>> = {
             decided: {
@@ -133,8 +140,11 @@ HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
 5. SOMUT TETİKLEYİCİ OLAY: İndirim, eski cihaz bozuldu, mağazada denedi, iş gereksinimi, seyahat planı vb.
 6. SOMUT SONRASI GÖZLEM: Pil yetti/yetmedi, performans, pişmanlık nedeni, beklenmedik sorun, memnuniyet nedeni
 
-YASAK İFADELER (bunları ASLA kullanma):
-"şunu almalısın", "kesinlikle", "en iyisi", "tavsiye ederim", "yatırım önerisi", "garanti"
+YASAK İFADELER (bunları ASLA kullanma - tavsiye veren dil):
+"şunu almalısın", "kesinlikle tavsiye ederim", "en iyisi budur", "tavsiye ederim", "garanti ederim", "kesin sonuç alırsın"
+
+SERBEST İFADELER (bunları kullanabilirsin - teknik/somut terimler):
+"garanti süresi", "resmi distribütör", "yetkili servis", "garanti kapsamı"
 
 ZORUNLU KULLANIM: Yaşanmış deneyim dili kullan:
 "benim durumumda", "bende şöyle oldu", "ben böyle yaptım", "benim için"
@@ -210,7 +220,7 @@ STİL KURALLARI:
                 'Authorization': `Bearer ${openaiApiKey}`,
             },
             body: JSON.stringify({
-                model: 'gpt-5-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     {
                         role: 'system',
@@ -246,45 +256,46 @@ STİL KURALLARI:
         }
         let outcomes = generatedData.outcomes || []
 
-        // Validation: Check required fields and specificity
-        const requiredFields = ['similar_question', 'persona', 'options_considered', 'constraints', 'trigger', 'tradeoffs', 'what_happened_after', 'outcome_text', 'feeling', 'outcome_type']
+        // Validation: Type-based checks to avoid false positives on empty arrays/objects
+        const hasValue = (v: any): boolean => v !== undefined && v !== null
 
-        const validateOutcome = (outcome: any): { valid: boolean; missing: string[] } => {
+        const validateOutcome = (o: any): { valid: boolean; missing: string[] } => {
             const missing: string[] = []
 
-            // Check required fields exist
-            for (const field of requiredFields) {
-                if (!outcome[field]) {
-                    missing.push(`missing ${field}`)
-                }
-            }
+            // String field validations with min length
+            if (!hasValue(o.similar_question) || String(o.similar_question).trim().length < 8)
+                missing.push('similar_question')
+            if (!hasValue(o.persona) || String(o.persona).trim().length < 5)
+                missing.push('persona')
+            if (!hasValue(o.trigger) || String(o.trigger).trim().length < 8)
+                missing.push('trigger')
+            if (!hasValue(o.what_happened_after) || String(o.what_happened_after).trim().length < 15)
+                missing.push('what_happened_after')
 
-            // Check specificity in outcome_text (simple keyword heuristics)
-            const text = (outcome.outcome_text || '').toLowerCase()
+            // Array field validations with min count
+            if (!Array.isArray(o.options_considered) || o.options_considered.length < 2)
+                missing.push('options_considered 2+')
+            if (!Array.isArray(o.constraints) || o.constraints.length < 1)
+                missing.push('constraints 1+')
 
-            // Check for at least 2 alternatives mentioned
-            const hasAlternatives = outcome.options_considered && outcome.options_considered.length >= 2
-            if (!hasAlternatives) missing.push('needs 2+ alternatives')
+            // Tradeoffs structure validation
+            if (!o.tradeoffs || !Array.isArray(o.tradeoffs.pros) || o.tradeoffs.pros.length < 2)
+                missing.push('tradeoffs.pros 2+')
+            if (!o.tradeoffs || !Array.isArray(o.tradeoffs.cons) || o.tradeoffs.cons.length < 2)
+                missing.push('tradeoffs.cons 2+')
 
-            // Check for constraints
-            const hasConstraints = outcome.constraints && outcome.constraints.length >= 1
-            if (!hasConstraints) missing.push('needs constraints')
+            // outcome_text min length (raised to 220 for better quality)
+            const text = String(o.outcome_text || '').trim()
+            if (text.length < 220) missing.push('outcome_text too short')
 
-            // Check for trigger
-            if (!outcome.trigger || outcome.trigger.length < 5) missing.push('needs trigger')
+            // Enum validations
+            const validFeelings = ['happy', 'neutral', 'uncertain', 'regret']
+            if (!validFeelings.includes(String(o.feeling || '').toLowerCase()))
+                missing.push('invalid feeling')
 
-            // Check tradeoffs structure
-            if (!outcome.tradeoffs?.pros?.length || !outcome.tradeoffs?.cons?.length) {
-                missing.push('needs pros and cons')
-            }
-
-            // Check what_happened_after
-            if (!outcome.what_happened_after || outcome.what_happened_after.length < 10) {
-                missing.push('needs what_happened_after')
-            }
-
-            // Simple text quality checks (at least 100 chars for detailed story)
-            if (text.length < 100) missing.push('outcome_text too short')
+            const validTypes = ['decided', 'cancelled']
+            if (!validTypes.includes(String(o.outcome_type || '').toLowerCase()))
+                missing.push('invalid outcome_type')
 
             return { valid: missing.length === 0, missing }
         }
@@ -296,9 +307,94 @@ STİL KURALLARI:
         }))
 
         const invalidOutcomes = validationResults.filter((r: any) => !r.valid)
+
+        // If there are invalid outcomes, try a fix pass
+        let finalInvalidOutcomes = invalidOutcomes
         if (invalidOutcomes.length > 0) {
-            console.warn('Some outcomes failed validation:', invalidOutcomes)
-            // We'll proceed but log the issues - in production could retry
+            console.warn('Some outcomes failed validation, attempting fix pass:', invalidOutcomes)
+
+            const fixPrompt = `Aşağıdaki JSON'daki eksik alanları düzelt.
+
+Eksik alanlar: ${invalidOutcomes.map((io: any) => `Outcome ${io.index + 1}: ${io.missing.join(', ')}`).join('; ')}
+
+Mevcut JSON:
+${JSON.stringify(generatedData, null, 2)}
+
+KATI KURALLAR - İHLAL ETME:
+1. outcomes array'inin eleman SAYISINI DEĞİŞTİRME - tam olarak ${count} tane outcome olmalı
+2. Yeni outcome EKLEME veya mevcut outcome SİLME
+3. persona, feeling, outcome_type değerlerini DEĞİŞTİRME
+4. Sadece eksik/kısa alanları zenginleştir
+5. Aynı JSON formatında yanıt ver`
+
+            try {
+                const fixResponse = await fetchWithRetry('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${openaiApiKey}`,
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'Sen JSON düzeltici bir asistansın. SADECE eksik alanları tamamla. Outcome sayısını, persona/feeling/outcome_type değerlerini KESİNLİKLE değiştirme. Yeni outcome ekleme veya silme.'
+                            },
+                            { role: 'user', content: fixPrompt }
+                        ],
+                        temperature: 0.5,
+                        max_tokens: 3000,
+                        response_format: { type: 'json_object' }
+                    })
+                })
+
+                if (fixResponse.ok) {
+                    const fixData = await fixResponse.json()
+                    const fixContent = fixData.choices[0]?.message?.content
+                    if (fixContent) {
+                        const fixedData = JSON.parse(fixContent)
+                        if (fixedData.outcomes && Array.isArray(fixedData.outcomes) && fixedData.outcomes.length === count) {
+                            outcomes = fixedData.outcomes
+                            console.log('Fix pass successful, using fixed outcomes')
+
+                            // Re-validate after fix pass
+                            const revalidationResults = outcomes.map((o: any, i: number) => ({
+                                index: i,
+                                ...validateOutcome(o)
+                            }))
+                            finalInvalidOutcomes = revalidationResults.filter((r: any) => !r.valid)
+                            if (finalInvalidOutcomes.length > 0) {
+                                console.warn('Some outcomes still invalid after fix pass:', finalInvalidOutcomes)
+                            } else {
+                                console.log('All outcomes valid after fix pass')
+                            }
+                        } else {
+                            console.warn('Fix pass returned wrong outcome count, keeping original')
+                        }
+                    }
+                }
+            } catch (fixErr) {
+                console.warn('Fix pass failed, proceeding with original outcomes:', fixErr)
+            }
+        }
+
+        // Ensure we have exactly 'count' outcomes - pad with fallbacks if needed
+        while (outcomes.length < count) {
+            const idx = outcomes.length
+            console.warn(`Padding missing outcome at index ${idx}`)
+            outcomes.push({
+                similar_question: user_question,
+                persona: assignedPersonas[idx] || 'genel kullanıcı',
+                options_considered: ['Seçenek A', 'Seçenek B'],
+                constraints: ['Belirsiz kısıt'],
+                trigger: 'Karar anı geldi',
+                tradeoffs: { pros: ['Artı 1', 'Artı 2'], cons: ['Eksi 1', 'Eksi 2'] },
+                what_happened_after: 'Sonuç henüz belirsiz.',
+                outcome_text: 'Bu kullanıcı henüz tam hikayesini paylaşmadı. Benzer durumda olan başka kullanıcıların deneyimlerine bakabilirsiniz. Kararlar her zaman kolay olmuyor, ama sonunda herkes kendi yolunu buluyor.',
+                feeling: outcomeCombos[idx]?.feeling || 'neutral',
+                outcome_type: outcomeCombos[idx]?.outcomeType || 'decided'
+            })
         }
 
         // Save to database
@@ -367,14 +463,50 @@ STİL KURALLARI:
             return feelingMap[normalized] || fallback as ValidFeeling
         }
 
+        // Valid outcome_type values that match database check constraint
+        const validOutcomeTypes = ['decided', 'cancelled'] as const
+        type ValidOutcomeType = typeof validOutcomeTypes[number]
+
+        // Sanitize outcome_type value - map invalid values to fallback
+        const sanitizeOutcomeType = (outcomeType: string | undefined, fallback: string): ValidOutcomeType => {
+            if (!outcomeType) return fallback as ValidOutcomeType
+            const normalized = outcomeType.toLowerCase().trim()
+
+            // Direct match
+            if (validOutcomeTypes.includes(normalized as ValidOutcomeType)) {
+                return normalized as ValidOutcomeType
+            }
+
+            // Map common alternatives
+            const typeMap: Record<string, ValidOutcomeType> = {
+                'did': 'decided',
+                'done': 'decided',
+                'completed': 'decided',
+                'yes': 'decided',
+                'chose': 'decided',
+                'cancel': 'cancelled',
+                'no': 'cancelled',
+                'skipped': 'cancelled',
+                'abandoned': 'cancelled',
+                'quit': 'cancelled'
+            }
+
+            return typeMap[normalized] || fallback as ValidOutcomeType
+        }
+
         // Generate embeddings for each outcome (based on similar_question + original context)
         // This ensures generated outcomes match users with similar question AND answers
         const outcomesWithEmbeddings = await Promise.all(
             outcomes.map(async (o: any, index: number) => {
+                // Force persona from assignedPersonas if model didn't use it correctly
+                const finalPersona = o.persona || assignedPersonas[index] || 'genel kullanıcı'
+                // Override o.persona to ensure consistency
+                o.persona = finalPersona
+
                 // Build rich text for embedding including new fields
                 const embeddingParts = [
                     o.similar_question || user_question,
-                    o.persona || '',
+                    finalPersona,
                     (o.options_considered || []).join(', '),
                     (o.constraints || []).join(', '),
                     o.trigger || '',
@@ -387,9 +519,13 @@ STİL KURALLARI:
                 const fallbackFeeling = outcomeCombos[index]?.feeling || 'neutral'
                 const sanitizedFeeling = sanitizeFeeling(o.feeling, fallbackFeeling)
 
+                // Sanitize outcome_type to prevent DB constraint violation
+                const fallbackOutcomeType = outcomeCombos[index]?.outcomeType || 'decided'
+                const sanitizedOutcomeType = sanitizeOutcomeType(o.outcome_type, fallbackOutcomeType)
+
                 // Build metadata JSON with the new structured fields
                 const metadata = {
-                    persona: o.persona || null,
+                    persona: finalPersona,
                     options_considered: o.options_considered || [],
                     constraints: o.constraints || [],
                     trigger: o.trigger || null,
@@ -399,7 +535,7 @@ STİL KURALLARI:
 
                 return {
                     session_id: null,
-                    outcome_type: o.outcome_type || outcomeCombos[index]?.outcomeType || 'decided',
+                    outcome_type: sanitizedOutcomeType,
                     outcome_text: o.outcome_text,
                     feeling: sanitizedFeeling,
                     related_question: o.similar_question,
@@ -426,7 +562,7 @@ STİL KURALLARI:
                 success: true,
                 generated_count: insertedOutcomes?.length || 0,
                 outcomes: insertedOutcomes,
-                validation_warnings: invalidOutcomes.length > 0 ? invalidOutcomes : undefined
+                validation_warnings: finalInvalidOutcomes.length > 0 ? finalInvalidOutcomes : undefined
             }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )

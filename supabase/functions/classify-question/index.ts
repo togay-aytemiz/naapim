@@ -104,13 +104,13 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
                 'Authorization': `Bearer ${openaiApiKey}`,
             },
             body: JSON.stringify({
-                model: 'gpt-5-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: user_question }
                 ],
-                response_format: { type: 'json_object' },
-                temperature: 0.3 // Lower temperature for more consistent classification
+                temperature: 0.3,
+                response_format: { type: 'json_object' }
             })
         })
 

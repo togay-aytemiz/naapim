@@ -49,6 +49,9 @@ Generate a CONCISE response in strictly valid JSON:
   "recommendation": "1-2 short sentences. Direct advice.",
   "reasoning": "2-3 short sentences max. Reference their specific situation.",
   "steps": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
+                temperature: 0.7,
+                max_tokens: 1500,
+                response_format: { type: 'json_object' }
   "sentiment": "positive OR cautious OR warning OR negative OR neutral",
   "followup_question": "A natural conversational question to ask the user when they return"
 }
@@ -89,11 +92,13 @@ RULES:
                 'Authorization': `Bearer ${openaiApiKey}`,
             },
             body: JSON.stringify({
-                model: 'gpt-5-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: `Lütfen "${user_question}" sorusunu analiz et ve JSON formatında yanıt ver.` }
                 ],
+                temperature: 0.7,
+                max_tokens: 1500,
                 response_format: { type: 'json_object' }
             })
         })

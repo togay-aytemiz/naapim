@@ -45,7 +45,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'gpt-5-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     {
                         role: 'system',
@@ -96,7 +96,8 @@ CEVAP FORMATI (JSON):
                     }
                 ],
                 temperature: 0.1,
-                max_tokens: 500
+                max_tokens: 500,
+                response_format: { type: 'json_object' }
             })
         })
 

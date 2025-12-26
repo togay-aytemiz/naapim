@@ -160,7 +160,10 @@ export const ResultPage = () => {
         const loadSeededOutcomes = async () => {
             setIsLoadingSeeds(true);
             try {
-                const context = Object.entries(sessionAnswers || {}).map(([k, v]) => `${k}: ${v}`).join('; ');
+                // Use readable context format for better LLM understanding
+                const context = sessionArchetypeId && sessionAnswers
+                    ? AnalysisService.getReadableContext(sessionArchetypeId, sessionAnswers)
+                    : '';
                 const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context);
                 setSeededOutcomes(outcomes?.outcomes || []);
             } catch (err) {

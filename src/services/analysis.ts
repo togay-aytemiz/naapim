@@ -19,7 +19,7 @@ export interface AnalysisResult {
 export class AnalysisService {
     private static archetypes: Archetype[] = (archetypesData as any).archetypes;
 
-    private static getReadableContext(archetypeId: string, answers: Record<string, string>): string {
+    static getReadableContext(archetypeId: string, answers: Record<string, string>): string {
         const questions = RegistryLoader.getQuestionsForArchetype(archetypeId);
         let context = "";
 

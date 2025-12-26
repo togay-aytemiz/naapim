@@ -63,11 +63,23 @@ GÖREV:
 - Belirsiz ifadelerde confidence düşük olmalı (0.3-0.5)
 - Net ifadelerde confidence yüksek olmalı (0.7-1.0)
 
+GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
+Aşağıdaki durumlarda MUTLAKA needs_clarification: true döndür ve is_unrealistic: true ekle:
+- Hayali varlıklar (unicorn, ejderha, süperman, batman, peri, vs.)
+- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği, ölümsüzlük)
+- Var olmayan ürünler/kavramlar
+- Trolleme/şaka amaçlı saçma sorular
+- Aşırı absürt veya mantıksız karşılaştırmalar
+
+Bu durumlarda clarification_prompt şöyle olmalı:
+"Bu soru gerçek bir karar durumunu yansıtmıyor gibi görünüyor. Naapim gerçek hayat kararlarında yardımcı olabilir. Lütfen gerçek bir karar veya ikilem paylaşır mısın?"
+
 ÇIKTI FORMATI (JSON):
 {
     "archetype_id": "kategori_id",
     "confidence": 0.0-1.0 arası sayı,
     "needs_clarification": true/false,
+    "is_unrealistic": true/false (fantastik/gerçek dışı soru ise true),
     "clarification_prompt": "Kullanıcıya sorulacak nazik detay sorusu (needs_clarification true ise)",
     "interpreted_question": "Kullanıcının niyetinin tam cümle hali (needs_clarification false ise)"
 }
@@ -88,13 +100,16 @@ KATEGORİLER:
         systemPrompt += `\nÖRNEK ANALİZLER:
 
 Girdi: "acaba ikinci çocuk?"
-Çıktı: {"archetype_id": "parenting_decisions", "confidence": 0.75, "needs_clarification": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+Çıktı: {"archetype_id": "parenting_decisions", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
 
 Girdi: "iş"
-Çıktı: {"archetype_id": "career_decisions", "confidence": 0.3, "needs_clarification": true, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz? Örneğin: İşimi değiştirmeli miyim? veya Terfi istemeli miyim?"}
+Çıktı: {"archetype_id": "career_decisions", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz? Örneğin: İşimi değiştirmeli miyim? veya Terfi istemeli miyim?"}
+
+Girdi: "Unicorn mu alsam superman mı?"
+Çıktı: {"archetype_id": "general", "confidence": 0, "needs_clarification": true, "is_unrealistic": true, "clarification_prompt": "Bu soru gerçek bir karar durumunu yansıtmıyor gibi görünüyor. Naapim gerçek hayat kararlarında yardımcı olabilir. Lütfen gerçek bir karar veya ikilem paylaşır mısın?"}
 
 Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
-Çıktı: {"archetype_id": "lifestyle_change", "confidence": 0.9, "needs_clarification": false, "interpreted_question": "Mevcut evinizde kalıp tadilat mı yaptırmalısınız yoksa taşınmalı mısınız kararını vermeye çalışıyorsunuz."}
+Çıktı: {"archetype_id": "lifestyle_change", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut evinizde kalıp tadilat mı yaptırmalısınız yoksa taşınmalı mısınız kararını vermeye çalışıyorsunuz."}
 `
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {

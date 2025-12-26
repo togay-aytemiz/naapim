@@ -53,6 +53,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     // Clarification state for vague inputs
     const [needsClarification, setNeedsClarification] = useState(false);
+    const [isUnrealistic, setIsUnrealistic] = useState(false);
     const [clarificationPrompt, setClarificationPrompt] = useState<string | null>(null);
     const [additionalInput, setAdditionalInput] = useState('');  // New clarification input only
     const [accumulatedQuestion, setAccumulatedQuestion] = useState<string>(userInput || '');  // Grows with each clarification
@@ -120,6 +121,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 if (classificationResult.needs_clarification) {
                     console.log('⚠️ Clarification needed:', classificationResult.clarification_prompt);
                     setNeedsClarification(true);
+                    setIsUnrealistic(classificationResult.is_unrealistic || false);
                     setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen kararınızı biraz daha açıklayın.');
                     setAdditionalInput(''); // Clear for fresh input
                     // accumulatedQuestion already has the current question
@@ -324,6 +326,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     if (classificationResult.needs_clarification) {
                         console.log('⚠️ Still needs clarification:', classificationResult.clarification_prompt);
                         setNeedsClarification(true);
+                        setIsUnrealistic(classificationResult.is_unrealistic || false);
                         setClarificationPrompt(classificationResult.clarification_prompt || 'Lütfen biraz daha detay verin.');
                         setAdditionalInput(''); // Clear for fresh input, accumulatedQuestion holds the merged context
                         setIsLoading(false);
@@ -356,6 +359,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 clarificationPrompt={clarificationPrompt || 'Lütfen kararınızı biraz daha açıklayın.'}
                 originalQuestion={accumulatedQuestion}
                 additionalInput={additionalInput}
+                isUnrealistic={isUnrealistic}
                 onInputChange={setAdditionalInput}
                 onSubmit={handleClarificationSubmit}
                 onBack={onBack}

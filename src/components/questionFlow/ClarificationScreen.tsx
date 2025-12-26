@@ -1,9 +1,11 @@
 import React from 'react';
+import { AlertTriangle, Home } from 'lucide-react';
 
 interface ClarificationScreenProps {
     clarificationPrompt: string;
     originalQuestion: string;  // The original/accumulated question (readonly)
     additionalInput: string;   // New clarification input
+    isUnrealistic?: boolean;   // True if question is fantasy/unrealistic
     onInputChange: (value: string) => void;
     onSubmit: () => void;
     onBack: () => void;
@@ -13,15 +15,85 @@ interface ClarificationScreenProps {
  * Clarification screen for when user input is too vague
  * Shows original question as readonly, asks for additional details
  * System will merge original + additional for classification
+ * 
+ * If isUnrealistic is true, shows a different UI asking user to go back home
  */
 export const ClarificationScreen: React.FC<ClarificationScreenProps> = ({
     clarificationPrompt,
     originalQuestion,
     additionalInput,
+    isUnrealistic = false,
     onInputChange,
     onSubmit,
     onBack
 }) => {
+    // Unrealistic question - show different UI
+    if (isUnrealistic) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-500">
+                <div className="text-center space-y-6 max-w-md w-full">
+                    {/* Warning Icon */}
+                    <div
+                        className="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: 'rgba(251, 146, 60, 0.15)' }}
+                    >
+                        <AlertTriangle className="w-8 h-8" style={{ color: 'var(--amber-500)' }} />
+                    </div>
+
+                    {/* Original question - show what they asked */}
+                    <div
+                        className="p-3 rounded-xl text-sm italic"
+                        style={{
+                            backgroundColor: 'var(--bg-tertiary)',
+                            border: '1px solid var(--border-secondary)',
+                            color: 'var(--text-muted)',
+                        }}
+                    >
+                        "{originalQuestion}"
+                    </div>
+
+                    {/* Explanation */}
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                            Bu soru gerçek bir karar gibi görünmüyor
+                        </h2>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            Naapim, gerçek hayat kararlarında yardımcı olmak için tasarlandı.
+                            Kariyer, ilişki, finans, sağlık gibi konularda sana destek olabiliriz.
+                        </p>
+                    </div>
+
+                    {/* CTA - Go back to homepage */}
+                    <button
+                        onClick={onBack}
+                        className="w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-0.5"
+                        style={{
+                            background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
+                            color: 'white',
+                            boxShadow: '0 4px 15px rgba(255, 111, 97, 0.3)'
+                        }}
+                    >
+                        <Home className="w-5 h-5" />
+                        Anasayfaya Dön ve Yeniden Dene
+                    </button>
+
+                    {/* Examples */}
+                    <div className="pt-2">
+                        <p className="text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                            Örnek sorular:
+                        </p>
+                        <div className="space-y-1.5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                            <p>• "İşimi değiştirmeli miyim?"</p>
+                            <p>• "Ev almak mı yoksa kiralamak mı daha mantıklı?"</p>
+                            <p>• "Yeni bir ilişkiye hazır mıyım?"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Normal clarification UI
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-5 animate-in fade-in duration-500">
             <div className="text-center space-y-5 max-w-md w-full">

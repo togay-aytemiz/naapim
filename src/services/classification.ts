@@ -5,6 +5,7 @@ export interface ClassificationResult {
     archetype_id: string;
     confidence: number;
     needs_clarification: boolean;
+    is_unrealistic?: boolean;
     clarification_prompt?: string;
     interpreted_question?: string;
 }
@@ -52,6 +53,7 @@ export class ClassificationService {
                 archetype_id: result.archetype_id || archetypes[0]?.id || 'career_decisions',
                 confidence: result.confidence || 0,
                 needs_clarification: result.needs_clarification || false,
+                is_unrealistic: result.is_unrealistic || false,
                 clarification_prompt: result.clarification_prompt || undefined,
                 interpreted_question: result.interpreted_question || undefined
             };

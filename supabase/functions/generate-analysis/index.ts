@@ -89,7 +89,7 @@ RULES:
                 'Authorization': `Bearer ${openaiApiKey}`,
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'gpt-5-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: `Lütfen "${user_question}" sorusunu analiz et ve JSON formatında yanıt ver.` }

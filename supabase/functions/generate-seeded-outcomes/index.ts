@@ -6,18 +6,24 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Persona pool for diversity
+// Persona pool for diversity - format: "role; constraints/context; priorities"
 const PERSONA_POOL = [
-    'bütçe odaklı üniversite öğrencisi',
-    'uzaktan çalışan, toplantı ve pil ömrü önemli',
-    'hafif içerik üreticisi, fotoğraf düzenlemesi yapıyor',
-    'yoğun iş temposunda profesyonel',
-    'teknoloji meraklısı hobi kullanıcısı',
-    'aile için alışveriş yapan ebeveyn',
-    'sık seyahat eden dijital göçebe',
-    'oyuncu, performans odaklı',
-    'minimalist, sadelik arayan',
-    'ilk kez bu kategoride alım yapan'
+    'bütçe odaklı üniversite öğrencisi; 35-45k bütçe; ikinci el bakıyor; taşınabilirlik önemli',
+    'uzaktan çalışan; günlük toplantı yoğun; pil ve sessizlik kritik; uzun kullanım',
+    'hafif içerik üreticisi; Lightroom Canva; depolama ve ekran önemli; dosya yönetimi',
+    'kurumsal profesyonel; Office Slack Zoom; stabilite ve garanti önemli; az sürpriz',
+    'teknoloji meraklısı; model kıyaslıyor; teknik detay seviyor; doğru seçim takıntısı',
+    'aile için alışveriş yapan ebeveyn; ortak kullanım; dayanıklılık; servis ağı önemli',
+    'sık seyahat eden; hafiflik; adaptör taşımak istemiyor; portlar ve şarj önemli',
+    'performans odaklı kullanıcı; çok sekme çok uygulama; ısınma takıntısı; akıcılık önemli',
+    'minimalist; gereksiz harcama istemiyor; işimi görsün modu; sade tercih',
+    'ilk kez bu kategoride alım yapan; bilgi kirliliği yaşıyor; basit kriterlerle ilerliyor',
+    'ikinci el düşünen; değer kaybına hassas; resale önemli; temiz cihaz arıyor',
+    'Apple ekosistem kullanıcısı; iPhone AirPods var; uyum ve continuity önemli',
+    'Windows alışkanlığı olan; geçişten çekiniyor; kısayollar ve alışkanlıklar önemli',
+    'servis ve garanti hassas; risk sevmiyor; arıza korkusu; resmi kanal tercih',
+    'acil ihtiyacı olan; eski cihaz bozulmuş; hızlı karar; stok kampanya baskısı',
+    'kampanya kovalayan; indirim zamanlıyor; taksit ve fiyat değişimi takip ediyor'
 ]
 
 serve(async (req) => {

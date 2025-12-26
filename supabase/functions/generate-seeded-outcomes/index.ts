@@ -6,6 +6,20 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Persona pool for diversity
+const PERSONA_POOL = [
+    'bütçe odaklı üniversite öğrencisi',
+    'uzaktan çalışan, toplantı ve pil ömrü önemli',
+    'hafif içerik üreticisi, fotoğraf düzenlemesi yapıyor',
+    'yoğun iş temposunda profesyonel',
+    'teknoloji meraklısı hobi kullanıcısı',
+    'aile için alışveriş yapan ebeveyn',
+    'sık seyahat eden dijital göçebe',
+    'oyuncu, performans odaklı',
+    'minimalist, sadelik arayan',
+    'ilk kez bu kategoride alım yapan'
+]
+
 serve(async (req) => {
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
@@ -77,6 +91,10 @@ serve(async (req) => {
             outcomeCombos[1].feeling = alternatives[Math.floor(Math.random() * alternatives.length)]
         }
 
+        // Assign distinct personas
+        const shuffledPersonas = [...PERSONA_POOL].sort(() => Math.random() - 0.5)
+        const assignedPersonas = shuffledPersonas.slice(0, count)
+
         const feelingDescriptions: Record<string, Record<string, string>> = {
             decided: {
                 happy: 'mutlu ve memnun, kararından çok hoşnut, iyi ki yapmış',
@@ -92,47 +110,68 @@ serve(async (req) => {
             }
         }
 
-        const prompt = `Sen Türkçe yazan bir içerik üreticisisin. Aşağıdaki soruya benzer bir karar veren ${count} farklı kişinin deneyimlerini yaz.
+        // Build the structured prompt
+        const contextInstruction = context
+            ? `\n\nKULLANICI BAĞLAMI (hikayelere doğal şekilde yansıt):\n${context}`
+            : ''
 
-Orijinal soru: "${user_question}"
+        const prompt = `Sen Türkçe yazan yaratıcı bir hikaye anlatıcısısın. Aşağıdaki ikileme benzer bir karar vermiş ${count} farklı gerçek kullanıcının deneyimlerini paylaşacaksın.
 
-Her kişi için:
-1. Benzer ama biraz farklı bir soru versiyonu yaz
-2. Verilen karar durumu ve hissine uygun bir deneyim hikayesi yaz
-3. Hikaye TUTARLI olmalı: karar verdiyse "yaptım/aldım/gittim", vazgeçtiyse "yapmadım/almadım/gitmedim" gibi
-4. Doğal ve insan yazısı gibi olsun
-5. 1-3 cümle arası, bazıları kısa bazıları uzun
+Orijinal soru: "${user_question}"${contextInstruction}
 
-Kişiler ve durumları:
-${outcomeCombos.map((c, i) => `${i + 1}. Kişi: ${c.outcomeType === 'decided' ? 'KARAR VERDİ (yaptı)' : 'VAZGEÇTİ (yapmadı)'} - ${feelingDescriptions[c.outcomeType][c.feeling]}`).join('\n')}
+HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
+1. EN AZ 2 ALTERNATİF KARŞILAŞTIRMASI: Somut seçenekler (örn: M2 Air vs M3 Air, Air vs Pro, Mac vs Windows)
+2. EN AZ 1 SOMUT KISIT: Bütçe aralığı/taksit limiti VEYA zaman baskısı VEYA stok/bulunabilirlik
+3. SOMUT KULLANIM SENARYOSU: İş, okul, kodlama, toplantı, fotoğraf düzenleme, taşınabilirlik, pil ömrü vb.
+4. SOMUT KRİTER: RAM, SSD, ekran boyutu, ağırlık, pil, servis, ikinci el değeri, klavye, port vb.
+5. SOMUT TETİKLEYİCİ OLAY: İndirim, eski cihaz bozuldu, mağazada denedi, iş gereksinimi, seyahat planı vb.
+6. SOMUT SONRASI GÖZLEM: Pil yetti/yetmedi, performans, pişmanlık nedeni, beklenmedik sorun, memnuniyet nedeni
 
-JSON formatında yanıt ver:
+YASAK İFADELER (bunları ASLA kullanma):
+"şunu almalısın", "kesinlikle", "en iyisi", "tavsiye ederim", "yatırım önerisi", "garanti"
+
+ZORUNLU KULLANIM: Yaşanmış deneyim dili kullan:
+"benim durumumda", "bende şöyle oldu", "ben böyle yaptım", "benim için"
+
+KİŞİLER VE DURUMLARI:
+${outcomeCombos.map((c, i) => `${i + 1}. Kişi: 
+   - Persona: ${assignedPersonas[i]}
+   - Karar: ${c.outcomeType === 'decided' ? 'KARARINI VERDİ (Yaptı)' : 'VAZGEÇTİ (Yapmadı)'}
+   - Hissiyat: ${feelingDescriptions[c.outcomeType][c.feeling]}
+   - feeling değeri: "${c.feeling}"
+   - outcome_type değeri: "${c.outcomeType}"`).join('\n')}
+
+JSON formatında yanıt ver. ÖNEMLİ: YUKARIDAKİ PERSONA, FEELING VE OUTCOME_TYPE DEĞERLERİNİ AYNEN KULLAN:
 {
   "outcomes": [
     {
-      "similar_question": "benzer soru versiyonu",
-      "outcome_text": "kişinin deneyim hikayesi - KARAR DURUMUNA UYGUN OLMALI",
-      "feeling": "${outcomeCombos[0].feeling}",
-      "outcome_type": "${outcomeCombos[0].outcomeType}"
+      "similar_question": "Kısa, spesifik başlık (format: Konu + 1 kısıt + 1 alternatif, örn: '40-55 bin TL bütçe ile M2 Air mi M3 Air mi')",
+      "persona": "Persona etiketi (yukarıdan al)",
+      "options_considered": ["alternatif1", "alternatif2"],
+      "constraints": ["kısıt1", "kısıt2"],
+      "trigger": "Kararı tetikleyen olay",
+      "tradeoffs": {
+        "pros": ["artı1", "artı2"],
+        "cons": ["eksi1", "eksi2"]
+      },
+      "what_happened_after": "1-2 cümle: karardan sonra ne oldu",
+      "outcome_text": "1-2 paragraf, doğal Türkçe, detaylı süreç + sonuç. Persona'nın kısıtlarını ve kriterlerini yansıt.",
+      "feeling": "happy|neutral|uncertain|regret (yukarıdaki değeri kullan)",
+      "outcome_type": "decided|cancelled (yukarıdaki değeri kullan)"
     }
   ]
 }
 
-ÇOK ÖNEMLİ:
-- outcome_type "decided" ise: "aldım", "yaptım", "başladım" gibi YAPILDI ifadeleri kullan
-- outcome_type "cancelled" ise: NEDEN vazgeçtiğini kısaca açıkla! Örnek:
-  - "Almaktan vazgeçtim, düşününce masrafları fazla geldi"
-  - "Yapmamaya karar verdim, şartlar uygun değildi"  
-  - "Vazgeçtim çünkü daha iyi bir seçenek çıktı"
-  Ama çok uzun yazma, 1-2 cümle yeter. Doğal insan dili kullan.
-- feeling ile outcome_type tutarlı olmalı (örn: cancelled + happy = "vazgeçtiğim için rahatladım")
-- Türkçe yaz, doğal ol, resmi olma
+MANTIK KURALLARI:
+- BİR KERE yapılan eylemler (almak, taşınmak, istifa): ASLA "almaya başladım" DEME → "Aldım" de
+- SÜREKLİ eylemler (diyet, spor, kurs): "Başladım" diyebilirsin
+- outcome_type "cancelled" ise NEDEN vazgeçtiğini SOMUT şekilde anlat
 
-CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
-- "Sonunda" kelimesiyle çok fazla cümle başlatma! Her hikayede farklı başlangıç kullan.
-- İYİ başlangıç örnekleri: "Baya düşündüm ve...", "Uzun süre tartıştım ama...", "İlk başta...", "Tam...", "Aslında...", "Beklemeden...", "Hemen..."
-- KÖTÜ: Her cümle "Sonunda..." ile başlıyor - BUNU YAPMA!
-- Her hikayenin başlangıcı FARKLI olmalı.`
+STİL KURALLARI:
+- Doğal, samimi dil: "baya", "açıkçası", "ne yalan söyleyeyim", "kafam karışıktı" kullanabilirsin
+- Yazım hatası yapma ama kurumsal konuşma
+- Her hikaye FARKLI başlasın - "Sonunda" ile çok başlama
+- HİKAYELER BİRBİRİNDEN TAMAMEN FARKLI OLMALI`
 
         // Helper: Retry fetch with exponential backoff
         const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3): Promise<Response> => {
@@ -169,12 +208,12 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
                 messages: [
                     {
                         role: 'system',
-                        content: 'Sen Türkçe içerik üreticisisin. JSON formatında yanıt ver. Doğal ve insani bir dil kullan.'
+                        content: 'Sen Türkçe deneyim hikayeleri üreten bir asistansın. SADECE geçerli JSON formatında yanıt ver. Tavsiye verme, yaşanmış deneyim anlat. Doğal ve samimi bir dil kullan.'
                     },
                     { role: 'user', content: prompt }
                 ],
                 temperature: 0.9,
-                max_tokens: 1500,
+                max_tokens: 3000,
                 response_format: { type: 'json_object' }
             })
         });
@@ -199,7 +238,62 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
             console.error('Failed to parse OpenAI response:', content);
             throw new Error('Invalid JSON in OpenAI response');
         }
-        const outcomes = generatedData.outcomes || []
+        let outcomes = generatedData.outcomes || []
+
+        // Validation: Check required fields and specificity
+        const requiredFields = ['similar_question', 'persona', 'options_considered', 'constraints', 'trigger', 'tradeoffs', 'what_happened_after', 'outcome_text', 'feeling', 'outcome_type']
+
+        const validateOutcome = (outcome: any): { valid: boolean; missing: string[] } => {
+            const missing: string[] = []
+
+            // Check required fields exist
+            for (const field of requiredFields) {
+                if (!outcome[field]) {
+                    missing.push(`missing ${field}`)
+                }
+            }
+
+            // Check specificity in outcome_text (simple keyword heuristics)
+            const text = (outcome.outcome_text || '').toLowerCase()
+
+            // Check for at least 2 alternatives mentioned
+            const hasAlternatives = outcome.options_considered && outcome.options_considered.length >= 2
+            if (!hasAlternatives) missing.push('needs 2+ alternatives')
+
+            // Check for constraints
+            const hasConstraints = outcome.constraints && outcome.constraints.length >= 1
+            if (!hasConstraints) missing.push('needs constraints')
+
+            // Check for trigger
+            if (!outcome.trigger || outcome.trigger.length < 5) missing.push('needs trigger')
+
+            // Check tradeoffs structure
+            if (!outcome.tradeoffs?.pros?.length || !outcome.tradeoffs?.cons?.length) {
+                missing.push('needs pros and cons')
+            }
+
+            // Check what_happened_after
+            if (!outcome.what_happened_after || outcome.what_happened_after.length < 10) {
+                missing.push('needs what_happened_after')
+            }
+
+            // Simple text quality checks (at least 100 chars for detailed story)
+            if (text.length < 100) missing.push('outcome_text too short')
+
+            return { valid: missing.length === 0, missing }
+        }
+
+        // Validate all outcomes
+        const validationResults = outcomes.map((o: any, i: number) => ({
+            index: i,
+            ...validateOutcome(o)
+        }))
+
+        const invalidOutcomes = validationResults.filter((r: any) => !r.valid)
+        if (invalidOutcomes.length > 0) {
+            console.warn('Some outcomes failed validation:', invalidOutcomes)
+            // We'll proceed but log the issues - in production could retry
+        }
 
         // Save to database
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -271,14 +365,31 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
         // This ensures generated outcomes match users with similar question AND answers
         const outcomesWithEmbeddings = await Promise.all(
             outcomes.map(async (o: any, index: number) => {
-                const textForEmbedding = context
-                    ? `${o.similar_question || user_question} | ${context}`
-                    : (o.similar_question || user_question)
+                // Build rich text for embedding including new fields
+                const embeddingParts = [
+                    o.similar_question || user_question,
+                    o.persona || '',
+                    (o.options_considered || []).join(', '),
+                    (o.constraints || []).join(', '),
+                    o.trigger || '',
+                    context
+                ].filter(Boolean)
+                const textForEmbedding = embeddingParts.join(' | ')
                 const embedding = await generateEmbedding(textForEmbedding)
 
                 // Sanitize feeling to prevent DB constraint violation
                 const fallbackFeeling = outcomeCombos[index]?.feeling || 'neutral'
                 const sanitizedFeeling = sanitizeFeeling(o.feeling, fallbackFeeling)
+
+                // Build metadata JSON with the new structured fields
+                const metadata = {
+                    persona: o.persona || null,
+                    options_considered: o.options_considered || [],
+                    constraints: o.constraints || [],
+                    trigger: o.trigger || null,
+                    tradeoffs: o.tradeoffs || { pros: [], cons: [] },
+                    what_happened_after: o.what_happened_after || null
+                }
 
                 return {
                     session_id: null,
@@ -288,7 +399,8 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
                     related_question: o.similar_question,
                     archetype_id: archetype_id || null,
                     is_generated: true,
-                    embedding
+                    embedding,
+                    metadata // Store additional structured data
                 }
             })
         )
@@ -307,7 +419,8 @@ CÜMLE BAŞLANGICI KURALLARI - ÇOK ÖNEMLİ:
             JSON.stringify({
                 success: true,
                 generated_count: insertedOutcomes?.length || 0,
-                outcomes: insertedOutcomes
+                outcomes: insertedOutcomes,
+                validation_warnings: invalidOutcomes.length > 0 ? invalidOutcomes : undefined
             }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )

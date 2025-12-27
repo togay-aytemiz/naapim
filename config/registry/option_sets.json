@@ -332,6 +332,64 @@
             ]
         },
         {
+            "id": "priority_lifestyle_v1",
+            "options": [
+                {
+                    "id": "joy",
+                    "label": "Keyif ve Mutluluk"
+                },
+                {
+                    "id": "wellness",
+                    "label": "Sağlık ve Zindelik"
+                },
+                {
+                    "id": "social",
+                    "label": "Sosyal Bağlar"
+                },
+                {
+                    "id": "growth",
+                    "label": "Kişisel Gelişim/Beceri"
+                },
+                {
+                    "id": "peace",
+                    "label": "Zihinsel Rahatlama"
+                },
+                {
+                    "id": "adventure",
+                    "label": "Macera ve Deneyim"
+                }
+            ]
+        },
+        {
+            "id": "priority_purchase_v1",
+            "options": [
+                {
+                    "id": "value_for_money",
+                    "label": "Fiyat/Performans Dengesi"
+                },
+                {
+                    "id": "durability",
+                    "label": "Uzun Ömürlülük ve Kalite"
+                },
+                {
+                    "id": "comfort",
+                    "label": "Konfor ve Kullanım Kolaylığı"
+                },
+                {
+                    "id": "prestige",
+                    "label": "Prestij ve Estetik"
+                },
+                {
+                    "id": "tech_specs",
+                    "label": "Teknolojik/Donanımsal Üstünlük"
+                },
+                {
+                    "id": "safety",
+                    "label": "Güvenlik ve Sağlamlık"
+                }
+            ]
+        },
+        {
             "id": "blocker_v1",
             "options": [
                 {

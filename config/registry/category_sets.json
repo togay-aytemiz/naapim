@@ -62,6 +62,19 @@
             ]
         },
         {
+            "id": "core_lifestyle_v1",
+            "label": "Yaşam tarzı çekirdeği",
+            "description": "Hobiler ve yaşam için özel öncelik seti",
+            "category_ids": [
+                "decision_readiness",
+                "decision_style",
+                "support_system",
+                "lifestyle_priority_goal",
+                "constraint_blocker",
+                "decision_nature"
+            ]
+        },
+        {
             "id": "social_v1",
             "label": "Sosyal ilişkiler özel",
             "category_ids": [
@@ -170,6 +183,17 @@
                 "timeline_horizon",
                 "budget_flexibility",
                 "risk_preference"
+            ]
+        },
+        {
+            "id": "core_purchase_v1",
+            "label": "Satın alma çekirdeği",
+            "category_ids": [
+                "urgency",
+                "support_system",
+                "purchase_priority_goal",
+                "constraint_blocker",
+                "decision_nature"
             ]
         },
         {

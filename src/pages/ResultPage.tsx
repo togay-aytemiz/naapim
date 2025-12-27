@@ -410,7 +410,7 @@ export const ResultPage = () => {
                                     style={{
                                         height: showFullAnalysis
                                             ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
-                                            : '160px'
+                                            : '220px'
                                     }}
                                 >
                                     {/* Reasoning */}
@@ -496,29 +496,6 @@ export const ResultPage = () => {
                                 )}
                             </div>
 
-                            {/* AYRICA Divider */}
-                            <div className="relative flex py-8 items-center">
-                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
-                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">AYRICA</span>
-                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
-                            </div>
-
-                            {/* Community Button - At bottom of card */}
-                            <button
-                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
-                                style={{
-                                    background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
-                                    color: 'white',
-                                    boxShadow: '0 2px 12px rgba(255, 107, 107, 0.35)'
-                                }}
-                            >
-                                <Users className="w-4 h-4" />
-                                <span>Başkaları neler yapıyor?</span>
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </button>
                         </div>
                     ) : (
                         <div
@@ -529,35 +506,66 @@ export const ResultPage = () => {
                         </div>
                     )}
 
-                    {/* Legal Disclaimer - Outside card */}
+
+                    {/* Legal Disclaimer - Immediately after card, before community section */}
                     <p
-                        className="text-xs text-center mt-4 px-5"
+                        className="text-xs text-center mt-2 mb-7 px-5"
                         style={{ color: 'var(--text-muted)' }}
                     >
                         naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
                     </p>
+
+                    {/* AYRICA Divider & Community Button - Outside card */}
+                    {analysis && (
+                        <div className="mt-6 mb-12 space-y-6">
+                            {/* AYRICA Divider */}
+                            <div className="relative flex items-center">
+                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
+                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">AYRICA</span>
+                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
+                            </div>
+
+                            <button
+                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="w-full py-3.5 px-4  rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.98]"
+                                style={{
+                                    background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
+                                    color: 'white',
+                                    boxShadow: '0 4px 15px rgba(255, 111, 97, 0.3)'
+                                }}
+                            >
+                                <Users className="w-4 h-4" />
+                                <span>Başkaları neler yapıyor?</span>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
 
 
-                <FollowUpSection
-                    seededOutcomes={seededOutcomes}
-                    isLoadingSeeds={isLoadingSeeds}
-                    isUnlocked={isStoriesUnlocked}
-                    onUnlock={handleUnlockStories}
-                    onUnlockWithEmail={(email, time) => {
-                        setUnlockEmail(email);
-                        setUnlockReminderTime(time);
-                        // Persist to localStorage for page refresh
-                        if (code) {
-                            localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
-                        }
-                    }}
-                    onShareStory={() => setShowRecoveryCode(true)}
-                    code={code}
-                    userQuestion={sessionUserInput}
-                    sessionId={sessionId}
-                    followupQuestion={analysis?.followup_question}
-                />
+                <div className="mt-16">
+                    <FollowUpSection
+                        seededOutcomes={seededOutcomes}
+                        isLoadingSeeds={isLoadingSeeds}
+                        isUnlocked={isStoriesUnlocked}
+                        onUnlock={handleUnlockStories}
+                        onUnlockWithEmail={(email, time) => {
+                            setUnlockEmail(email);
+                            setUnlockReminderTime(time);
+                            // Persist to localStorage for page refresh
+                            if (code) {
+                                localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
+                            }
+                        }}
+                        onShareStory={() => setShowRecoveryCode(true)}
+                        code={code}
+                        userQuestion={sessionUserInput}
+                        sessionId={sessionId}
+                        followupQuestion={analysis?.followup_question}
+                    />
+                </div>
 
                 {showRecoveryCode && (
                     <div className="-mt-4">

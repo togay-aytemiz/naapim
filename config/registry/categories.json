@@ -86,6 +86,20 @@
             ]
         },
         {
+            "id": "lifestyle_priority_goal",
+            "label": "Beklenti",
+            "field_keys": [
+                "lifestyle_priority"
+            ]
+        },
+        {
+            "id": "purchase_priority_goal",
+            "label": "Öncelikli hedef",
+            "field_keys": [
+                "purchase_priority"
+            ]
+        },
+        {
             "id": "constraint_blocker",
             "label": "Engeller",
             "field_keys": [

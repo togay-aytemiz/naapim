@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, X, Clock, Lock, KeyRound } from 'lucide-react';
 import { OutcomeExpansionBanner } from './OutcomeExpansionBanner';
+import { UnlockModal } from './UnlockModal';
 
 interface SeededOutcome {
     outcome_type: 'decided' | 'cancelled' | 'thinking';
@@ -247,7 +248,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
     };
 
     return (
-        <div id="follow-up-section" className="flex flex-col items-center px-5 scroll-mt-24 pt-6">
+        <div id="follow-up-section" className="flex flex-col items-center px-5 scroll-mt-24 pt-6" >
             <div className="w-full max-w-md space-y-8">
                 {/* Community Stories Preview */}
                 <div className="space-y-4">
@@ -428,7 +429,6 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                 seededOutcomes={seededOutcomes}
                 followupQuestion={followupQuestion}
             />
-        </div >
+        </div>
     );
 };
-import { UnlockModal } from './UnlockModal';

@@ -427,7 +427,7 @@
             "label": "Sağlık ve yaşam",
             "default_followup_days": 14,
             "category_set_ids": [
-                "core_v1",
+                "core_lifestyle_v1",
                 "health_v1",
                 "health_details_v1"
             ],
@@ -613,7 +613,7 @@
             "label": "Yaşam tarzı değişikliği",
             "default_followup_days": 30,
             "category_set_ids": [
-                "core_v2",
+                "core_lifestyle_v1",
                 "lifestyle_v1",
                 "lifestyle_details_v1"
             ],
@@ -704,7 +704,7 @@
             "label": "Büyük satın alımlar",
             "default_followup_days": 21,
             "category_set_ids": [
-                "core_v1",
+                "core_purchase_v1",
                 "purchase_v1",
                 "purchase_details_v1"
             ],
@@ -796,7 +796,7 @@
             "default_followup_days": 0,
             "category_set_ids": [],
             "routing_hints": {
-                "definition": "Finansal yatırım tavsiyeleri, tıbbi/sağlık danışmanlığı, ilaç kullanımı, hukuki danışmanlık gibi profesyonel uzmanlık gerektiren ve riskli olabilecek konular.",
+                "definition": "Finansal yatırım tavsiyeleri, tıbbi/sağlık danışmanlığı, hukuki danışmanlık gibi uzmanlık gerektiren konular. AYRICA: Siyaset, parti tercihleri, nefret söylemi, ırkçılık, terör ve yasadışı eylemler.",
                 "positive_examples": [
                     "Altın mı alsam dolar mı?",
                     "Borsa'ya yatırım yapmalı mıyım?",
@@ -808,7 +808,11 @@
                     "Şu hastalık için hangi tedavi?",
                     "Dava açmalı mıyım?",
                     "Boşanma davası nasıl açılır?",
-                    "Miras hakkım ne kadar?"
+                    "Miras hakkım ne kadar?",
+                    "Hangi partiye oy vermeliyim?",
+                    "Seçimde kime oy atayım?",
+                    "Terör örgütüne katılmalı mıyım?",
+                    "Pis [ırk] grubu..."
                 ],
                 "negative_examples": [
                     "Ev almak için tasarruf nasıl yaparım?",
@@ -832,7 +836,19 @@
                     "dava",
                     "avukat",
                     "miras",
-                    "mahkeme"
+                    "mahkeme",
+                    "siyaset",
+                    "parti",
+                    "oy ver",
+                    "seçim",
+                    "ırkçılık",
+                    "nefret",
+                    "terör",
+                    "bomba",
+                    "silah",
+                    "yasadışı",
+                    "öldür",
+                    "saldır"
                 ],
                 "exclusions": []
             }
@@ -842,7 +858,7 @@
             "label": "Sosyal İlişkiler ve Arkadaşlık",
             "default_followup_days": 14,
             "category_set_ids": [
-                "core_emotional_v2",
+                "core_lifestyle_v1",
                 "social_v1",
                 "social_details_v1"
             ],
@@ -1022,7 +1038,7 @@
             "label": "Tatil ve Seyahat",
             "default_followup_days": 7,
             "category_set_ids": [
-                "core_v2",
+                "core_lifestyle_v1",
                 "travel_v1",
                 "travel_details_v1"
             ],

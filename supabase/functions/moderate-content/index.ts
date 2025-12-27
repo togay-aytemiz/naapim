@@ -66,6 +66,9 @@ YASAKLI İÇERİKLER:
 5. Kişisel bilgiler (isim, adres, kimlik numarası)
 6. Spam veya anlamsız içerik
 7. Zararlı veya tehlikeli içerik
+8. Nefret Söylemi ve Ayrımcılık (Ircçılık, cinsiyetçilik, vb.)
+9. Terör ve Yasadışı Eylemler (Terör örgütü propagandası, şiddet övgüsü, yasadışı eylem teşviki)
+10. Siyaset ve Politika (Partiler, seçimler, siyasi figürler hakkında görüş veya taraf tutma - örn: "X'e mi Y'ye mi oy versem?")
 
 YAZIM DÜZELTMESİ KURALLARI:
 - SADECE yazım yanlışlarını düzelt (örn: "bişey" → "bir şey", "yapcam" → "yapacağım")
@@ -79,7 +82,7 @@ CEVAP FORMATI (JSON):
 {
   "approved": true/false,
   "reason": "Reddedilme sebebi (sadece approved=false ise)",
-  "category": "Kategori adı (contact_info, advertisement, financial_advice, offensive, personal_info, spam, harmful)",
+  "category": "Kategori adı (contact_info, advertisement, financial_advice, offensive, personal_info, spam, harmful, hate_speech, terrorism, politics)",
   "corrected_text": "Yazım ve dilbilgisi düzeltilmiş metin (approved=true ise)"
 }
 
@@ -128,7 +131,10 @@ CEVAP FORMATI (JSON):
                     offensive: 'Saldırgan veya küfürlü içerik paylaşamazsın.',
                     personal_info: 'Kişisel bilgi paylaşamazsın.',
                     spam: 'Spam veya anlamsız içerik paylaşamazsın.',
-                    harmful: 'Zararlı içerik paylaşamazsın.'
+                    harmful: 'Zararlı içerik paylaşamazsın.',
+                    hate_speech: 'Irkçılık, nefret söylemi veya ayrımcılık içeren içerikler paylaşamazsın.',
+                    terrorism: 'Terör, şiddet veya yasadışı eylemleri öven içerikler paylaşamazsın.',
+                    politics: 'Siyasi propaganda veya taraf tutma içeren konular hakkında yardımcı olamıyoruz.'
                 }
 
                 return new Response(

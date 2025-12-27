@@ -79,6 +79,18 @@
             "option_set_id": "priority_v1"
         },
         {
+            "key": "lifestyle_priority",
+            "label": "Bu değişimden en büyük beklentin ne?",
+            "type": "single_select",
+            "option_set_id": "priority_lifestyle_v1"
+        },
+        {
+            "key": "purchase_priority",
+            "label": "Bu satın alımdaki en büyük önceliğin ne?",
+            "type": "single_select",
+            "option_set_id": "priority_purchase_v1"
+        },
+        {
             "key": "main_blocker",
             "label": "Seni en çok engelleyen şey ne?",
             "type": "single_select",

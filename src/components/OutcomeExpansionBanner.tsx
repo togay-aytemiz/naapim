@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, BarChart3, Brain, Mail, Check, RefreshCw } from 'lucide-react';
+import { Sparkles, BarChart3, Brain, Check, RefreshCw } from 'lucide-react';
 import { sendCodeEmail, scheduleReminder } from '../services/emailService';
 import { isValidEmail } from '../utils/validation';
 

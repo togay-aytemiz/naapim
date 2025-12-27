@@ -749,6 +749,69 @@
                 "travel_style",
                 "destination_type"
             ]
+        },
+        {
+            "id": "occasion_type",
+            "label": "Etkinlik Türü",
+            "field_keys": [
+                "food_occasion"
+            ]
+        },
+        {
+            "id": "guest_count",
+            "label": "Misafir Sayısı",
+            "field_keys": [
+                "food_guest_count"
+            ]
+        },
+        {
+            "id": "prep_time",
+            "label": "Hazırlık Süresi",
+            "field_keys": [
+                "food_prep_time"
+            ]
+        },
+        {
+            "id": "cooking_skill",
+            "label": "Mutfak Deneyimi",
+            "field_keys": [
+                "food_cooking_skill"
+            ]
+        },
+        {
+            "id": "dietary_restrictions",
+            "label": "Özel Diyet",
+            "field_keys": [
+                "food_dietary_restrictions"
+            ]
+        },
+        {
+            "id": "restaurant_atmosphere",
+            "label": "Mekan Atmosferi",
+            "field_keys": [
+                "food_atmosphere"
+            ]
+        },
+        {
+            "id": "cuisine_type",
+            "label": "Mutfak Tercihi",
+            "field_keys": [
+                "food_cuisine"
+            ]
+        },
+        {
+            "id": "location_area",
+            "label": "Bölge Tercihi",
+            "field_keys": [
+                "food_location"
+            ]
+        },
+        {
+            "id": "service_type",
+            "label": "Servis Tipi",
+            "field_keys": [
+                "food_service_type"
+            ]
         }
     ],
     "_meta": {

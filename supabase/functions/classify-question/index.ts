@@ -126,7 +126,16 @@ Girdi: "Tenis'e başlamalı mıyım?"
 Çıktı: {"archetype_id": "health_wellness", "decision_type": "binary_decision", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Tenis sporuna başlayıp başlamamayı düşünüyorsunuz."}
 
 Girdi: "Sıcak şarabın yanına ne hazırlayım?"
-Çıktı: {"archetype_id": "lifestyle_change", "decision_type": "exploration", "confidence": 0.7, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
+
+Girdi: "Kızlar gecesi için ne hazırlasam?"
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Arkadaşlarınızla kızlar gecesi için yemek/meze fikirleri arıyorsunuz."}
+
+Girdi: "Yıldönümü için hangi restorana gitsek?"
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Eşinizle yıldönümü için romantik bir restoran arıyorsunuz."}
+
+Girdi: "Bu akşam ne sipariş etsek?"
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Akşam yemeği için yemek siparişi fikirleri arıyorsunuz."}
 
 Girdi: "iş"
 Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}

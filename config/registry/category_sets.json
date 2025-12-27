@@ -321,6 +321,47 @@
                 "budget_flexibility",
                 "decision_readiness"
             ]
+        },
+        {
+            "id": "food_v1",
+            "label": "Yemek ve Ağırlama",
+            "category_ids": [
+                "occasion_type",
+                "guest_count",
+                "prep_time",
+                "cooking_skill",
+                "dietary_restrictions"
+            ]
+        },
+        {
+            "id": "food_details_v1",
+            "label": "Yemek Detayları",
+            "category_ids": [
+                "budget_flexibility",
+                "decision_readiness"
+            ]
+        },
+        {
+            "id": "food_restaurant_v1",
+            "label": "Restoran Seçimi",
+            "category_ids": [
+                "occasion_type",
+                "guest_count",
+                "restaurant_atmosphere",
+                "cuisine_type",
+                "dietary_restrictions"
+            ]
+        },
+        {
+            "id": "food_delivery_v1",
+            "label": "Yemek Siparişi",
+            "category_ids": [
+                "occasion_type",
+                "guest_count",
+                "cuisine_type",
+                "service_type",
+                "dietary_restrictions"
+            ]
         }
     ]
 }

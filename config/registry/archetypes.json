@@ -791,6 +791,182 @@
             }
         },
         {
+            "id": "food_hospitality",
+            "label": "Yemek, Restoran ve Ağırlama",
+            "default_followup_days": 7,
+            "category_set_ids": [
+                "core_lifestyle_v1",
+                "food_v1",
+                "food_details_v1"
+            ],
+            "routing_hints": {
+                "definition": "Yemek hazırlığı, meze seçimi, tarif önerileri, restoran seçimi, yemek siparişi, misafir ağırlama, özel günler için mekan planlaması, sofra düzeni veya beslenme tercihleri ile ilgili kararlar.",
+                "positive_examples": [
+                    "Kızlar gecesi için ne hazırlasam?",
+                    "Sıcak şarabın yanına ne meze yapayım?",
+                    "Akşam yemeğinde misafirlere ne ikram etsem?",
+                    "Piknik için ne hazırlasam?",
+                    "Hafta sonu brunch menüsü ne olsun?",
+                    "Doğum günü pastası yerine ne yapabilirim?",
+                    "Vejetaryen misafirler için ne pişirmeliyim?",
+                    "Yıldönümü için hangi restorana gitsek?",
+                    "Dışarıdan ne yemek söylesem?",
+                    "Romantik bir akşam yemeği için nereye gidelim?",
+                    "Bu akşam ne sipariş etsek?",
+                    "Evlilik teklifi için güzel bir mekan önerir misin?",
+                    "Aile yemeği için nereye gidelim?"
+                ],
+                "negative_examples": [
+                    "Diyet yapmalı mıyım? (health_wellness)",
+                    "Kilo vermeli miyim? (health_wellness)"
+                ],
+                "keywords": [
+                    "yemek",
+                    "meze",
+                    "tarif",
+                    "misafir",
+                    "ağırlama",
+                    "sofra",
+                    "pişirmek",
+                    "hazırlamak",
+                    "ikram",
+                    "menü",
+                    "atıştırmalık",
+                    "aperatif",
+                    "kahvaltı",
+                    "öğle yemeği",
+                    "akşam yemeği",
+                    "tatlı",
+                    "içecek",
+                    "şarap",
+                    "kokteyl",
+                    "parti",
+                    "davet",
+                    "restoran",
+                    "mekan",
+                    "sipariş",
+                    "yemeksepeti",
+                    "getir",
+                    "trendyol",
+                    "yıldönümü",
+                    "romantik",
+                    "özel gün",
+                    "kutlama",
+                    "rezervasyon",
+                    "kafe",
+                    "bar"
+                ],
+                "exclusions": [
+                    "diyet ve kilo verme (health_wellness)",
+                    "beslenme bozuklukları (health_wellness)"
+                ]
+            },
+            "priority_categories": {
+                "party_hosting": {
+                    "triggers": [
+                        "misafir",
+                        "davet",
+                        "parti",
+                        "kutlama",
+                        "doğum günü",
+                        "kızlar gecesi"
+                    ],
+                    "prioritize": [
+                        "occasion_type",
+                        "guest_count",
+                        "dietary_restrictions",
+                        "prep_time"
+                    ],
+                    "description": "Parti/davet için misafir sayısı ve zaman soruları"
+                },
+                "meal_planning": {
+                    "triggers": [
+                        "ne pişir",
+                        "ne hazırla",
+                        "menü",
+                        "yemek listesi",
+                        "haftalık"
+                    ],
+                    "prioritize": [
+                        "cooking_skill",
+                        "prep_time",
+                        "ingredient_pref",
+                        "dietary_restrictions"
+                    ],
+                    "description": "Yemek planlaması için beceri ve zaman soruları"
+                },
+                "pairing": {
+                    "triggers": [
+                        "yanına",
+                        "eşlik",
+                        "meze",
+                        "atıştırmalık",
+                        "aperatif"
+                    ],
+                    "prioritize": [
+                        "main_item",
+                        "flavor_profile",
+                        "prep_time",
+                        "dietary_restrictions"
+                    ],
+                    "description": "Eşleştirme/meze için lezzet ve zaman soruları"
+                },
+                "special_diet": {
+                    "triggers": [
+                        "vejetaryen",
+                        "vegan",
+                        "gluten",
+                        "alerji",
+                        "halal"
+                    ],
+                    "prioritize": [
+                        "dietary_restrictions",
+                        "ingredient_pref",
+                        "cooking_skill",
+                        "guest_count"
+                    ],
+                    "description": "Özel diyet için kısıtlama ve alternatif soruları"
+                },
+                "restaurant_selection": {
+                    "triggers": [
+                        "restoran",
+                        "mekan",
+                        "nereye gidelim",
+                        "nereye gitsek",
+                        "yıldönümü",
+                        "romantik",
+                        "özel gün",
+                        "kafe",
+                        "bar"
+                    ],
+                    "prioritize": [
+                        "occasion_type",
+                        "guest_count",
+                        "budget_flexibility",
+                        "dietary_restrictions"
+                    ],
+                    "description": "Restoran/mekan seçimi için bütçe ve atmosfer soruları"
+                },
+                "food_delivery": {
+                    "triggers": [
+                        "sipariş",
+                        "söyle",
+                        "getir",
+                        "yemeksepeti",
+                        "dışarıdan",
+                        "paket"
+                    ],
+                    "prioritize": [
+                        "occasion_type",
+                        "guest_count",
+                        "dietary_restrictions",
+                        "budget_flexibility"
+                    ],
+                    "description": "Yemek siparişi için tercih ve bütçe soruları"
+                }
+            }
+        },
+        {
             "id": "blocked_topics",
             "label": "Engelli konu",
             "default_followup_days": 0,

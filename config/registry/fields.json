@@ -725,6 +725,60 @@
             "label": "Ne tür bir yer arıyorsun?",
             "type": "single_select",
             "option_set_id": "destination_type_v1"
+        },
+        {
+            "key": "food_occasion",
+            "label": "Bu ne tür bir etkinlik?",
+            "type": "single_select",
+            "option_set_id": "food_occasion_v1"
+        },
+        {
+            "key": "food_guest_count",
+            "label": "Kaç kişilik hazırlık yapacaksın?",
+            "type": "single_select",
+            "option_set_id": "food_guest_count_v1"
+        },
+        {
+            "key": "food_prep_time",
+            "label": "Hazırlık için ne kadar zamanın var?",
+            "type": "single_select",
+            "option_set_id": "food_prep_time_v1"
+        },
+        {
+            "key": "food_cooking_skill",
+            "label": "Mutfakta kendini nasıl görüyorsun?",
+            "type": "single_select",
+            "option_set_id": "food_cooking_skill_v1"
+        },
+        {
+            "key": "food_dietary_restrictions",
+            "label": "Özel diyet veya kısıtlama var mı?",
+            "type": "single_select",
+            "option_set_id": "food_dietary_restrictions_v1"
+        },
+        {
+            "key": "food_atmosphere",
+            "label": "Nasıl bir atmosfer arıyorsun?",
+            "type": "single_select",
+            "option_set_id": "food_atmosphere_v1"
+        },
+        {
+            "key": "food_cuisine",
+            "label": "Ne tür mutfak tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "food_cuisine_v1"
+        },
+        {
+            "key": "food_location",
+            "label": "Hangi bölgede olmasını istersin?",
+            "type": "single_select",
+            "option_set_id": "food_location_v1"
+        },
+        {
+            "key": "food_service_type",
+            "label": "Nasıl yemek istiyorsun?",
+            "type": "single_select",
+            "option_set_id": "food_service_type_v1"
         }
     ]
 }

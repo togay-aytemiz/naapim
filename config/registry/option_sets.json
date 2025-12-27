@@ -2699,6 +2699,284 @@
                     "label": "Tatil köyü/resort"
                 }
             ]
+        },
+        {
+            "id": "food_occasion_v1",
+            "description": "Yemek/ağırlama etkinlik türü",
+            "options": [
+                {
+                    "id": "casual_gathering",
+                    "label": "Samimi arkadaş buluşması"
+                },
+                {
+                    "id": "dinner_party",
+                    "label": "Akşam yemeği daveti"
+                },
+                {
+                    "id": "celebration",
+                    "label": "Kutlama (doğum günü, yılbaşı vb.)"
+                },
+                {
+                    "id": "brunch",
+                    "label": "Brunch/kahvaltı"
+                },
+                {
+                    "id": "aperitif",
+                    "label": "Aperatif/meze eşliği"
+                },
+                {
+                    "id": "picnic",
+                    "label": "Piknik/açık hava"
+                },
+                {
+                    "id": "family_meal",
+                    "label": "Aile yemeği"
+                }
+            ]
+        },
+        {
+            "id": "food_guest_count_v1",
+            "description": "Misafir sayısı",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Sadece kendim için"
+                },
+                {
+                    "id": "couple",
+                    "label": "2 kişi"
+                },
+                {
+                    "id": "small",
+                    "label": "3-5 kişi"
+                },
+                {
+                    "id": "medium",
+                    "label": "6-10 kişi"
+                },
+                {
+                    "id": "large",
+                    "label": "10+ kişi"
+                }
+            ]
+        },
+        {
+            "id": "food_prep_time_v1",
+            "description": "Hazırlık süresi",
+            "options": [
+                {
+                    "id": "quick",
+                    "label": "15-30 dakika (hızlı)"
+                },
+                {
+                    "id": "moderate",
+                    "label": "30-60 dakika"
+                },
+                {
+                    "id": "relaxed",
+                    "label": "1-2 saat"
+                },
+                {
+                    "id": "plenty",
+                    "label": "Gün boyu hazırlık yapabilirim"
+                },
+                {
+                    "id": "advance",
+                    "label": "Önceden hazırlamak istiyorum"
+                }
+            ]
+        },
+        {
+            "id": "food_cooking_skill_v1",
+            "description": "Mutfak deneyimi",
+            "options": [
+                {
+                    "id": "beginner",
+                    "label": "Yeni başlayan (basit tarifler)"
+                },
+                {
+                    "id": "basic",
+                    "label": "Temel yemekler yapabiliyorum"
+                },
+                {
+                    "id": "intermediate",
+                    "label": "Orta seviye (çoğu tarifi yapabilirim)"
+                },
+                {
+                    "id": "advanced",
+                    "label": "İleri seviye (karmaşık tarifler)"
+                },
+                {
+                    "id": "chef",
+                    "label": "Profesyonel/aşçılık deneyimim var"
+                }
+            ]
+        },
+        {
+            "id": "food_dietary_restrictions_v1",
+            "description": "Özel diyet kısıtlamaları",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Yok, herkes her şeyi yiyebilir"
+                },
+                {
+                    "id": "vegetarian",
+                    "label": "Vejetaryen misafirler var"
+                },
+                {
+                    "id": "vegan",
+                    "label": "Vegan misafirler var"
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "Gluten intoleransı var"
+                },
+                {
+                    "id": "halal",
+                    "label": "Helal beslenme"
+                },
+                {
+                    "id": "allergies",
+                    "label": "Gıda alerjisi var"
+                },
+                {
+                    "id": "multiple",
+                    "label": "Karışık kısıtlamalar var"
+                }
+            ]
+        },
+        {
+            "id": "food_atmosphere_v1",
+            "description": "Mekan atmosferi tercihi",
+            "options": [
+                {
+                    "id": "romantic",
+                    "label": "Romantik ve samimi"
+                },
+                {
+                    "id": "casual",
+                    "label": "Rahat ve günlük"
+                },
+                {
+                    "id": "upscale",
+                    "label": "Şık ve lüks"
+                },
+                {
+                    "id": "lively",
+                    "label": "Canlı ve eğlenceli"
+                },
+                {
+                    "id": "quiet",
+                    "label": "Sakin ve sessiz"
+                },
+                {
+                    "id": "family_friendly",
+                    "label": "Aile dostu"
+                },
+                {
+                    "id": "trendy",
+                    "label": "Trend ve modern"
+                }
+            ]
+        },
+        {
+            "id": "food_cuisine_v1",
+            "description": "Mutfak tercihi",
+            "options": [
+                {
+                    "id": "turkish",
+                    "label": "Türk mutfağı"
+                },
+                {
+                    "id": "italian",
+                    "label": "İtalyan (pizza, makarna)"
+                },
+                {
+                    "id": "asian",
+                    "label": "Uzak Doğu (sushi, Çin, Tayland)"
+                },
+                {
+                    "id": "kebab",
+                    "label": "Kebap ve ızgara"
+                },
+                {
+                    "id": "seafood",
+                    "label": "Deniz ürünleri"
+                },
+                {
+                    "id": "burger_fast",
+                    "label": "Burger ve fast food"
+                },
+                {
+                    "id": "world",
+                    "label": "Dünya mutfağı (karışık)"
+                },
+                {
+                    "id": "healthy",
+                    "label": "Sağlıklı/hafif"
+                },
+                {
+                    "id": "no_preference",
+                    "label": "Fark etmez, öneri bekliyorum"
+                }
+            ]
+        },
+        {
+            "id": "food_location_v1",
+            "description": "Bölge/lokasyon tercihi",
+            "options": [
+                {
+                    "id": "nearby",
+                    "label": "Yakınımda olsun"
+                },
+                {
+                    "id": "city_center",
+                    "label": "Şehir merkezi"
+                },
+                {
+                    "id": "seaside",
+                    "label": "Deniz kenarı/manzaralı"
+                },
+                {
+                    "id": "rooftop",
+                    "label": "Teras/çatı katı"
+                },
+                {
+                    "id": "historic",
+                    "label": "Tarihi bölge"
+                },
+                {
+                    "id": "no_preference",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_service_type_v1",
+            "description": "Servis tipi tercihi",
+            "options": [
+                {
+                    "id": "dine_in",
+                    "label": "Restoranda yemek"
+                },
+                {
+                    "id": "delivery",
+                    "label": "Eve sipariş"
+                },
+                {
+                    "id": "takeaway",
+                    "label": "Gel-al (paket)"
+                },
+                {
+                    "id": "home_cooking",
+                    "label": "Evde hazırlamak"
+                },
+                {
+                    "id": "catering",
+                    "label": "Catering/hazır gelen"
+                }
+            ]
         }
     ],
     "_meta": {

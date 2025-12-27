@@ -483,7 +483,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                                 {option.label}
                             </span>
                             <span
-                                className="ml-3 w-7 h-7 rounded-md flex items-center justify-center text-sm font-semibold"
+                                className="hidden sm:flex ml-3 w-7 h-7 rounded-md items-center justify-center text-sm font-semibold"
                                 style={{
                                     backgroundColor: 'var(--border-secondary)',
                                     color: 'var(--text-tertiary)'

@@ -443,13 +443,13 @@ export const ResultPage = () => {
                                                 <div
                                                     className="p-4 rounded-xl"
                                                     style={{
-                                                        backgroundColor: 'var(--emerald-50)',
-                                                        border: '1px solid var(--emerald-200)'
+                                                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                                        border: '1px solid rgba(16, 185, 129, 0.2)'
                                                     }}
                                                 >
                                                     <h4
                                                         className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                        style={{ color: 'var(--emerald-700)' }}
+                                                        style={{ color: 'var(--emerald-500)' }}
                                                     >
                                                         Artılar
                                                     </h4>
@@ -462,7 +462,7 @@ export const ResultPage = () => {
                                                                 />
                                                                 <span
                                                                     className="text-sm"
-                                                                    style={{ color: 'var(--emerald-800)' }}
+                                                                    style={{ color: 'var(--text-secondary)' }}
                                                                 >
                                                                     {pro}
                                                                 </span>
@@ -477,13 +477,13 @@ export const ResultPage = () => {
                                                 <div
                                                     className="p-4 rounded-xl"
                                                     style={{
-                                                        backgroundColor: 'var(--red-50)',
-                                                        border: '1px solid var(--red-200)'
+                                                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                        border: '1px solid rgba(239, 68, 68, 0.2)'
                                                     }}
                                                 >
                                                     <h4
                                                         className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                        style={{ color: 'var(--red-700)' }}
+                                                        style={{ color: 'var(--red-500)' }}
                                                     >
                                                         Eksiler
                                                     </h4>
@@ -496,7 +496,7 @@ export const ResultPage = () => {
                                                                 />
                                                                 <span
                                                                     className="text-sm"
-                                                                    style={{ color: 'var(--red-800)' }}
+                                                                    style={{ color: 'var(--text-secondary)' }}
                                                                 >
                                                                     {con}
                                                                 </span>

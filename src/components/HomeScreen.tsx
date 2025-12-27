@@ -92,7 +92,33 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
     const [targetCount] = useState(() => getSmartActiveCount());
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [showAIModal, setShowAIModal] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const [textareaHeight, setTextareaHeight] = useState(56);
+
+    // Auto-resize textarea with smooth transition
+    const adjustTextareaHeight = () => {
+        const textarea = inputRef.current;
+        if (textarea) {
+            // Create a hidden clone to measure scrollHeight with same width
+            const clone = textarea.cloneNode(true) as HTMLTextAreaElement;
+            clone.style.height = 'auto';
+            clone.style.width = `${textarea.offsetWidth}px`; // Match original width
+            clone.style.position = 'absolute';
+            clone.style.visibility = 'hidden';
+            clone.style.pointerEvents = 'none';
+            clone.style.left = '-9999px';
+            document.body.appendChild(clone);
+
+            const lineHeight = 28;
+            const maxLines = 5;
+            const maxHeight = lineHeight * maxLines;
+            const newHeight = Math.min(clone.scrollHeight, maxHeight);
+            const finalHeight = Math.max(56, newHeight);
+
+            document.body.removeChild(clone);
+            setTextareaHeight(finalHeight);
+        }
+    };
 
     // Typewriter effect state
     const [questionIndex, setQuestionIndex] = useState(0);
@@ -201,7 +227,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
                 }`}
             style={{
                 background: isDarkMode
-                    ? 'radial-gradient(ellipse at top right, #263245ff 0%, #050b26ff 50%, #141414ff 100%)'
+                    ? 'radial-gradient(ellipse at top right, #042458ff 0%, #050b26ff 50%, #431e1eff 100%)'
                     : 'radial-gradient(ellipse at top left, #faeaacff 0%, #f8fafc 50%, #a7cdfbff 100%)'
             }}
         >
@@ -235,36 +261,53 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
                     <div className="w-full max-w-2xl flex flex-col gap-6 z-10">
                         {/* Search Bar Container - appears third */}
                         <label
-                            className={`group relative flex w-full items-center p-2 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.5s_forwards] ${isDarkMode
+                            className={`group relative flex w-full items-start p-2 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl opacity-0 animate-[fadeSlideUp_0.6s_ease-out_0.5s_forwards] ${isDarkMode
                                 ? 'bg-[#0f172a]/60 border border-[#334155]/50 shadow-black/20 hover:shadow-black/30 hover:bg-[#0f172a]/80 focus-within:ring-4 focus-within:ring-[#1e3a8a]/50 focus-within:border-[#3b82f6]/50'
                                 : 'bg-white shadow-blue-900/5 hover:shadow-blue-900/10'
                                 }`}
                         >
-                            <div className={`hidden sm:flex pl-4 items-center justify-center pointer-events-none ${isDarkMode ? 'text-[#64748b]' : 'text-slate-400'}`}>
+                            <div className={`hidden sm:flex pl-4 pt-4 items-center justify-center pointer-events-none ${isDarkMode ? 'text-[#64748b]' : 'text-slate-400'}`}>
                                 <span className="material-symbols-outlined text-2xl">search</span>
                             </div>
-                            <input
+                            <textarea
                                 ref={inputRef}
-                                className={`w-full h-14 md:h-16 rounded-xl border-0 bg-transparent pl-4 ${input.trim() ? 'pr-28 sm:pr-44' : 'pr-4'} focus:ring-0 outline-none text-lg md:text-xl ${isDarkMode
+                                className={`flex-1 max-h-[140px] rounded-xl border-0 bg-transparent pl-4 py-4 leading-7 ${input.trim().length >= 20 ? 'pr-16 sm:pr-40' : 'pr-4'} focus:ring-0 outline-none text-lg md:text-xl resize-none overflow-y-auto scrollbar-hide ${isDarkMode
                                     ? 'text-white placeholder:text-[#64748b]'
                                     : 'text-slate-900 placeholder:text-slate-400'
                                     }`}
+                                style={{ height: `${textareaHeight}px`, transition: 'height 0.2s ease-out', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                                 placeholder={input ? '' : fullPlaceholder}
-                                type="text"
                                 value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleContinueClick()}
+                                onChange={(e) => {
+                                    setInput(e.target.value);
+                                    adjustTextareaHeight();
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleContinueClick();
+                                    }
+                                }}
+                                rows={1}
                                 autoFocus
                             />
-                            {/* Continue Button embedded in input if has content */}
-                            <div className={`absolute right-2 top-1/2 -translate-y-1/2 transition-all duration-300 ease-out ${input.trim() ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
+                            {/* Continue Button - inside input, animated */}
+                            <div
+                                className="absolute right-2"
+                                style={{
+                                    top: '50%',
+                                    opacity: input.trim().length >= 20 ? 1 : 0,
+                                    transform: input.trim().length >= 20 ? 'translateY(-50%) translateX(0)' : 'translateY(-50%) translateX(20px)',
+                                    transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
+                                    pointerEvents: input.trim().length >= 20 ? 'auto' : 'none'
+                                }}
+                            >
                                 <button
                                     onClick={handleContinueClick}
-                                    className="flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 bg-black text-white rounded-xl hover:bg-neutral-800 hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold text-sm md:text-base"
+                                    className="flex items-center justify-center gap-2 w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 bg-black text-white rounded-full sm:rounded-xl hover:bg-neutral-800 hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold text-sm md:text-base"
                                 >
-                                    <span className="sm:hidden">Başla</span>
                                     <span className="hidden sm:inline">Devam Et</span>
-                                    <span className="hidden sm:inline material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                                    <span className="material-symbols-outlined text-xl sm:text-sm font-bold">arrow_forward</span>
                                 </button>
                             </div>
                         </label>

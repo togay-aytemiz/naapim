@@ -83,10 +83,11 @@ KARAR TİPLERİ (decision_type):
 - Net ifadelerde confidence yüksek olmalı (0.7-1.0)
 
 GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
-Aşağıdaki durumlarda MUTLAKA is_unrealistic: true olmalı:
+Aşağıdaki durumlarda MUTLAKA is_unrealistic: true VE needs_clarification: true olmalı:
 - Süper kahramanlar, kurgusal karakterler (Superman, Batman, Harry Potter...)
-- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği)
+- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği, unicorn)
 - Şaka/trolleme amaçlı absürt sorular
+- Gerçek hayatta var olmayan durumlar
 
 KATEGORİLER:
 `

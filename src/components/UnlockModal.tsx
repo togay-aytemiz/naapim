@@ -163,7 +163,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                             )}
 
                             {/* Privacy Disclaimer */}
-                            <div className="flex items-start gap-2">
+                            <div className="flex items-center gap-2">
                                 <span className="flex-shrink-0">🔒</span>
                                 <p className="text-xs text-[var(--text-muted)]">
                                     Sadece bu karar için kullanılır, reklam yok, spam yok.

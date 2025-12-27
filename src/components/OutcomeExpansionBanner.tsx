@@ -1,7 +1,71 @@
-import React from 'react';
-import { Sparkles, BarChart3, Brain } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, BarChart3, Brain, Mail, Check, RefreshCw } from 'lucide-react';
+import { sendCodeEmail, scheduleReminder } from '../services/emailService';
+import { isValidEmail } from '../utils/validation';
 
-export const OutcomeExpansionBanner: React.FC = () => {
+interface OutcomeExpansionBannerProps {
+    email?: string | null;
+    code?: string;
+    userQuestion?: string;
+    sessionId?: string;
+    onEmailUpdate?: (newEmail: string) => void;
+}
+
+export const OutcomeExpansionBanner: React.FC<OutcomeExpansionBannerProps> = ({
+    email,
+    code,
+    userQuestion,
+    sessionId,
+    onEmailUpdate
+}) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [newEmail, setNewEmail] = useState(email || '');
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleUpdateEmail = async () => {
+        if (!isValidEmail(newEmail)) {
+            setError('Geçerli bir e-posta adresi girin.');
+            return;
+        }
+
+        setIsUpdating(true);
+        setError(null);
+
+        try {
+            // 1. Resend code email to new address
+            if (code) {
+                await sendCodeEmail(newEmail, code, userQuestion || '');
+            }
+
+            // 2. Reschedule reminder to new address
+            await scheduleReminder(
+                newEmail,
+                code || '',
+                userQuestion || '',
+                sessionId,
+                undefined,
+                '1_week',
+                undefined
+            );
+
+            // 3. Update parent state
+            onEmailUpdate?.(newEmail);
+
+            setUpdateSuccess(true);
+            setIsEditing(false);
+
+            // Reset success indicator after 3 seconds
+            setTimeout(() => setUpdateSuccess(false), 3000);
+        } catch (err) {
+            console.error('Email update error:', err);
+            setError('Güncelleme başarısız, tekrar deneyin.');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
     return (
         <div
             className="mt-8 rounded-3xl relative overflow-hidden text-left"
@@ -87,7 +151,7 @@ export const OutcomeExpansionBanner: React.FC = () => {
                     </div>
                 </div>
 
-                {/* How to Share Banner */}
+                {/* How to Share Banner with Email */}
                 <div
                     className="mt-5 p-3 rounded-xl"
                     style={{
@@ -97,13 +161,76 @@ export const OutcomeExpansionBanner: React.FC = () => {
                 >
                     <div className="flex gap-3 items-start">
                         <span className="text-xl flex-shrink-0">📬</span>
-                        <div>
+                        <div className="flex-1">
                             <p className="text-xs font-medium text-[var(--text-primary)] mb-0.5">
                                 Nasıl paylaşım yaparım?
                             </p>
                             <p className="text-xs text-[var(--text-secondary)] leading-relaxed opacity-90">
-                                Hiç dert etme. Gönderdiğimiz e-postadaki talimatları izleyerek dilediğin zaman hikayeni ekleyebilirsin. Ayrıca 1 hafta sonra sana kısa bir hatırlatma yapacağız.
+                                {email ? (
+                                    <>
+                                        Hiç dert etme. <strong className="font-semibold text-[var(--text-primary)]">{email}</strong> adresine gönderdiğimiz e-postadaki talimatları izleyerek dilediğin zaman hikayeni ekleyebilirsin. Ayrıca 1 hafta sonra sana kısa bir hatırlatma yapacağız.
+                                    </>
+                                ) : (
+                                    'Hiç dert etme. Gönderdiğimiz e-postadaki talimatları izleyerek dilediğin zaman hikayeni ekleyebilirsin. Ayrıca 1 hafta sonra sana kısa bir hatırlatma yapacağız.'
+                                )}
                             </p>
+
+                            {/* Email Display/Edit Section */}
+                            {email && (
+                                <div className="mt-3 pt-3 border-t border-blue-200/50">
+                                    <div
+                                        className={`transition-all duration-300 ease-in-out overflow-hidden ${isEditing ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                                    >
+                                        <div className="space-y-2 pb-2">
+                                            <input
+                                                type="email"
+                                                value={newEmail}
+                                                onChange={(e) => setNewEmail(e.target.value)}
+                                                placeholder="Yeni e-posta adresi"
+                                                className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-blue-200 focus:outline-none focus:border-blue-400"
+                                            />
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={handleUpdateEmail}
+                                                    disabled={isUpdating}
+                                                    className="flex-1 px-3 py-2 text-xs font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 disabled:opacity-50 transition-colors"
+                                                >
+                                                    {isUpdating ? 'Kaydediliyor...' : 'Kaydet'}
+                                                </button>
+                                                <button
+                                                    onClick={() => { setIsEditing(false); setNewEmail(email); setError(null); }}
+                                                    className="px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                                                >
+                                                    İptal
+                                                </button>
+                                            </div>
+                                            {error && (
+                                                <p className="text-xs text-red-500">{error}</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {!isEditing && (
+                                        <div className="flex items-center">
+                                            {updateSuccess ? (
+                                                <span className="flex items-center gap-1 text-[10px] text-green-600">
+                                                    <Check className="w-3 h-3" />
+                                                    E-posta güncellendi
+                                                </span>
+                                            ) : (
+                                                <span
+                                                    onClick={() => setIsEditing(true)}
+                                                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer"
+                                                    style={{ fontSize: '12px' }}
+                                                >
+                                                    <RefreshCw className="w-3 h-3" />
+                                                    E-postayı değiştir
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

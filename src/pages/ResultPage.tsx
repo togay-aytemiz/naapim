@@ -239,6 +239,10 @@ export const ResultPage = () => {
 
     const handleUnlockStories = () => {
         setIsStoriesUnlocked(true);
+        // Smooth scroll to community stories after unlock
+        setTimeout(() => {
+            document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
     };
 
     const handleBackToHome = () => {
@@ -412,7 +416,7 @@ export const ResultPage = () => {
                                     style={{
                                         height: showFullAnalysis
                                             ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
-                                            : '220px'
+                                            : '240px'
                                     }}
                                 >
                                     {/* Reasoning */}
@@ -639,6 +643,17 @@ export const ResultPage = () => {
                         userQuestion={sessionUserInput}
                         sessionId={sessionId}
                         followupQuestion={analysis?.followup_question}
+                        unlockEmail={unlockEmail}
+                        onEmailUpdate={(newEmail) => {
+                            setUnlockEmail(newEmail);
+                            // Update localStorage
+                            if (code) {
+                                localStorage.setItem(`unlock_${code}`, JSON.stringify({
+                                    email: newEmail,
+                                    reminderTime: unlockReminderTime
+                                }));
+                            }
+                        }}
                     />
                 </div>
 

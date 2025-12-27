@@ -142,6 +142,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 setArchetypeId(classificationResult.archetype_id);
                 setSelectedFieldKeys(selectionResult.selectedFieldKeys);
                 setDecisionType(classificationResult.decision_type || 'binary_decision');
+
+                // For blocked_topics, skip the loading wait - show immediately
+                if (classificationResult.archetype_id === 'blocked_topics') {
+                    setIsLoading(false);
+                }
+
                 setQuestionsReady(true); // Only set when questions are actually ready
                 console.log('🏁 Done, questions ready');
             } catch (error) {
@@ -285,8 +291,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }, [currentQuestion, isTransitioning, handleOptionSelect]);
 
     // Render Loading State with hybrid CTA (ready when both LLM done AND min wait elapsed)
-    // IMPORTANT: Skip loading screen if clarification is needed
-    if (!needsClarification && (isLoading || (questionsReady && !minWaitElapsed))) {
+    // IMPORTANT: Skip loading screen if clarification is needed OR if blocked_topics
+    const isBlockedTopic = archetypeId === 'blocked_topics';
+    if (!needsClarification && !isBlockedTopic && (isLoading || (questionsReady && !minWaitElapsed))) {
         const showReadyButton = questionsReady && minWaitElapsed;
         return (
             <LoadingScreen

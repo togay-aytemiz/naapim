@@ -125,6 +125,9 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
 Çıktı: {"archetype_id": "lifestyle_change", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut evinizde kalıp tadilat mı yaptırmalısınız yoksa taşınmalı mısınız kararını vermeye çalışıyorsunuz."}
 `
 
+        // Build valid archetype IDs for enum
+        const validArchetypeIds = archetypes.map(a => a.id)
+
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -138,7 +141,45 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
                     { role: 'user', content: user_question }
                 ],
                 temperature: 0.3,
-                response_format: { type: 'json_object' }
+                response_format: {
+                    type: 'json_schema',
+                    json_schema: {
+                        name: 'classification_result',
+                        strict: true,
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                archetype_id: {
+                                    type: 'string',
+                                    enum: validArchetypeIds,
+                                    description: 'En uygun kategori ID\'si'
+                                },
+                                confidence: {
+                                    type: 'number',
+                                    description: '0.0-1.0 arası güven skoru'
+                                },
+                                needs_clarification: {
+                                    type: 'boolean',
+                                    description: 'Kullanıcıdan detay gerekiyor mu'
+                                },
+                                is_unrealistic: {
+                                    type: 'boolean',
+                                    description: 'Gerçek dışı/fantastik soru mu'
+                                },
+                                clarification_prompt: {
+                                    type: ['string', 'null'],
+                                    description: 'Kullanıcıya sorulacak detay sorusu (needs_clarification true ise)'
+                                },
+                                interpreted_question: {
+                                    type: ['string', 'null'],
+                                    description: 'Kullanıcının niyetinin tam cümle hali'
+                                }
+                            },
+                            required: ['archetype_id', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
+                            additionalProperties: false
+                        }
+                    }
+                }
             })
         })
 

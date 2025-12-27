@@ -12,6 +12,8 @@ export interface AnalysisResult {
     recommendation: string;
     reasoning: string;
     steps: string[];
+    pros?: string[];
+    cons?: string[];
     sentiment: Sentiment;
     followup_question?: string;
 }

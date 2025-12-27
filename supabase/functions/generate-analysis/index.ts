@@ -49,9 +49,8 @@ Generate a CONCISE response in strictly valid JSON:
   "recommendation": "1-2 short sentences. Direct advice.",
   "reasoning": "2-3 short sentences max. Reference their specific situation.",
   "steps": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
-                temperature: 0.7,
-                max_tokens: 1500,
-                response_format: { type: 'json_object' }
+  "pros": ["Artı 1", "Artı 2", "Artı 3"],
+  "cons": ["Eksi 1", "Eksi 2"],
   "sentiment": "positive OR cautious OR warning OR negative OR neutral",
   "followup_question": "A natural conversational question to ask the user when they return"
 }
@@ -61,6 +60,8 @@ RULES:
   BAD examples (too generic): "Planla ve Harekete Geç", "Dikkatli Ol", "Karar Ver"
   GOOD examples (specific): "Kreşe Aşamalı Geçiş Yapın", "Yeni İş İçin Teklifi Değerlendir", "Ev Taşınmadan Önce Bütçe Oluşturun"
 - Maximum 5 steps, each 5-10 words
+- pros: 3-5 positive points about taking this action. Be specific to their situation.
+- cons: 2-5 potential downsides or risks. Be balanced and realistic.
 - Everything in Turkish
 - sentiment: YOU MUST CHOOSE THE MOST APPROPRIATE ONE:
   - "positive" = you actively ENCOURAGE them to do it. Use for: good opportunities, low risk, clear benefits
@@ -115,6 +116,16 @@ RULES:
                                     items: { type: 'string' },
                                     description: 'Maksimum 5 adım'
                                 },
+                                pros: {
+                                    type: 'array',
+                                    items: { type: 'string' },
+                                    description: '3-5 artı/olumlu madde'
+                                },
+                                cons: {
+                                    type: 'array',
+                                    items: { type: 'string' },
+                                    description: '2-5 eksi/olumsuz madde'
+                                },
                                 sentiment: {
                                     type: 'string',
                                     enum: ['positive', 'cautious', 'warning', 'negative', 'neutral'],
@@ -122,7 +133,7 @@ RULES:
                                 },
                                 followup_question: { type: 'string', description: 'Takip sorusu' }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'sentiment', 'followup_question'],
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'pros', 'cons', 'sentiment', 'followup_question'],
                             additionalProperties: false
                         }
                     }

@@ -8,25 +8,113 @@ const corsHeaders = {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-// Persona pool for diversity - format: "role; constraints/context; priorities"
-const PERSONA_POOL = [
-    'bütçe odaklı üniversite öğrencisi; kısıtlı bütçe; ikinci el bakıyor; taşınabilirlik önemli',
-    'uzaktan çalışan; günlük toplantı yoğun; pil ve sessizlik kritik; uzun kullanım',
-    'hafif içerik üreticisi; Lightroom Canva; depolama ve ekran önemli; dosya yönetimi',
-    'kurumsal profesyonel; Office Slack Zoom; stabilite ve garanti önemli; az sürpriz',
-    'teknoloji meraklısı; model kıyaslıyor; teknik detay seviyor; doğru seçim takıntısı',
-    'aile için alışveriş yapan ebeveyn; ortak kullanım; dayanıklılık; servis ağı önemli',
-    'sık seyahat eden; hafiflik; adaptör taşımak istemiyor; portlar ve şarj önemli',
-    'performans odaklı kullanıcı; çok sekme çok uygulama; ısınma takıntısı; akıcılık önemli',
-    'minimalist; gereksiz harcama istemiyor; işimi görsün modu; sade tercih',
-    'ilk kez bu kategoride alım yapan; bilgi kirliliği yaşıyor; basit kriterlerle ilerliyor',
-    'ikinci el düşünen; değer kaybına hassas; resale önemli; temiz cihaz arıyor',
-    'Apple ekosistem kullanıcısı; iPhone AirPods var; uyum ve continuity önemli',
-    'Windows alışkanlığı olan; geçişten çekiniyor; kısayollar ve alışkanlıklar önemli',
-    'servis ve garanti hassas; risk sevmiyor; arıza korkusu; resmi kanal tercih',
-    'acil ihtiyacı olan; eski cihaz bozulmuş; hızlı karar; stok kampanya baskısı',
-    'kampanya kovalayan; indirim zamanlıyor; taksit ve fiyat değişimi takip ediyor'
-]
+// Dynamic persona pools based on archetype - each archetype gets contextually relevant personas
+const PERSONA_POOLS: Record<string, string[]> = {
+    // Sports, fitness, health decisions
+    health_wellness: [
+        'yoğun iş temposunda çalışan; stres atmak istiyor; zaman sınırlı',
+        'emekli; sağlık için aktif kalmak istiyor; sosyalleşme önemli',
+        'anne/baba; çocuğa örnek olmak istiyor; aile aktivitesi arıyor',
+        'kilolu birey; form kazanmak istiyor; motivasyon sorunu',
+        'iş arkadaşlarıyla spor yapmak isteyen; networking potansiyeli',
+        'eskiden sporcu; yaralanma sonrası temkinli; form kaybı stresi',
+        'genç profesyonel; sosyal medyada paylaşmak istiyor; trendy sporlar',
+        'introvert; bireysel aktivite tercih ediyor; kalabalıktan kaçınıyor',
+        'sağlık sorunu yaşamış; doktor önerisiyle hareket etmek istiyor',
+        'sabah insanı; erken saatlerde spor yapmak istiyor; rutin arıyor',
+    ],
+    // Lifestyle, hobbies, routines
+    lifestyle_change: [
+        'şehir stresi yaşayan; doğa arayışında; hafta sonu kaçışı',
+        'uzaktan çalışmaya geçen; yer bağımsız; yeni rutin arıyor',
+        'emekliliğe hazırlanan; yavaşlamak istiyor; hobi ağırlıklı',
+        'yeni taşınan; çevre edinmek istiyor; aktiviteyle tanışma',
+        'minimalist olmak isteyen; gereksiz tüketimi azaltmak; sadelik',
+        'dijital yorgunluk yaşayan; offline aktivite arıyor; detoks',
+        'sosyal çevre genişletmek isteyen; yeni insanlarla tanışma',
+        'yaratıcı çıkış arayan; monotonluktan sıkılmış; kendini ifade',
+    ],
+    // Career, job, work decisions
+    career_decisions: [
+        'kurumsal çalışan; terfi bekliyor; sabırsız; değişim istiyor',
+        'freelancer olmak isteyen; özgürlük arıyor; gelir belirsizliği korkusu',
+        'sektör değiştirmek isteyen; yetkinlik endişesi; sıfırdan başlama',
+        'yöneticilik teklifi alan; sorumluluk korkusu; work-life balance',
+        'startup\'a katılmak isteyen; risk iştahı orta; büyüme potansiyeli',
+        'yurt dışı iş teklifi alan; aile baskısı; kültür şoku endişesi',
+        'tükenmişlik yaşayan; mola vermek istiyor; kariyer sorgulaması',
+        'yan iş kurmak isteyen; ek gelir; asıl işi bırakmadan deneme',
+    ],
+    // Tech, electronics, big purchases
+    major_purchase: [
+        'bütçe odaklı üniversite öğrencisi; kısıtlı bütçe; ikinci el bakıyor; taşınabilirlik önemli',
+        'uzaktan çalışan; günlük toplantı yoğun; pil ve sessizlik kritik; uzun kullanım',
+        'hafif içerik üreticisi; Lightroom Canva; depolama ve ekran önemli; dosya yönetimi',
+        'kurumsal profesyonel; Office Slack Zoom; stabilite ve garanti önemli; az sürpriz',
+        'teknoloji meraklısı; model kıyaslıyor; teknik detay seviyor; doğru seçim takıntısı',
+        'aile için alışveriş yapan ebeveyn; ortak kullanım; dayanıklılık; servis ağı önemli',
+        'sık seyahat eden; hafiflik; adaptör taşımak istemiyor; portlar ve şarj önemli',
+        'performans odaklı kullanıcı; çok sekme çok uygulama; ısınma takıntısı; akıcılık önemli',
+        'minimalist; gereksiz harcama istemiyor; işimi görsün modu; sade tercih',
+        'ilk kez bu kategoride alım yapan; bilgi kirliliği yaşıyor; basit kriterlerle ilerliyor',
+        'ikinci el düşünen; değer kaybına hassas; resale önemli; temkin cihaz arıyor',
+        'Apple ekosistem kullanıcısı; iPhone AirPods var; uyum ve continuity önemli',
+        'Windows alışkanlığı olan; geçişten çekiniyor; kısayollar ve alışkanlıklar önemli',
+        'servis ve garanti hassas; risk sevmiyor; arıza korkusu; resmi kanal tercih',
+        'acil ihtiyacı olan; eski cihaz bozulmuş; hızlı karar; stok kampanya baskısı',
+        'kampanya kovalayan; indirim zamanlıyor; taksit ve fiyat değişimi takip ediyor',
+    ],
+    // Relationships
+    relationship_decisions: [
+        'uzun süredir ilişkide olan; evlilik baskısı hisseden; kararsız',
+        'yeni ilişkiye başlayan; geçmiş yaralardan temkinli; güven sorunu',
+        'uzun mesafe ilişkisi yaşayan; fiziksel uzaklık stresi; gelecek belirsiz',
+        'evli çift; iletişim sorunları yaşayan; terapi düşünen',
+        'ayrılık düşünen; duygusal olarak yıpranmış; yalnızlık korkusu',
+        'çocuklu ebeveyn; ilişkiyi çocuklar için sürdüren; kendi mutluluğu',
+    ],
+    // Parenting
+    parenting_decisions: [
+        'ilk kez ebeveyn olan; deneyimsiz; her şeyi doğru yapmak istiyor',
+        'çalışan anne/baba; iş-aile dengesi stresi; suçluluk duygusu',
+        'ikinci çocuk düşünen; maddi ve fiziksel kapasite sorgulaması',
+        'çocuğun okulu için karar veren; eğitim kalitesi; ulaşım; bütçe',
+        'ergen çocuğu olan; iletişim kopukluğu; sınır koyma zorluğu',
+        'tek ebeveyn; destek sistemi sınırlı; tüm yük üzerinde',
+    ],
+    // Education
+    education_learning: [
+        'kariyer değişimi için eğitim arayan; yeni alan öğrenmek istiyor',
+        'mevcut işinde yükselmek isteyen; sertifika veya derece düşünen',
+        'öğrenci; yurt dışı eğitim düşünen; maliyet ve adaptasyon endişesi',
+        'kendi kendine öğrenen; online kurs vs bootcamp kararsızlığı',
+        'yabancı dil öğrenmek isteyen; zaman ve yöntem sorgulaması',
+        'yüksek lisans düşünen; akademik kariyer mi sektör mü kararsız',
+    ],
+    // Finance
+    money_finance: [
+        'ilk kez ev almayı düşünen; kira mı mortgage mi kararsız',
+        'yatırım yapmak isteyen; risk iştahını bilmiyor; bilgi eksikliği',
+        'borç yönetimi ile uğraşan; konsolidasyon düşünen',
+        'emeklilik planı yapan; bireysel emeklilik faydalı mı sorguluyor',
+        'acil fon oluşturmak isteyen; tasarruf alışkanlığı zayıf',
+        'kripto veya hisse düşünen; volatilite korkusu; timing endişesi',
+    ],
+    // Default fallback
+    default: [
+        'genel karar verici; araştırma yapan; tereddütlü; farklı görüşler dinliyor',
+        'ilk kez bu kararı veren; deneyimsiz; öğrenme sürecinde; hata yapmak istemiyor',
+        'acele karar vermesi gereken; zaman baskısı altında; pratik çözüm arıyor',
+        'uzun süredir düşünen; analiz felci yaşayan; artık harekete geçmek istiyor',
+        'çevresinden tavsiye alan; sosyal onay arayan; yalnız karar vermekten kaçınan',
+        'deneme yanılma ile öğrenen; küçük adımlarla ilerlemek isteyen',
+    ],
+}
+
+// Helper to get personas for an archetype
+const getPersonasForArchetype = (archetypeId: string): string[] => {
+    return PERSONA_POOLS[archetypeId] || PERSONA_POOLS.default
+}
 
 Deno.serve(async (req) => {
     // Handle CORS preflight
@@ -141,7 +229,64 @@ Deno.serve(async (req) => {
             }
             return arr.slice(0, Math.min(n, arr.length))
         }
-        const assignedPersonas = pickDistinct(PERSONA_POOL, count)
+
+        // Dynamic LLM-based persona generation based on question context
+        let assignedPersonas: string[] = []
+        try {
+            console.log('🎭 Generating dynamic personas for question context...')
+            const personaGenResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${openaiApiKey}`,
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `Sen persona üretici bir asistansın. Verilen soru ve bağlam için gerçekçi Türk kullanıcı personaları üret.
+Format: "rol; kısıtlar/bağlam; öncelikler"
+Örnek: "yoğun tempoda çalışan mimar; haftada 2 saat boş; stres atma ve sosyalleşme öncelikli"`
+                        },
+                        {
+                            role: 'user',
+                            content: `Soru: "${user_question}"
+${context ? `Bağlam: ${context}` : ''}
+${archetype_id ? `Kategori: ${archetype_id}` : ''}
+
+Bu soruyla karşılaşabilecek ${count} farklı gerçekçi Türk kullanıcı personası üret.
+Her persona BİRBİRİNDEN FARKLI olmalı (farklı yaş, meslek, motivasyon).
+JSON formatında yanıt ver: { "personas": ["persona1", "persona2", "persona3"] }`
+                        }
+                    ],
+                    temperature: 0.8,
+                    max_tokens: 500,
+                    response_format: { type: 'json_object' }
+                })
+            })
+
+            if (personaGenResponse.ok) {
+                const personaData = await personaGenResponse.json()
+                const personaContent = personaData.choices[0]?.message?.content
+                if (personaContent) {
+                    const parsed = JSON.parse(personaContent)
+                    if (parsed.personas && Array.isArray(parsed.personas) && parsed.personas.length >= count) {
+                        assignedPersonas = parsed.personas.slice(0, count)
+                        console.log('✅ Generated dynamic personas:', assignedPersonas)
+                    }
+                }
+            }
+        } catch (personaErr) {
+            console.warn('⚠️ Dynamic persona generation failed, using fallback:', personaErr)
+        }
+
+        // Fallback to static pool if dynamic generation failed
+        if (assignedPersonas.length < count) {
+            const fallbackPool = getPersonasForArchetype(archetype_id || 'default')
+            assignedPersonas = pickDistinct(fallbackPool, count)
+            console.log('📋 Using fallback personas from pool:', archetype_id || 'default')
+        }
 
         const feelingDescriptions: Record<string, Record<string, string>> = {
             decided: {

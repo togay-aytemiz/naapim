@@ -263,17 +263,8 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 
                     {/* Cards container */}
                     <div className="space-y-3 relative">
-                        {/* LOADING STATE: Show skeleton cards */}
-                        {isLoadingSeeds ? (
-                            <div className="space-y-3">
-                                <SkeletonCard delay={0} />
-                                <SkeletonCard delay={100} />
-                                <SkeletonCard delay={200} />
-                                <p className="text-center text-xs pt-2" style={{ color: 'var(--text-muted)' }}>
-                                    Hikayeler yükleniyor...
-                                </p>
-                            </div>
-                        ) : isUnlocked ? (
+                        {/* Show unlocked state OR locked state with skeleton/real cards behind */}
+                        {isUnlocked ? (
                             <div className="space-y-3 animate-in fade-in duration-500">
                                 {seededOutcomes.slice(0, 3).map((outcome, idx) => (
                                     <RealOutcomeCard key={idx} outcome={outcome} showFull={true} />
@@ -291,7 +282,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                             </div>
 
                         ) : (
-                            /* LOCKED STATE - Animated Story Capsules */
+                            /* LOCKED STATE - Show skeleton or real cards behind CTA overlay */
                             <>
                                 {/* CSS for animations - only float, no glow */}
                                 <style>{`
@@ -318,25 +309,35 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                     }
                                 `}</style>
 
-                                {/* Story Capsules */}
-                                <StoryCapsule
-                                    outcome={seededOutcomes[0]}
-                                    animationClass="story-capsule-1"
-                                    showFeeling={true}
-                                    fallbackText={sampleQuestions[0]}
-                                />
-                                <StoryCapsule
-                                    outcome={seededOutcomes[1]}
-                                    animationClass="story-capsule-2"
-                                    showFeeling={true}
-                                    fallbackText={sampleQuestions[1]}
-                                />
-                                <StoryCapsule
-                                    outcome={seededOutcomes[2]}
-                                    animationClass="story-capsule-3"
-                                    showFeeling={false}
-                                    fallbackText={sampleQuestions[2]}
-                                />
+                                {/* Background cards - skeleton while loading, real capsules when loaded */}
+                                {isLoadingSeeds ? (
+                                    <>
+                                        <SkeletonCard delay={0} />
+                                        <SkeletonCard delay={100} />
+                                        <SkeletonCard delay={200} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <StoryCapsule
+                                            outcome={seededOutcomes[0]}
+                                            animationClass="story-capsule-1"
+                                            showFeeling={true}
+                                            fallbackText={sampleQuestions[0]}
+                                        />
+                                        <StoryCapsule
+                                            outcome={seededOutcomes[1]}
+                                            animationClass="story-capsule-2"
+                                            showFeeling={true}
+                                            fallbackText={sampleQuestions[1]}
+                                        />
+                                        <StoryCapsule
+                                            outcome={seededOutcomes[2]}
+                                            animationClass="story-capsule-3"
+                                            showFeeling={false}
+                                            fallbackText={sampleQuestions[2]}
+                                        />
+                                    </>
+                                )}
 
                                 {/* Full gradient overlay - fades cards from top to bottom */}
                                 <div

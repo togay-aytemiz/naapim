@@ -429,6 +429,79 @@ export const ResultPage = () => {
                                         </p>
                                     </div>
 
+                                    {/* Pros & Cons Section */}
+                                    {(analysis.pros?.length || analysis.cons?.length) && (
+                                        <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Artılar */}
+                                            {analysis.pros && analysis.pros.length > 0 && (
+                                                <div
+                                                    className="p-4 rounded-xl"
+                                                    style={{
+                                                        backgroundColor: 'var(--emerald-50)',
+                                                        border: '1px solid var(--emerald-200)'
+                                                    }}
+                                                >
+                                                    <h4
+                                                        className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                                        style={{ color: 'var(--emerald-700)' }}
+                                                    >
+                                                        Artılar
+                                                    </h4>
+                                                    <ul className="space-y-2">
+                                                        {analysis.pros.map((pro, idx) => (
+                                                            <li key={idx} className="flex items-start gap-2">
+                                                                <span
+                                                                    className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                                                                    style={{ backgroundColor: 'var(--emerald-500)' }}
+                                                                />
+                                                                <span
+                                                                    className="text-sm"
+                                                                    style={{ color: 'var(--emerald-800)' }}
+                                                                >
+                                                                    {pro}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {/* Eksiler */}
+                                            {analysis.cons && analysis.cons.length > 0 && (
+                                                <div
+                                                    className="p-4 rounded-xl"
+                                                    style={{
+                                                        backgroundColor: 'var(--red-50)',
+                                                        border: '1px solid var(--red-200)'
+                                                    }}
+                                                >
+                                                    <h4
+                                                        className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                                        style={{ color: 'var(--red-700)' }}
+                                                    >
+                                                        Eksiler
+                                                    </h4>
+                                                    <ul className="space-y-2">
+                                                        {analysis.cons.map((con, idx) => (
+                                                            <li key={idx} className="flex items-start gap-2">
+                                                                <span
+                                                                    className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                                                                    style={{ backgroundColor: 'var(--red-500)' }}
+                                                                />
+                                                                <span
+                                                                    className="text-sm"
+                                                                    style={{ color: 'var(--red-800)' }}
+                                                                >
+                                                                    {con}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
                                     {/* Steps */}
                                     <div>
                                         <h3

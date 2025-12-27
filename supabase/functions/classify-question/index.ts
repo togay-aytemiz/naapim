@@ -49,14 +49,14 @@ serve(async (req) => {
         }
 
         // Enhanced system prompt for better understanding
-        let systemPrompt = `Sen bir karar verme asistanısın. Kullanıcının yazdığı soruyu/düşünceyi analiz edip aşağıdaki kategorilerden birine sınıflandırmalısın.
+        let systemPrompt = `Sen bir karar verme ve keşif asistanısın. Kullanıcının yazdığı soruyu/düşünceyi analiz edip aşağıdaki kategorilerden birine sınıflandırmalısın.
 
 GÖREV:
 1. Kullanıcının ifadesini analiz et (kısa, belirsiz veya informal olsa bile)
 2. Kullanıcının gerçek niyetini anlamaya çalış
 3. En uygun kategoriyi seç
 4. KARAR TİPİNİ belirle (aşağıdaki listeden)
-5. Eğer ifade çok belirsiz veya kısaysa, kullanıcıdan detay iste
+5. SADECE çok belirsiz veya anlamsız ise clarification iste - "ne hazırlayım", "ne yapsam" gibi sorularda clarification GEREKMEZ
 
 KARAR TİPLERİ (decision_type):
 - binary_decision: "Yapayım mı yapmayayım mı?" tarzı evet/hayır kararları
@@ -65,7 +65,12 @@ KARAR TİPLERİ (decision_type):
 - method: "Nasıl yapmalıyım?" tarzı yöntem/strateji soruları
 - validation: "Doğru mu yaptım?" tarzı geçmiş karar değerlendirmesi
 - emotional_support: "Yalnız mıyım bu durumda?" tarzı duygusal destek arayışı
-- exploration: "Seçeneklerimi görmek istiyorum" tarzı keşif odaklı sorular
+- exploration: "Seçeneklerimi/fikirleri görmek istiyorum" tarzı keşif odaklı sorular
+
+EXPLORATION (KEŞİF) TİPİ ÖNEMLİ:
+"Ne hazırlayım?", "Ne yapsam?", "Ne alabilirim?", "Önerir misiniz?" gibi sorular exploration tipidir.
+Bu sorularda kullanıcı başkalarının deneyimlerinden fikir almak istiyor - BU GEÇERLİ BİR KULLANIM.
+Bu tür sorularda needs_clarification: false olmalı ve lifestyle_change veya en uygun kategori seçilmeli.
 
 ÖRNEK KARAR TİPLERİ:
 - "Tenis'e başlamalı mıyım?" → binary_decision
@@ -75,12 +80,16 @@ KARAR TİPLERİ (decision_type):
 - "İşten ayrıldım, doğru mu yaptım?" → validation
 - "Herkes böyle mi hissediyor?" → emotional_support
 - "Kariyer seçeneklerimi görmek istiyorum" → exploration
+- "Sıcak şarabın yanına ne hazırlayım?" → exploration (GEÇERLİ - başkaları ne yapmış merak ediyor)
+- "Kızlar gecesi için ne hazırlasam?" → exploration (GEÇERLİ)
+- "Kahvaltıda ne yapsam?" → exploration (GEÇERLİ)
 
 ÖNEMLİ KURALLAR:
 - Kısa ifadeler (örn: "ikinci çocuk?", "iş değişikliği") bağlamdan anlam çıkar
 - "acaba", "belki", "düşünüyorum" gibi kelimeler karar verme sürecini ima eder
-- Belirsiz ifadelerde confidence düşük olmalı (0.3-0.5)
-- Net ifadelerde confidence yüksek olmalı (0.7-1.0)
+- "Ne yapsam?", "Ne hazırlasam?" gibi sorular geçerli exploration sorularıdır
+- Belirsiz ama anlaşılır ifadelerde confidence 0.6-0.7 olmalı, needs_clarification: false
+- Tamamen anlamsız veya tek kelimelik ifadeler için clarification iste
 
 GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
 Aşağıdaki durumlarda MUTLAKA is_unrealistic: true VE needs_clarification: true olmalı:
@@ -115,6 +124,9 @@ Girdi: "Ne zaman ev almalıyım?"
 
 Girdi: "Tenis'e başlamalı mıyım?"
 Çıktı: {"archetype_id": "health_wellness", "decision_type": "binary_decision", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Tenis sporuna başlayıp başlamamayı düşünüyorsunuz."}
+
+Girdi: "Sıcak şarabın yanına ne hazırlayım?"
+Çıktı: {"archetype_id": "lifestyle_change", "decision_type": "exploration", "confidence": 0.7, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
 
 Girdi: "iş"
 Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}

@@ -550,6 +550,18 @@ button {
   }
 }
 
+@keyframes subtleBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 .animate-in {
   animation: fadeInUp 0.4s ease-out forwards;
 }

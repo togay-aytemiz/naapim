@@ -549,11 +549,11 @@ export const ResultPage = () => {
                                     <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2 z-20">
                                         <button
                                             onClick={() => setShowFullAnalysis(true)}
-                                            className="flex items-center gap-2 px-5 py-2.5 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-md group"
+                                            className="flex items-center gap-2 px-5 py-2.5 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-md group animate-[subtleBounce_2s_ease-in-out_infinite]"
                                             style={{
                                                 backgroundColor: 'var(--bg-elevated)',
-                                                border: '1px solid var(--border-secondary)',
-                                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                                                border: '1px solid var(--coral-primary)',
+                                                boxShadow: '0 2px 8px rgba(255, 111, 97, 0.15)'
                                             }}
                                         >
                                             <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12" style={{ color: 'var(--coral-primary)' }} />

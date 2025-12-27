@@ -304,7 +304,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onContinue }) => {
                             >
                                 <button
                                     onClick={handleContinueClick}
-                                    className="flex items-center justify-center gap-2 w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 bg-black text-white rounded-full sm:rounded-xl hover:bg-neutral-800 hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold text-sm md:text-base"
+                                    className={`flex items-center justify-center gap-2 w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 text-white rounded-full sm:rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold text-sm md:text-base ${isDarkMode ? 'bg-neutral-600 hover:bg-neutral-500' : 'bg-black hover:bg-neutral-800'}`}
                                 >
                                     <span className="hidden sm:inline">Devam Et</span>
                                     <span className="material-symbols-outlined text-xl sm:text-sm font-bold">arrow_forward</span>

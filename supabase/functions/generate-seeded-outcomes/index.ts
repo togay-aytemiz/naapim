@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { user_question, archetype_id, context = '', count = 3, recovery_code } = await req.json()
+        const { user_question, archetype_id, context = '', count = 3, recovery_code, decision_type = 'binary_decision' } = await req.json()
 
         if (!user_question) {
             return new Response(
@@ -308,9 +308,43 @@ JSON formatında yanıt ver: { "personas": ["persona1", "persona2", "persona3"] 
             ? `\n\nKULLANICI BAĞLAMI (hikayelere doğal şekilde yansıt):\n${context}`
             : ''
 
+        // Decision type specific instructions
+        const decisionTypeInstructions: Record<string, string> = {
+            binary_decision: `Bu "yapayım mı yapmayayım mı" tarzı bir karar. Hikayelerde:
+- Kişinin yaptığı/yapmadığı TEK ANA KARAR odak noktası olmalı
+- Artılar ve eksiler karşılaştırması olmalı
+- "Sonunda yaptım" veya "Vazgeçtim" şeklinde net sonuçlar`,
+            comparison: `Bu "A mı B mi" tarzı bir karşılaştırma kararı. Hikayelerde:
+- İki veya daha fazla somut alternatif MUTLAKA karşılaştırılmalı
+- Her alternativin artıları ve eksileri detaylı belirtilmeli
+- "X'i tercih ettim çünkü..." formatında net karşılaştırma sonucu`,
+            timing: `Bu "ne zaman yapmalıyım" tarzı bir zamanlama kararı. Hikayelerde:
+- Zamanlamanın önemi vurgulanmalı
+- "Şimdi mi sonra mı" ikilemi işlenmeli
+- Beklemek veya hemen harekete geçmek sonuçları anlatılmalı`,
+            method: `Bu "nasıl yapmalıyım" tarzı bir yöntem kararı. Hikayelerde:
+- Farklı yaklaşımlar/stratejiler karşılaştırılmalı
+- Seçilen yöntemin sonuçları anlatılmalı`,
+            validation: `Bu "doğru mu yaptım" tarzı bir geçmiş karar değerlendirmesi. Hikayelerde:
+- Geçmişte alınan kararın sonuçları değerlendirilmeli
+- "Hindsight" perspektifi kullanılmalı
+- "Tekrar olsa..." tarzı düşünceler eklenebilir`,
+            emotional_support: `Bu duygusal destek arayışı olan bir karar. Hikayelerde:
+- Benzer durumda olan kişilerin deneyimleri paylaşılmalı
+- "Sen yalnız değilsin" mesajı verilmeli
+- Empati ve anlayış ön planda`,
+            exploration: `Bu keşif odaklı bir soru. Hikayelerde:
+- Çeşitli seçenekler ve alternatiflerin keşfi anlatılmalı
+- "Ben de senin gibiyken şunları denedim" formatı`
+        }
+        const decisionTypeInstruction = decisionTypeInstructions[decision_type] || decisionTypeInstructions.binary_decision
+
         const prompt = `Sen Türkçe yazan yaratıcı bir hikaye anlatıcısısın. Aşağıdaki ikileme benzer bir karar vermiş ${count} farklı gerçek kullanıcının deneyimlerini paylaşacaksın.
 
 Orijinal soru: "${user_question}"${contextInstruction}
+
+KARAR TİPİ: ${decision_type}
+${decisionTypeInstruction}
 
 HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
 1. EN AZ 2 ALTERNATİF KARŞILAŞTIRMASI: Somut seçenekler (örn: M2 Air vs M3 Air, Air vs Pro, Mac vs Windows)
@@ -768,9 +802,10 @@ KATI KURALLAR - İHLAL ETME:
                 // Override o.persona to ensure consistency
                 o.persona = finalPersona
 
-                // Build rich text for embedding including new fields
+                // Build rich text for embedding including new fields + decision_type
                 const embeddingParts = [
                     o.similar_question || user_question,
+                    decision_type, // decision type for better matching
                     finalPersona,
                     (o.options_considered || []).join(', '),
                     (o.constraints || []).join(', '),

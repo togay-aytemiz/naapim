@@ -3,6 +3,7 @@ import type { Archetype } from '../types/registry';
 
 export interface ClassificationResult {
     archetype_id: string;
+    decision_type: 'binary_decision' | 'comparison' | 'timing' | 'method' | 'validation' | 'emotional_support' | 'exploration';
     confidence: number;
     needs_clarification: boolean;
     is_unrealistic?: boolean;
@@ -21,6 +22,7 @@ export class ClassificationService {
             console.warn("Supabase not configured. Returning fallback.");
             return {
                 archetype_id: archetypes[0]?.id || 'career_decisions',
+                decision_type: 'binary_decision',
                 confidence: 0,
                 needs_clarification: true,
                 clarification_prompt: 'Lütfen kararınızı biraz daha açıklayın.'
@@ -56,6 +58,7 @@ export class ClassificationService {
 
             return {
                 archetype_id: result.archetype_id || archetypes[0]?.id || 'career_decisions',
+                decision_type: result.decision_type || 'binary_decision',
                 confidence: result.confidence || 0,
                 needs_clarification: result.needs_clarification || false,
                 is_unrealistic: result.is_unrealistic || promptIndicatesUnrealistic || false,
@@ -67,6 +70,7 @@ export class ClassificationService {
             console.error("Classification Service Error:", error);
             return {
                 archetype_id: archetypes[0]?.id || 'career_decisions',
+                decision_type: 'binary_decision',
                 confidence: 0,
                 needs_clarification: true,
                 clarification_prompt: 'Bir hata oluştu. Lütfen tekrar deneyin.'

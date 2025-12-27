@@ -108,7 +108,8 @@ export const ResultPage = () => {
                 const sessionPromise = submitSession({
                     user_question: sessionUserInput,
                     archetype_id: sessionArchetypeId,
-                    answers: sessionAnswers
+                    answers: sessionAnswers,
+                    decision_type: location.state?.decisionType || 'binary_decision'
                 });
 
                 try {
@@ -164,7 +165,8 @@ export const ResultPage = () => {
                 const context = sessionArchetypeId && sessionAnswers
                     ? AnalysisService.getReadableContext(sessionArchetypeId, sessionAnswers)
                     : '';
-                const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context, code);
+                const decisionType = location.state?.decisionType || 'binary_decision';
+                const outcomes = await AnalysisService.generateSeededOutcomes(sessionUserInput, sessionArchetypeId, context, code, decisionType);
                 setSeededOutcomes(outcomes?.outcomes || []);
             } catch (err) {
                 console.warn('Seeded outcomes error:', err);

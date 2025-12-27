@@ -55,7 +55,26 @@ GÖREV:
 1. Kullanıcının ifadesini analiz et (kısa, belirsiz veya informal olsa bile)
 2. Kullanıcının gerçek niyetini anlamaya çalış
 3. En uygun kategoriyi seç
-4. Eğer ifade çok belirsiz veya kısaysa, kullanıcıdan detay iste
+4. KARAR TİPİNİ belirle (aşağıdaki listeden)
+5. Eğer ifade çok belirsiz veya kısaysa, kullanıcıdan detay iste
+
+KARAR TİPLERİ (decision_type):
+- binary_decision: "Yapayım mı yapmayayım mı?" tarzı evet/hayır kararları
+- comparison: "A mı B mi?" tarzı iki veya daha fazla seçenek karşılaştırması
+- timing: "Ne zaman yapmalıyım?" tarzı zamanlama kararları
+- method: "Nasıl yapmalıyım?" tarzı yöntem/strateji soruları
+- validation: "Doğru mu yaptım?" tarzı geçmiş karar değerlendirmesi
+- emotional_support: "Yalnız mıyım bu durumda?" tarzı duygusal destek arayışı
+- exploration: "Seçeneklerimi görmek istiyorum" tarzı keşif odaklı sorular
+
+ÖRNEK KARAR TİPLERİ:
+- "Tenis'e başlamalı mıyım?" → binary_decision
+- "MacBook mu alsam Windows mu?" → comparison
+- "Ne zaman ev almalıyım?" → timing
+- "Nasıl zam istemeliyim?" → method
+- "İşten ayrıldım, doğru mu yaptım?" → validation
+- "Herkes böyle mi hissediyor?" → emotional_support
+- "Kariyer seçeneklerimi görmek istiyorum" → exploration
 
 ÖNEMLİ KURALLAR:
 - Kısa ifadeler (örn: "ikinci çocuk?", "iş değişikliği") bağlamdan anlam çıkar
@@ -65,37 +84,9 @@ GÖREV:
 
 GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
 Aşağıdaki durumlarda MUTLAKA is_unrealistic: true olmalı:
-
-SÜPER KAHRAMANLAR VE KURGUSAL KARAKTERLER:
-- Superman, Batman, Spiderman, Iron Man, Thor, Hulk, Wonder Woman
-- Unicorn, ejderha, peri, cin, büyücü, vampir, kurt adam
-- Anime/manga karakterleri, çizgi roman kahramanları
-- Film/dizi karakterleri (Darth Vader, Harry Potter, Gandalf, vs.)
-
-SAÇMA/TROLL SORU KALIPLARI:
-- "Hangisi kazanır?", "Kim daha güçlü?", "Kim yener?"
-- Gerçek olmayan şeyleri karşılaştırma
-- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği, ölümsüzlük)
+- Süper kahramanlar, kurgusal karakterler (Superman, Batman, Harry Potter...)
+- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği)
 - Şaka/trolleme amaçlı absürt sorular
-
-ÖRNEKLER (HEPSİ is_unrealistic: true OLMALI):
-- "Superman mı kazanır Batman mi?" → is_unrealistic: true
-- "Unicorn mu alsam ejderha mı?" → is_unrealistic: true  
-- "Thor mu güçlü Hulk mu?" → is_unrealistic: true
-- "Harry Potter olsam mı Gandalf mı?" → is_unrealistic: true
-
-Bu durumlarda clarification_prompt şöyle olmalı:
-"Bu soru gerçek bir karar durumunu yansıtmıyor gibi görünüyor. Naapim gerçek hayat kararlarında yardımcı olabilir. Lütfen gerçek bir karar veya ikilem paylaşır mısın?"
-
-ÇIKTI FORMATI (JSON):
-{
-    "archetype_id": "kategori_id",
-    "confidence": 0.0-1.0 arası sayı,
-    "needs_clarification": true/false,
-    "is_unrealistic": true/false (fantastik/gerçek dışı soru ise true),
-    "clarification_prompt": "Kullanıcıya sorulacak nazik detay sorusu (needs_clarification true ise)",
-    "interpreted_question": "Kullanıcının niyetinin tam cümle hali (needs_clarification false ise)"
-}
 
 KATEGORİLER:
 `
@@ -113,16 +104,19 @@ KATEGORİLER:
         systemPrompt += `\nÖRNEK ANALİZLER:
 
 Girdi: "acaba ikinci çocuk?"
-Çıktı: {"archetype_id": "parenting_decisions", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+Çıktı: {"archetype_id": "parenting_decisions", "decision_type": "binary_decision", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+
+Girdi: "MacBook mu alsam Windows laptop mu?"
+Çıktı: {"archetype_id": "major_purchase", "decision_type": "comparison", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "MacBook ve Windows laptop arasında seçim yapmaya çalışıyorsunuz."}
+
+Girdi: "Ne zaman ev almalıyım?"
+Çıktı: {"archetype_id": "money_finance", "decision_type": "timing", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Ev satın almak için doğru zamanlamayı belirlemeye çalışıyorsunuz."}
+
+Girdi: "Tenis'e başlamalı mıyım?"
+Çıktı: {"archetype_id": "health_wellness", "decision_type": "binary_decision", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Tenis sporuna başlayıp başlamamayı düşünüyorsunuz."}
 
 Girdi: "iş"
-Çıktı: {"archetype_id": "career_decisions", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz? Örneğin: İşimi değiştirmeli miyim? veya Terfi istemeli miyim?"}
-
-Girdi: "Unicorn mu alsam superman mı?"
-Çıktı: {"archetype_id": "general", "confidence": 0, "needs_clarification": true, "is_unrealistic": true, "clarification_prompt": "Bu soru gerçek bir karar durumunu yansıtmıyor gibi görünüyor. Naapim gerçek hayat kararlarında yardımcı olabilir. Lütfen gerçek bir karar veya ikilem paylaşır mısın?"}
-
-Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
-Çıktı: {"archetype_id": "lifestyle_change", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut evinizde kalıp tadilat mı yaptırmalısınız yoksa taşınmalı mısınız kararını vermeye çalışıyorsunuz."}
+Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}
 `
 
         // Build valid archetype IDs for enum
@@ -154,6 +148,11 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
                                     enum: validArchetypeIds,
                                     description: 'En uygun kategori ID\'si'
                                 },
+                                decision_type: {
+                                    type: 'string',
+                                    enum: ['binary_decision', 'comparison', 'timing', 'method', 'validation', 'emotional_support', 'exploration'],
+                                    description: 'Karar tipi'
+                                },
                                 confidence: {
                                     type: 'number',
                                     description: '0.0-1.0 arası güven skoru'
@@ -175,7 +174,7 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
                                     description: 'Kullanıcının niyetinin tam cümle hali'
                                 }
                             },
-                            required: ['archetype_id', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
+                            required: ['archetype_id', 'decision_type', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
                             additionalProperties: false
                         }
                     }
@@ -191,8 +190,7 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
         const content = data.choices[0]?.message?.content
         const result = JSON.parse(content || '{}')
 
-        // Validate archetype_id exists
-        const validArchetypeIds = archetypes.map(a => a.id)
+        // Validate archetype_id exists (validArchetypeIds defined at line 128)
         const archetypeId = validArchetypeIds.includes(result.archetype_id)
             ? result.archetype_id
             : archetypes[0]?.id
@@ -200,8 +198,10 @@ Girdi: "Evimden taşınmalı mıyım yoksa tadilat mı yaptırmalıyım?"
         return new Response(
             JSON.stringify({
                 archetype_id: archetypeId,
+                decision_type: result.decision_type || 'binary_decision',
                 confidence: result.confidence || 0,
                 needs_clarification: result.needs_clarification || false,
+                is_unrealistic: result.is_unrealistic || false,
                 clarification_prompt: result.clarification_prompt || null,
                 interpreted_question: result.interpreted_question || null
             }),

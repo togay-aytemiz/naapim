@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         )
 
-        const { user_question, answers, archetype_id } = await req.json()
+        const { user_question, answers, archetype_id, decision_type } = await req.json()
 
         if (!user_question) {
             throw new Error('Missing user_question')
@@ -33,6 +33,7 @@ Deno.serve(async (req) => {
             .insert({
                 user_question,
                 archetype_id: safeArchetypeId,
+                decision_type: decision_type || 'binary_decision',
                 status: 'active'
             })
             .select('id')

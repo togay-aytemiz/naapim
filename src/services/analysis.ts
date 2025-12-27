@@ -110,7 +110,8 @@ export class AnalysisService {
         userQuestion: string,
         archetypeId: string,
         context: string,
-        recoveryCode?: string
+        recoveryCode?: string,
+        decisionType: string = 'binary_decision'
     ): Promise<{ outcomes: any[], source?: string } | null> {
         if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn('Supabase not configured, skipping seeded outcomes');
@@ -129,7 +130,8 @@ export class AnalysisService {
                     archetype_id: archetypeId,
                     context: context,  // Pass user's answers for better matching
                     count: 3,
-                    recovery_code: recoveryCode // For caching - reuse existing outcomes
+                    recovery_code: recoveryCode, // For caching - reuse existing outcomes
+                    decision_type: decisionType // For decision type-specific prompts
                 })
             });
 

@@ -352,7 +352,7 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
 
                                     {/* CTA Content */}
                                     <div className="relative z-30 flex flex-col items-center space-y-4">
-                                        {/* Lock Icon */}
+                                        {/* Lock Icon OR Spinner */}
                                         <div
                                             className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl transform -rotate-6"
                                             style={{
@@ -360,24 +360,44 @@ export const FollowUpSection: React.FC<FollowUpSectionProps> = ({
                                                 boxShadow: '0 0 15px rgba(255, 107, 107, 0.4)'
                                             }}
                                         >
-                                            <Lock className="w-7 h-7 text-white" />
+                                            {isLoadingSeeds ? (
+                                                <svg className="w-7 h-7 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                                </svg>
+                                            ) : (
+                                                <Lock className="w-7 h-7 text-white" />
+                                            )}
                                         </div>
 
-                                        {/* Unlock Button */}
+                                        {/* Unlock Button OR Loading Text */}
                                         <button
-                                            onClick={() => setShowUnlockModal(true)}
-                                            className="group flex items-center justify-center gap-2 py-4 px-8 rounded-2xl font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 active:translate-y-0 text-lg w-full max-w-xs"
+                                            onClick={() => !isLoadingSeeds && setShowUnlockModal(true)}
+                                            disabled={isLoadingSeeds}
+                                            className={`group flex items-center justify-center gap-2 py-4 px-8 rounded-2xl font-semibold text-white shadow-lg transition-all duration-300 text-lg w-full max-w-xs ${isLoadingSeeds ? 'opacity-90 cursor-wait' : 'hover:-translate-y-1 active:translate-y-0'}`}
                                             style={{
                                                 background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
                                                 boxShadow: '0 4px 20px rgba(255, 111, 97, 0.4)'
                                             }}
                                         >
-                                            <KeyRound className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                                            <span>Hikayelerin Kilidini Aç</span>
+                                            {isLoadingSeeds ? (
+                                                <>
+                                                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                                    </svg>
+                                                    <span>Sana özel eşleşme yapılıyor</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <KeyRound className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                                                    <span>Hikayelerin Kilidini Aç</span>
+                                                </>
+                                            )}
                                         </button>
 
-                                        {/* YA DA Divider + Secondary Button */}
-                                        {onShareStory && (
+                                        {/* YA DA Divider + Secondary Button - Hide during loading */}
+                                        {!isLoadingSeeds && onShareStory && (
                                             <>
                                                 {/* YA DA Eyebrow */}
                                                 <div className="flex items-center w-full max-w-xs">

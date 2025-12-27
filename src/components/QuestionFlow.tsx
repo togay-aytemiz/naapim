@@ -17,7 +17,7 @@ interface QuestionFlowProps {
     userInput?: string;
     archetypeId?: string;
     selectedFieldKeys?: string[]; // Optional: LLM-selected field keys
-    onComplete: (answers: Record<string, string>, archetypeId: string, selectedFieldKeys?: string[], effectiveQuestion?: string) => void;
+    onComplete: (answers: Record<string, string>, archetypeId: string, selectedFieldKeys?: string[], effectiveQuestion?: string, decisionType?: string) => void;
     onBack: () => void;
 }
 
@@ -42,6 +42,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     // State for internal classification results
     const [archetypeId, setArchetypeId] = useState<string | undefined>(initialArchetypeId);
     const [selectedFieldKeys, setSelectedFieldKeys] = useState<string[] | undefined>(initialSelectedFieldKeys);
+    const [decisionType, setDecisionType] = useState<string>('binary_decision');
 
     // Loading state - start loading if we have userInput but no archetype yet
     const [isLoading, setIsLoading] = useState<boolean>(!!userInput && !initialArchetypeId);
@@ -140,6 +141,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys);
                 setArchetypeId(classificationResult.archetype_id);
                 setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                setDecisionType(classificationResult.decision_type || 'binary_decision');
                 setQuestionsReady(true); // Only set when questions are actually ready
                 console.log('🏁 Done, questions ready');
             } catch (error) {
@@ -247,7 +249,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 setSelectedOptionId(null);
             } else {
                 // Pass back valid archetypeId and keys
-                onComplete(newAnswers, archetypeId, selectedFieldKeys, effectiveQuestion);
+                onComplete(newAnswers, archetypeId, selectedFieldKeys, effectiveQuestion, decisionType);
             }
             setIsTransitioning(false);
         }, 400); // Wait for animation
@@ -342,6 +344,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     setEffectiveQuestion(mergedInput);
                     setArchetypeId(classificationResult.archetype_id);
                     setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                    setDecisionType(classificationResult.decision_type || 'binary_decision');
                     setQuestionsReady(true); // Mark questions as ready
                 } catch (error) {
                     console.error('❌ Reclassification failed:', error);

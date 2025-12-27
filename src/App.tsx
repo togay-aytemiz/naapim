@@ -32,7 +32,8 @@ function App() {
     answers: Record<string, string>,
     archetypeId: string,
     _selectedFieldKeys?: string[],
-    effectiveQuestion?: string
+    effectiveQuestion?: string,
+    decisionType?: string
   ) => {
     // Use effectiveQuestion (from clarification) or fallback to original userInput
     const userInput = effectiveQuestion || location.state?.userInput;
@@ -48,7 +49,8 @@ function App() {
       state: {
         userInput,
         answers,
-        archetypeId
+        archetypeId,
+        decisionType: decisionType || 'binary_decision'
       }
     });
   };

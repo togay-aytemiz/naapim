@@ -4,6 +4,7 @@ export interface SubmitSessionParams {
     user_question: string
     answers: Record<string, string>
     archetype_id?: string
+    decision_type?: 'binary_decision' | 'comparison' | 'timing' | 'method' | 'validation' | 'emotional_support' | 'exploration'
 }
 
 export interface SubmitSessionResponse {

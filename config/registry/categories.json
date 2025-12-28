@@ -954,7 +954,15 @@
                 "social_vulnerability",
                 "social_trust",
                 "social_forgiveness",
-                "social_expectation"
+                "social_expectation",
+                "social_meeting_freq",
+                "social_init_contact",
+                "social_support_give",
+                "social_new_friends",
+                "social_conflict_avoid",
+                "social_listening",
+                "social_appreciation_show",
+                "social_reliability"
             ]
         },
         {
@@ -978,7 +986,10 @@
                 "lifestyle_comfort_zone",
                 "lifestyle_technology",
                 "lifestyle_simplicity",
-                "lifestyle_nature_freq"
+                "lifestyle_nature_freq",
+                "time_constraint",
+                "simple_priority",
+                "simple_urgency"
             ]
         },
         {
@@ -1002,7 +1013,10 @@
                 "career_stress",
                 "career_learning",
                 "career_leadership",
-                "career_stability"
+                "career_stability",
+                "time_constraint",
+                "current_mood",
+                "simple_priority"
             ]
         },
         {
@@ -1021,7 +1035,15 @@
                 "parenting_priority",
                 "parenting_challenge",
                 "parenting_screen",
-                "parenting_activity"
+                "parenting_activity",
+                "parenting_routine",
+                "parenting_nutrition",
+                "parenting_sleep",
+                "parenting_sibling",
+                "parenting_growth",
+                "parenting_outdoor",
+                "parenting_learning",
+                "parenting_social_skill"
             ]
         },
         {
@@ -1040,7 +1062,15 @@
                 "relationship_trust",
                 "relationship_intimacy",
                 "relationship_support",
-                "relationship_growth"
+                "relationship_growth",
+                "relationship_time_together",
+                "relationship_appreciation",
+                "relationship_boundaries",
+                "relationship_hobbies",
+                "relationship_finance_views",
+                "relationship_family",
+                "relationship_life_balance",
+                "relationship_date_freq"
             ]
         },
         {
@@ -1059,7 +1089,15 @@
                 "finance_income",
                 "finance_emergency",
                 "finance_spending",
-                "finance_tracking"
+                "finance_tracking",
+                "finance_automation",
+                "finance_advice",
+                "finance_insurance",
+                "finance_retirement",
+                "finance_side_income",
+                "finance_save_method",
+                "finance_big_purchase",
+                "finance_stress_level"
             ]
         },
         {
@@ -1078,7 +1116,15 @@
                 "education_support",
                 "education_motivation",
                 "education_depth",
-                "education_certification"
+                "education_certification",
+                "education_feedback",
+                "education_practice",
+                "education_collaboration",
+                "education_content",
+                "education_schedule",
+                "education_outcome",
+                "education_resources",
+                "education_revision"
             ]
         },
         {
@@ -1097,7 +1143,15 @@
                 "eldercare_budget",
                 "eldercare_time",
                 "eldercare_preference",
-                "eldercare_stress"
+                "eldercare_stress",
+                "eldercare_comm_freq",
+                "eldercare_medical",
+                "eldercare_daily_help",
+                "eldercare_emotional",
+                "eldercare_financial_support",
+                "eldercare_future",
+                "eldercare_respite",
+                "eldercare_tech"
             ]
         },
         {

@@ -6375,6 +6375,886 @@
                     "label": "Çok stresli"
                 }
             ]
+        },
+        {
+            "id": "parenting_routine_v1",
+            "description": "Günlük rutin - basit",
+            "options": [
+                {
+                    "id": "strict",
+                    "label": "Katı rutin"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                },
+                {
+                    "id": "chaotic",
+                    "label": "Düzensiz"
+                }
+            ]
+        },
+        {
+            "id": "parenting_nutrition_v1",
+            "description": "Beslenme yaklaşımı - basit",
+            "options": [
+                {
+                    "id": "strict",
+                    "label": "Katı sağlıklı"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "relaxed",
+                    "label": "Rahat"
+                }
+            ]
+        },
+        {
+            "id": "parenting_sleep_v1",
+            "description": "Uyku durumu - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi uyuyor"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "problematic",
+                    "label": "Sorunlu"
+                }
+            ]
+        },
+        {
+            "id": "parenting_sibling_v1",
+            "description": "Kardeş durumu - basit",
+            "options": [
+                {
+                    "id": "only",
+                    "label": "Tek çocuk"
+                },
+                {
+                    "id": "siblings",
+                    "label": "Kardeşleri var"
+                },
+                {
+                    "id": "expecting",
+                    "label": "Kardeş bekleniyor"
+                }
+            ]
+        },
+        {
+            "id": "parenting_growth_v1",
+            "description": "Gelişim odağı - basit",
+            "options": [
+                {
+                    "id": "academic",
+                    "label": "Akademik"
+                },
+                {
+                    "id": "emotional",
+                    "label": "Duygusal"
+                },
+                {
+                    "id": "physical",
+                    "label": "Fiziksel"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                }
+            ]
+        },
+        {
+            "id": "parenting_outdoor_v1",
+            "description": "Dış mekan aktivitesi - basit",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün dışarı"
+                },
+                {
+                    "id": "often",
+                    "label": "Sık sık"
+                },
+                {
+                    "id": "rarely",
+                    "label": "Nadiren"
+                }
+            ]
+        },
+        {
+            "id": "parenting_learning_v1",
+            "description": "Öğrenme tarzı - basit",
+            "options": [
+                {
+                    "id": "visual",
+                    "label": "Görsel öğrenir"
+                },
+                {
+                    "id": "hands_on",
+                    "label": "Yaparak öğrenir"
+                },
+                {
+                    "id": "auditory",
+                    "label": "Dinleyerek öğrenir"
+                }
+            ]
+        },
+        {
+            "id": "parenting_social_skill_v1",
+            "description": "Sosyal beceriler - basit",
+            "options": [
+                {
+                    "id": "strong",
+                    "label": "Güçlü sosyal"
+                },
+                {
+                    "id": "developing",
+                    "label": "Gelişiyor"
+                },
+                {
+                    "id": "needs_support",
+                    "label": "Desteğe ihtiyacı var"
+                }
+            ]
+        },
+        {
+            "id": "relationship_time_together_v1",
+            "description": "Birlikte zaman - basit",
+            "options": [
+                {
+                    "id": "lots",
+                    "label": "Çok zaman geçiriyoruz"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Yeterli"
+                },
+                {
+                    "id": "little",
+                    "label": "Az zaman buluyoruz"
+                }
+            ]
+        },
+        {
+            "id": "relationship_appreciation_v1",
+            "description": "Takdir - basit",
+            "options": [
+                {
+                    "id": "often",
+                    "label": "Sık takdir ederiz"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Bazen"
+                },
+                {
+                    "id": "rarely",
+                    "label": "Nadiren"
+                }
+            ]
+        },
+        {
+            "id": "relationship_boundaries_v1",
+            "description": "Sınırlar - basit",
+            "options": [
+                {
+                    "id": "clear",
+                    "label": "Net sınırlarımız var"
+                },
+                {
+                    "id": "work_in_progress",
+                    "label": "Geliştiriyoruz"
+                },
+                {
+                    "id": "unclear",
+                    "label": "Belirsiz"
+                }
+            ]
+        },
+        {
+            "id": "relationship_hobbies_v1",
+            "description": "Ortak hobiler - basit",
+            "options": [
+                {
+                    "id": "many",
+                    "label": "Çok ortak hobimiz var"
+                },
+                {
+                    "id": "some",
+                    "label": "Birkaç"
+                },
+                {
+                    "id": "separate",
+                    "label": "Ayrı ilgi alanlarımız var"
+                }
+            ]
+        },
+        {
+            "id": "relationship_finance_v1",
+            "description": "Finansal görüşler - basit",
+            "options": [
+                {
+                    "id": "aligned",
+                    "label": "Uyumlu"
+                },
+                {
+                    "id": "different",
+                    "label": "Farklı ama saygılı"
+                },
+                {
+                    "id": "conflict",
+                    "label": "Çatışma var"
+                }
+            ]
+        },
+        {
+            "id": "relationship_family_v1",
+            "description": "Aile ilişkileri - basit",
+            "options": [
+                {
+                    "id": "close",
+                    "label": "Ailelerle yakınız"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "distant",
+                    "label": "Mesafeli"
+                }
+            ]
+        },
+        {
+            "id": "relationship_balance_v1",
+            "description": "Hayat dengesi - basit",
+            "options": [
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "partner_focused",
+                    "label": "Partner odaklı"
+                },
+                {
+                    "id": "individual_focused",
+                    "label": "Bireysel odaklı"
+                }
+            ]
+        },
+        {
+            "id": "relationship_date_v1",
+            "description": "Çıkma sıklığı - basit",
+            "options": [
+                {
+                    "id": "weekly",
+                    "label": "Haftalık"
+                },
+                {
+                    "id": "monthly",
+                    "label": "Aylık"
+                },
+                {
+                    "id": "rarely",
+                    "label": "Nadiren"
+                }
+            ]
+        },
+        {
+            "id": "finance_automation_v1",
+            "description": "Otomasyon - basit",
+            "options": [
+                {
+                    "id": "automated",
+                    "label": "Otomatik tasarruf/ödeme"
+                },
+                {
+                    "id": "manual",
+                    "label": "Manuel takip"
+                },
+                {
+                    "id": "none",
+                    "label": "Sistem yok"
+                }
+            ]
+        },
+        {
+            "id": "finance_advice_v1",
+            "description": "Danışmanlık - basit",
+            "options": [
+                {
+                    "id": "professional",
+                    "label": "Profesyonel danışman"
+                },
+                {
+                    "id": "self",
+                    "label": "Kendi araştırıyorum"
+                },
+                {
+                    "id": "none",
+                    "label": "Danışmanlık almıyorum"
+                }
+            ]
+        },
+        {
+            "id": "finance_insurance_v1",
+            "description": "Sigorta durumu - basit",
+            "options": [
+                {
+                    "id": "comprehensive",
+                    "label": "Kapsamlı sigorta"
+                },
+                {
+                    "id": "basic",
+                    "label": "Temel sigorta"
+                },
+                {
+                    "id": "none",
+                    "label": "Sigorta yok"
+                }
+            ]
+        },
+        {
+            "id": "finance_retirement_v1",
+            "description": "Emeklilik planı - basit",
+            "options": [
+                {
+                    "id": "on_track",
+                    "label": "Plan var ve uyguluyorum"
+                },
+                {
+                    "id": "started",
+                    "label": "Başladım"
+                },
+                {
+                    "id": "not_started",
+                    "label": "Henüz başlamadım"
+                }
+            ]
+        },
+        {
+            "id": "finance_side_income_v1",
+            "description": "Ek gelir - basit",
+            "options": [
+                {
+                    "id": "have",
+                    "label": "Ek gelirim var"
+                },
+                {
+                    "id": "planning",
+                    "label": "Planlıyorum"
+                },
+                {
+                    "id": "none",
+                    "label": "Yok"
+                }
+            ]
+        },
+        {
+            "id": "finance_save_method_v1",
+            "description": "Tasarruf yöntemi - basit",
+            "options": [
+                {
+                    "id": "percentage",
+                    "label": "Gelirin %'si"
+                },
+                {
+                    "id": "leftover",
+                    "label": "Kalan para"
+                },
+                {
+                    "id": "irregular",
+                    "label": "Düzensiz"
+                }
+            ]
+        },
+        {
+            "id": "finance_big_purchase_v1",
+            "description": "Büyük harcama planı - basit",
+            "options": [
+                {
+                    "id": "planned",
+                    "label": "Planlı büyük harcama var"
+                },
+                {
+                    "id": "maybe",
+                    "label": "Belki"
+                },
+                {
+                    "id": "none",
+                    "label": "Yok"
+                }
+            ]
+        },
+        {
+            "id": "finance_stress_v1",
+            "description": "Finansal stres - basit",
+            "options": [
+                {
+                    "id": "low",
+                    "label": "Az stres"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "high",
+                    "label": "Yüksek stres"
+                }
+            ]
+        },
+        {
+            "id": "education_feedback_v1",
+            "description": "Geri bildirim tercihi - basit",
+            "options": [
+                {
+                    "id": "immediate",
+                    "label": "Anında geri bildirim"
+                },
+                {
+                    "id": "periodic",
+                    "label": "Periyodik"
+                },
+                {
+                    "id": "minimal",
+                    "label": "Minimum"
+                }
+            ]
+        },
+        {
+            "id": "education_practice_v1",
+            "description": "Pratik önemi - basit",
+            "options": [
+                {
+                    "id": "essential",
+                    "label": "Çok önemli"
+                },
+                {
+                    "id": "helpful",
+                    "label": "Yararlı"
+                },
+                {
+                    "id": "optional",
+                    "label": "Opsiyonel"
+                }
+            ]
+        },
+        {
+            "id": "education_collaboration_v1",
+            "description": "İşbirliği - basit",
+            "options": [
+                {
+                    "id": "love",
+                    "label": "Grupla öğrenmeyi severim"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Bazen"
+                },
+                {
+                    "id": "prefer_solo",
+                    "label": "Tek başıma tercih ederim"
+                }
+            ]
+        },
+        {
+            "id": "education_content_v1",
+            "description": "İçerik formatı - basit",
+            "options": [
+                {
+                    "id": "video",
+                    "label": "Video"
+                },
+                {
+                    "id": "text",
+                    "label": "Yazılı"
+                },
+                {
+                    "id": "interactive",
+                    "label": "İnteraktif"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "education_schedule_v1",
+            "description": "Çalışma zamanı - basit",
+            "options": [
+                {
+                    "id": "morning",
+                    "label": "Sabah"
+                },
+                {
+                    "id": "evening",
+                    "label": "Akşam"
+                },
+                {
+                    "id": "weekend",
+                    "label": "Hafta sonu"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                }
+            ]
+        },
+        {
+            "id": "education_outcome_v1",
+            "description": "Beklenen sonuç - basit",
+            "options": [
+                {
+                    "id": "job",
+                    "label": "İş bulmak"
+                },
+                {
+                    "id": "skill",
+                    "label": "Beceri kazanmak"
+                },
+                {
+                    "id": "promotion",
+                    "label": "Terfi almak"
+                },
+                {
+                    "id": "interest",
+                    "label": "İlgi alanı"
+                }
+            ]
+        },
+        {
+            "id": "education_resources_v1",
+            "description": "Kaynak bütçesi - basit",
+            "options": [
+                {
+                    "id": "free",
+                    "label": "Ücretsiz kaynaklar"
+                },
+                {
+                    "id": "affordable",
+                    "label": "Uygun fiyatlı"
+                },
+                {
+                    "id": "invest",
+                    "label": "Yatırım yapabilirim"
+                }
+            ]
+        },
+        {
+            "id": "education_revision_v1",
+            "description": "Tekrar tarzı - basit",
+            "options": [
+                {
+                    "id": "spaced",
+                    "label": "Aralıklı tekrar"
+                },
+                {
+                    "id": "intensive",
+                    "label": "Yoğun tekrar"
+                },
+                {
+                    "id": "minimal",
+                    "label": "Minimum tekrar"
+                }
+            ]
+        },
+        {
+            "id": "social_meeting_freq_v1",
+            "description": "Buluşma sıklığı - basit",
+            "options": [
+                {
+                    "id": "often",
+                    "label": "Sık buluşurum"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Bazen"
+                },
+                {
+                    "id": "rarely",
+                    "label": "Nadiren"
+                }
+            ]
+        },
+        {
+            "id": "social_init_contact_v1",
+            "description": "İletişim başlatma - basit",
+            "options": [
+                {
+                    "id": "always",
+                    "label": "Her zaman ben başlatırım"
+                },
+                {
+                    "id": "equal",
+                    "label": "Eşit"
+                },
+                {
+                    "id": "wait",
+                    "label": "Genelde beklerim"
+                }
+            ]
+        },
+        {
+            "id": "social_support_give_v1",
+            "description": "Destek verme - basit",
+            "options": [
+                {
+                    "id": "proactive",
+                    "label": "Proaktif destek veririm"
+                },
+                {
+                    "id": "asked",
+                    "label": "İstenince veririm"
+                },
+                {
+                    "id": "hesitant",
+                    "label": "Çekinik olurum"
+                }
+            ]
+        },
+        {
+            "id": "social_new_friends_v1",
+            "description": "Yeni arkadaşlık - basit",
+            "options": [
+                {
+                    "id": "open",
+                    "label": "Yeni arkadaşlara açığım"
+                },
+                {
+                    "id": "selective",
+                    "label": "Seçici"
+                },
+                {
+                    "id": "content",
+                    "label": "Mevcutlarla yetinirim"
+                }
+            ]
+        },
+        {
+            "id": "social_conflict_avoid_v1",
+            "description": "Çatışmadan kaçınma - basit",
+            "options": [
+                {
+                    "id": "confront",
+                    "label": "Yüzleşirim"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Bazen kaçınırım"
+                },
+                {
+                    "id": "avoid",
+                    "label": "Genelde kaçınırım"
+                }
+            ]
+        },
+        {
+            "id": "social_listening_v1",
+            "description": "Dinleme becerisi - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi dinleyiciyim"
+                },
+                {
+                    "id": "working",
+                    "label": "Geliştiriyorum"
+                },
+                {
+                    "id": "struggle",
+                    "label": "Zorlanıyorum"
+                }
+            ]
+        },
+        {
+            "id": "social_appreciation_v1",
+            "description": "Takdir gösterme - basit",
+            "options": [
+                {
+                    "id": "verbal",
+                    "label": "Sözle ifade ederim"
+                },
+                {
+                    "id": "actions",
+                    "label": "Davranışlarla gösteririm"
+                },
+                {
+                    "id": "struggle",
+                    "label": "Göstermekte zorlanırım"
+                }
+            ]
+        },
+        {
+            "id": "social_reliability_v1",
+            "description": "Güvenilirlik - basit",
+            "options": [
+                {
+                    "id": "very",
+                    "label": "Çok güvenilir"
+                },
+                {
+                    "id": "mostly",
+                    "label": "Çoğunlukla"
+                },
+                {
+                    "id": "working",
+                    "label": "Üzerinde çalışıyorum"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_comm_freq_v1",
+            "description": "İletişim sıklığı - basit",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün konuşuruz"
+                },
+                {
+                    "id": "weekly",
+                    "label": "Haftalık"
+                },
+                {
+                    "id": "less",
+                    "label": "Daha az"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_medical_v1",
+            "description": "Tıbbi randevular - basit",
+            "options": [
+                {
+                    "id": "assist",
+                    "label": "Ben götürüyorum"
+                },
+                {
+                    "id": "shared",
+                    "label": "Paylaşıyoruz"
+                },
+                {
+                    "id": "independent",
+                    "label": "Kendisi gidiyor"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_daily_help_v1",
+            "description": "Günlük yardım - basit",
+            "options": [
+                {
+                    "id": "extensive",
+                    "label": "Çok yardım gerekiyor"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta düzey"
+                },
+                {
+                    "id": "minimal",
+                    "label": "Az yardım"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_emotional_v1",
+            "description": "Duygusal destek - basit",
+            "options": [
+                {
+                    "id": "primary",
+                    "label": "Ana destek benim"
+                },
+                {
+                    "id": "shared",
+                    "label": "Paylaşıyoruz"
+                },
+                {
+                    "id": "others",
+                    "label": "Başkaları sağlıyor"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_financial_v1",
+            "description": "Finansal destek - basit",
+            "options": [
+                {
+                    "id": "provide",
+                    "label": "Ben sağlıyorum"
+                },
+                {
+                    "id": "partial",
+                    "label": "Kısmen"
+                },
+                {
+                    "id": "none",
+                    "label": "Sağlamıyorum"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_future_v1",
+            "description": "Gelecek planlaması - basit",
+            "options": [
+                {
+                    "id": "discussed",
+                    "label": "Konuştuk ve planladık"
+                },
+                {
+                    "id": "started",
+                    "label": "Başladık"
+                },
+                {
+                    "id": "not_yet",
+                    "label": "Henüz konuşmadık"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_respite_v1",
+            "description": "Mola ihtiyacı - basit",
+            "options": [
+                {
+                    "id": "have",
+                    "label": "Mola alabiliyorum"
+                },
+                {
+                    "id": "need",
+                    "label": "Molaya ihtiyacım var"
+                },
+                {
+                    "id": "none",
+                    "label": "Mola alamıyorum"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_tech_v1",
+            "description": "Teknoloji kullanımı - basit",
+            "options": [
+                {
+                    "id": "comfortable",
+                    "label": "Teknolojiyle rahat"
+                },
+                {
+                    "id": "learning",
+                    "label": "Öğreniyor"
+                },
+                {
+                    "id": "resistant",
+                    "label": "Dirençli"
+                }
+            ]
         }
     ],
     "_meta": {

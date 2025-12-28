@@ -1865,6 +1865,294 @@
             "label": "Bakıcı olarak stres seviyen?",
             "type": "single_select",
             "option_set_id": "eldercare_stress_v1"
+        },
+        {
+            "key": "parenting_routine",
+            "label": "Günlük rutininiz nasıl?",
+            "type": "single_select",
+            "option_set_id": "parenting_routine_v1"
+        },
+        {
+            "key": "parenting_nutrition",
+            "label": "Beslenme yaklaşımınız?",
+            "type": "single_select",
+            "option_set_id": "parenting_nutrition_v1"
+        },
+        {
+            "key": "parenting_sleep",
+            "label": "Çocuğun uyku durumu?",
+            "type": "single_select",
+            "option_set_id": "parenting_sleep_v1"
+        },
+        {
+            "key": "parenting_sibling",
+            "label": "Kardeş durumu?",
+            "type": "single_select",
+            "option_set_id": "parenting_sibling_v1"
+        },
+        {
+            "key": "parenting_growth",
+            "label": "Gelişim odağınız?",
+            "type": "single_select",
+            "option_set_id": "parenting_growth_v1"
+        },
+        {
+            "key": "parenting_outdoor",
+            "label": "Dış mekan aktivitesi?",
+            "type": "single_select",
+            "option_set_id": "parenting_outdoor_v1"
+        },
+        {
+            "key": "parenting_learning",
+            "label": "Çocuğun öğrenme tarzı?",
+            "type": "single_select",
+            "option_set_id": "parenting_learning_v1"
+        },
+        {
+            "key": "parenting_social_skill",
+            "label": "Sosyal becerileri?",
+            "type": "single_select",
+            "option_set_id": "parenting_social_skill_v1"
+        },
+        {
+            "key": "relationship_time_together",
+            "label": "Birlikte ne kadar zaman geçiriyorsunuz?",
+            "type": "single_select",
+            "option_set_id": "relationship_time_together_v1"
+        },
+        {
+            "key": "relationship_appreciation",
+            "label": "Birbirinizi takdir ediyor musunuz?",
+            "type": "single_select",
+            "option_set_id": "relationship_appreciation_v1"
+        },
+        {
+            "key": "relationship_boundaries",
+            "label": "Sınırlarınız net mi?",
+            "type": "single_select",
+            "option_set_id": "relationship_boundaries_v1"
+        },
+        {
+            "key": "relationship_hobbies",
+            "label": "Ortak hobileriniz var mı?",
+            "type": "single_select",
+            "option_set_id": "relationship_hobbies_v1"
+        },
+        {
+            "key": "relationship_finance_views",
+            "label": "Finansal görüşleriniz uyumlu mu?",
+            "type": "single_select",
+            "option_set_id": "relationship_finance_v1"
+        },
+        {
+            "key": "relationship_family",
+            "label": "Ailelerle ilişkiniz?",
+            "type": "single_select",
+            "option_set_id": "relationship_family_v1"
+        },
+        {
+            "key": "relationship_life_balance",
+            "label": "Hayat dengeniz?",
+            "type": "single_select",
+            "option_set_id": "relationship_balance_v1"
+        },
+        {
+            "key": "relationship_date_freq",
+            "label": "Ne sıklıkla çıkıyorsunuz?",
+            "type": "single_select",
+            "option_set_id": "relationship_date_v1"
+        },
+        {
+            "key": "finance_automation",
+            "label": "Otomatik tasarruf/ödeme var mı?",
+            "type": "single_select",
+            "option_set_id": "finance_automation_v1"
+        },
+        {
+            "key": "finance_advice",
+            "label": "Finansal danışmanlık alıyor musun?",
+            "type": "single_select",
+            "option_set_id": "finance_advice_v1"
+        },
+        {
+            "key": "finance_insurance",
+            "label": "Sigorta durumun?",
+            "type": "single_select",
+            "option_set_id": "finance_insurance_v1"
+        },
+        {
+            "key": "finance_retirement",
+            "label": "Emeklilik planın?",
+            "type": "single_select",
+            "option_set_id": "finance_retirement_v1"
+        },
+        {
+            "key": "finance_side_income",
+            "label": "Ek gelirin var mı?",
+            "type": "single_select",
+            "option_set_id": "finance_side_income_v1"
+        },
+        {
+            "key": "finance_save_method",
+            "label": "Tasarruf yöntemin?",
+            "type": "single_select",
+            "option_set_id": "finance_save_method_v1"
+        },
+        {
+            "key": "finance_big_purchase",
+            "label": "Planlı büyük harcama var mı?",
+            "type": "single_select",
+            "option_set_id": "finance_big_purchase_v1"
+        },
+        {
+            "key": "finance_stress_level",
+            "label": "Finansal stres seviyen?",
+            "type": "single_select",
+            "option_set_id": "finance_stress_v1"
+        },
+        {
+            "key": "education_feedback",
+            "label": "Geri bildirim tercihin?",
+            "type": "single_select",
+            "option_set_id": "education_feedback_v1"
+        },
+        {
+            "key": "education_practice",
+            "label": "Pratik ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "education_practice_v1"
+        },
+        {
+            "key": "education_collaboration",
+            "label": "Grupla mı tek mi öğrenirsin?",
+            "type": "single_select",
+            "option_set_id": "education_collaboration_v1"
+        },
+        {
+            "key": "education_content",
+            "label": "Hangi içerik formatı?",
+            "type": "single_select",
+            "option_set_id": "education_content_v1"
+        },
+        {
+            "key": "education_schedule",
+            "label": "Ne zaman çalışırsın?",
+            "type": "single_select",
+            "option_set_id": "education_schedule_v1"
+        },
+        {
+            "key": "education_outcome",
+            "label": "Beklenen sonuç?",
+            "type": "single_select",
+            "option_set_id": "education_outcome_v1"
+        },
+        {
+            "key": "education_resources",
+            "label": "Kaynak bütçen?",
+            "type": "single_select",
+            "option_set_id": "education_resources_v1"
+        },
+        {
+            "key": "education_revision",
+            "label": "Tekrar tarzın?",
+            "type": "single_select",
+            "option_set_id": "education_revision_v1"
+        },
+        {
+            "key": "social_meeting_freq",
+            "label": "Ne sıklıkla buluşursun?",
+            "type": "single_select",
+            "option_set_id": "social_meeting_freq_v1"
+        },
+        {
+            "key": "social_init_contact",
+            "label": "İletişimi kim başlatır?",
+            "type": "single_select",
+            "option_set_id": "social_init_contact_v1"
+        },
+        {
+            "key": "social_support_give",
+            "label": "Destek verme tarzın?",
+            "type": "single_select",
+            "option_set_id": "social_support_give_v1"
+        },
+        {
+            "key": "social_new_friends",
+            "label": "Yeni arkadaşlıklara açık mısın?",
+            "type": "single_select",
+            "option_set_id": "social_new_friends_v1"
+        },
+        {
+            "key": "social_conflict_avoid",
+            "label": "Çatışmadan kaçınır mısın?",
+            "type": "single_select",
+            "option_set_id": "social_conflict_avoid_v1"
+        },
+        {
+            "key": "social_listening",
+            "label": "Dinleme becerin?",
+            "type": "single_select",
+            "option_set_id": "social_listening_v1"
+        },
+        {
+            "key": "social_appreciation_show",
+            "label": "Takdiri nasıl gösterirsin?",
+            "type": "single_select",
+            "option_set_id": "social_appreciation_v1"
+        },
+        {
+            "key": "social_reliability",
+            "label": "Ne kadar güvenilirsin?",
+            "type": "single_select",
+            "option_set_id": "social_reliability_v1"
+        },
+        {
+            "key": "eldercare_comm_freq",
+            "label": "Ne sıklıkla konuşursunuz?",
+            "type": "single_select",
+            "option_set_id": "eldercare_comm_freq_v1"
+        },
+        {
+            "key": "eldercare_medical",
+            "label": "Tıbbi randevulara kim götürüyor?",
+            "type": "single_select",
+            "option_set_id": "eldercare_medical_v1"
+        },
+        {
+            "key": "eldercare_daily_help",
+            "label": "Günlük yardım ihtiyacı?",
+            "type": "single_select",
+            "option_set_id": "eldercare_daily_help_v1"
+        },
+        {
+            "key": "eldercare_emotional",
+            "label": "Duygusal destek kim sağlıyor?",
+            "type": "single_select",
+            "option_set_id": "eldercare_emotional_v1"
+        },
+        {
+            "key": "eldercare_financial_support",
+            "label": "Finansal destek sağlıyor musun?",
+            "type": "single_select",
+            "option_set_id": "eldercare_financial_v1"
+        },
+        {
+            "key": "eldercare_future",
+            "label": "Gelecek planlaması yaptınız mı?",
+            "type": "single_select",
+            "option_set_id": "eldercare_future_v1"
+        },
+        {
+            "key": "eldercare_respite",
+            "label": "Mola alabiliyor musun?",
+            "type": "single_select",
+            "option_set_id": "eldercare_respite_v1"
+        },
+        {
+            "key": "eldercare_tech",
+            "label": "Yakının teknolojiyle arası?",
+            "type": "single_select",
+            "option_set_id": "eldercare_tech_v1"
         }
     ]
 }

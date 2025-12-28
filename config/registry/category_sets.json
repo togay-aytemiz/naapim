@@ -99,7 +99,10 @@
                 "conflict_style",
                 "social_impact",
                 "conflict_context",
-                "resolution_effort"
+                "resolution_effort",
+                "social_boundary_pref",
+                "social_effort_pref",
+                "social_conflict_pref"
             ]
         },
         {
@@ -212,7 +215,8 @@
                 "product_features",
                 "hidden_costs",
                 "durability_factors",
-                "aesthetic_values"
+                "aesthetic_values",
+                "purchase_reviews_detail"
             ]
         },
         {
@@ -234,7 +238,8 @@
                 "asset_preference",
                 "liquidity_needs",
                 "management_style",
-                "debt_strategy"
+                "debt_strategy",
+                "finance_spending_detail"
             ]
         },
         {
@@ -244,7 +249,10 @@
                 "future_goals",
                 "conflict_style",
                 "love_language",
-                "living_arrangement"
+                "living_arrangement",
+                "relationship_communication_detail",
+                "relationship_trust_detail",
+                "relationship_effort_detail"
             ]
         },
         {
@@ -285,7 +293,8 @@
                 "learning_mode",
                 "credential_type",
                 "return_on_invest",
-                "study_field"
+                "study_field",
+                "education_depth_detail"
             ]
         },
         {
@@ -312,7 +321,11 @@
             "category_ids": [
                 "budget_flexibility",
                 "family_capacity",
-                "emotional_barriers"
+                "emotional_barriers",
+                "eldercare_cognitive_pref",
+                "eldercare_mobility_pref",
+                "eldercare_health_detail",
+                "eldercare_time_detail"
             ]
         },
         {
@@ -328,7 +341,10 @@
             "label": "Seyahat detay",
             "category_ids": [
                 "budget_flexibility",
-                "decision_readiness"
+                "decision_readiness",
+                "travel_accommodation_pref",
+                "travel_transport_pref",
+                "travel_planning_pref"
             ]
         },
         {
@@ -347,7 +363,10 @@
             "label": "Yemek Detayları",
             "category_ids": [
                 "budget_flexibility",
-                "decision_readiness"
+                "decision_readiness",
+                "food_texture_pref",
+                "food_protein_pref",
+                "food_spice_pref"
             ]
         },
         {

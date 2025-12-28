@@ -1099,6 +1099,139 @@
                 "eldercare_preference",
                 "eldercare_stress"
             ]
+        },
+        {
+            "id": "food_texture_pref",
+            "label": "Doku Tercihi",
+            "field_keys": [
+                "food_texture"
+            ]
+        },
+        {
+            "id": "food_protein_pref",
+            "label": "Protein Tercihi",
+            "field_keys": [
+                "food_protein"
+            ]
+        },
+        {
+            "id": "food_spice_pref",
+            "label": "Baharat Tercihi",
+            "field_keys": [
+                "food_spice"
+            ]
+        },
+        {
+            "id": "travel_accommodation_pref",
+            "label": "Konaklama Tercihi",
+            "field_keys": [
+                "travel_accommodation"
+            ]
+        },
+        {
+            "id": "travel_transport_pref",
+            "label": "Ulaşım Tercihi",
+            "field_keys": [
+                "travel_transport"
+            ]
+        },
+        {
+            "id": "travel_planning_pref",
+            "label": "Planlama Tarzı",
+            "field_keys": [
+                "travel_planning"
+            ]
+        },
+        {
+            "id": "social_boundary_pref",
+            "label": "Sınır Koyma",
+            "field_keys": [
+                "social_boundary"
+            ]
+        },
+        {
+            "id": "social_effort_pref",
+            "label": "İlişki Çabası",
+            "field_keys": [
+                "social_effort"
+            ]
+        },
+        {
+            "id": "social_conflict_pref",
+            "label": "Çatışma Tarzı",
+            "field_keys": [
+                "social_conflict_style"
+            ]
+        },
+        {
+            "id": "eldercare_cognitive_pref",
+            "label": "Zihinsel Durum",
+            "field_keys": [
+                "eldercare_cognitive"
+            ]
+        },
+        {
+            "id": "eldercare_mobility_pref",
+            "label": "Hareketlilik",
+            "field_keys": [
+                "eldercare_mobility"
+            ]
+        },
+        {
+            "id": "eldercare_health_detail",
+            "label": "Sağlık Detayı",
+            "field_keys": [
+                "eldercare_health"
+            ]
+        },
+        {
+            "id": "eldercare_time_detail",
+            "label": "Zaman Detayı",
+            "field_keys": [
+                "eldercare_time"
+            ]
+        },
+        {
+            "id": "relationship_communication_detail",
+            "label": "İletişim Detayı",
+            "field_keys": [
+                "relationship_communication"
+            ]
+        },
+        {
+            "id": "relationship_trust_detail",
+            "label": "Güven Detayı",
+            "field_keys": [
+                "relationship_trust"
+            ]
+        },
+        {
+            "id": "relationship_effort_detail",
+            "label": "Çaba Detayı",
+            "field_keys": [
+                "relationship_effort"
+            ]
+        },
+        {
+            "id": "finance_spending_detail",
+            "label": "Harcama Detayı",
+            "field_keys": [
+                "finance_spending"
+            ]
+        },
+        {
+            "id": "education_depth_detail",
+            "label": "Derinlik Detayı",
+            "field_keys": [
+                "education_depth"
+            ]
+        },
+        {
+            "id": "purchase_reviews_detail",
+            "label": "Yorum Önemi",
+            "field_keys": [
+                "purchase_reviews"
+            ]
         }
     ],
     "_meta": {

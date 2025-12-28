@@ -56,7 +56,16 @@ GÖREV:
 2. Kullanıcının gerçek niyetini anlamaya çalış
 3. En uygun kategoriyi seç
 4. KARAR TİPİNİ belirle (aşağıdaki listeden)
-5. SADECE çok belirsiz veya anlamsız ise clarification iste - "ne hazırlayım", "ne yapsam" gibi sorularda clarification GEREKMEZ
+5. KARAR KARMAŞIKLIĞINI belirle (simple/moderate/complex)
+6. SADECE çok belirsiz veya anlamsız ise clarification iste - "ne hazırlayım", "ne yapsam" gibi sorularda clarification GEREKMEZ
+
+KARAR KARMAŞIKLIĞI (decision_complexity):
+- simple: Günlük/anlık kararlar. Düşük risk, kolay geri dönüş, kısa vadeli etki, genelde sadece kişiyi ilgilendiren.
+  Örnekler: "Kahve mi çay mı?", "Otobüsle mi gideyim arabayla mı?", "Bu akşam ne film izlesek?", "Hangi renk t-shirt giysem?"
+- moderate: Biraz düşünme gerektiren ama hayat değiştirici olmayan kararlar.
+  Örnekler: "Hafta sonu nereye gitsek?", "Hangi restoranı tercih etsek?", "Yeni telefon kılıfı hangisi olsun?"
+- complex: Hayat değiştirici, uzun vadeli etki, birden fazla kişiyi etkileyen kararlar.
+  Örnekler: "İşten ayrılmalı mıyım?", "Evlenmeli miyiz?", "Taşınmalı mıyım?", "İkinci çocuk yapalım mı?"
 
 KARAR TİPLERİ (decision_type):
 - binary_decision: "Yapayım mı yapmayayım mı?" tarzı evet/hayır kararları
@@ -72,17 +81,20 @@ EXPLORATION (KEŞİF) TİPİ ÖNEMLİ:
 Bu sorularda kullanıcı başkalarının deneyimlerinden fikir almak istiyor - BU GEÇERLİ BİR KULLANIM.
 Bu tür sorularda needs_clarification: false olmalı ve lifestyle_change veya en uygun kategori seçilmeli.
 
-ÖRNEK KARAR TİPLERİ:
-- "Tenis'e başlamalı mıyım?" → binary_decision
-- "MacBook mu alsam Windows mu?" → comparison
-- "Ne zaman ev almalıyım?" → timing
-- "Nasıl zam istemeliyim?" → method
-- "İşten ayrıldım, doğru mu yaptım?" → validation
-- "Herkes böyle mi hissediyor?" → emotional_support
-- "Kariyer seçeneklerimi görmek istiyorum" → exploration
-- "Sıcak şarabın yanına ne hazırlayım?" → exploration (GEÇERLİ - başkaları ne yapmış merak ediyor)
-- "Kızlar gecesi için ne hazırlasam?" → exploration (GEÇERLİ)
-- "Kahvaltıda ne yapsam?" → exploration (GEÇERLİ)
+ÖRNEK KARAR TİPLERİ VE KARMAŞIKLIKLARI:
+- "Tenis'e başlamalı mıyım?" → binary_decision, moderate
+- "MacBook mu alsam Windows mu?" → comparison, moderate (ciddi harcama)
+- "Kahve mi içsem çay mı?" → comparison, simple
+- "Otobüsle mi gideyim arabayla mı?" → comparison, simple
+- "Bu akşam ne film izlesek?" → exploration, simple
+- "Ne zaman ev almalıyım?" → timing, complex
+- "Nasıl zam istemeliyim?" → method, moderate
+- "İşten ayrıldım, doğru mu yaptım?" → validation, complex
+- "Herkes böyle mi hissediyor?" → emotional_support, moderate
+- "Kariyer seçeneklerimi görmek istiyorum" → exploration, complex
+- "Sıcak şarabın yanına ne hazırlayım?" → exploration, simple
+- "Kızlar gecesi için ne hazırlasam?" → exploration, simple
+- "Kahvaltıda ne yapsam?" → exploration, simple
 
 ÖNEMLİ KURALLAR:
 - Kısa ifadeler (örn: "ikinci çocuk?", "iş değişikliği") bağlamdan anlam çıkar
@@ -114,31 +126,31 @@ KATEGORİLER:
         systemPrompt += `\nÖRNEK ANALİZLER:
 
 Girdi: "acaba ikinci çocuk?"
-Çıktı: {"archetype_id": "parenting_decisions", "decision_type": "binary_decision", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+Çıktı: {"archetype_id": "parenting_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+
+Girdi: "Kahve mi içsem çay mı?"
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Kahve ve çay arasında seçim yapmak istiyorsunuz."}
+
+Girdi: "Otobüsle mi gideyim arabayla mı?"
+Çıktı: {"archetype_id": "lifestyle_change", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İşe/okula nasıl gideceğinize karar vermek istiyorsunuz."}
 
 Girdi: "MacBook mu alsam Windows laptop mu?"
-Çıktı: {"archetype_id": "major_purchase", "decision_type": "comparison", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "MacBook ve Windows laptop arasında seçim yapmaya çalışıyorsunuz."}
+Çıktı: {"archetype_id": "major_purchase", "decision_type": "comparison", "decision_complexity": "moderate", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "MacBook ve Windows laptop arasında seçim yapmaya çalışıyorsunuz."}
 
 Girdi: "Ne zaman ev almalıyım?"
-Çıktı: {"archetype_id": "money_finance", "decision_type": "timing", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Ev satın almak için doğru zamanlamayı belirlemeye çalışıyorsunuz."}
-
-Girdi: "Tenis'e başlamalı mıyım?"
-Çıktı: {"archetype_id": "health_wellness", "decision_type": "binary_decision", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Tenis sporuna başlayıp başlamamayı düşünüyorsunuz."}
+Çıktı: {"archetype_id": "money_finance", "decision_type": "timing", "decision_complexity": "complex", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Ev satın almak için doğru zamanlamayı belirlemeye çalışıyorsunuz."}
 
 Girdi: "Sıcak şarabın yanına ne hazırlayım?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
-
-Girdi: "Kızlar gecesi için ne hazırlasam?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Arkadaşlarınızla kızlar gecesi için yemek/meze fikirleri arıyorsunuz."}
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "simple", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
 
 Girdi: "Yıldönümü için hangi restorana gitsek?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Eşinizle yıldönümü için romantik bir restoran arıyorsunuz."}
+Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Eşinizle yıldönümü için romantik bir restoran arıyorsunuz."}
 
-Girdi: "Bu akşam ne sipariş etsek?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Akşam yemeği için yemek siparişi fikirleri arıyorsunuz."}
+Girdi: "İşten ayrılmalı mıyım?"
+Çıktı: {"archetype_id": "career_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut işinizden ayrılmayı düşünüyorsunuz."}
 
 Girdi: "iş"
-Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}
+Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}
 `
 
         // Build valid archetype IDs for enum
@@ -175,6 +187,11 @@ Girdi: "iş"
                                     enum: ['binary_decision', 'comparison', 'timing', 'method', 'validation', 'emotional_support', 'exploration'],
                                     description: 'Karar tipi'
                                 },
+                                decision_complexity: {
+                                    type: 'string',
+                                    enum: ['simple', 'moderate', 'complex'],
+                                    description: 'Karar karmaşıklığı: simple (günlük/anlık), moderate (biraz düşünme gerektirir), complex (hayat değiştirici)'
+                                },
                                 confidence: {
                                     type: 'number',
                                     description: '0.0-1.0 arası güven skoru'
@@ -196,7 +213,7 @@ Girdi: "iş"
                                     description: 'Kullanıcının niyetinin tam cümle hali'
                                 }
                             },
-                            required: ['archetype_id', 'decision_type', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
+                            required: ['archetype_id', 'decision_type', 'decision_complexity', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
                             additionalProperties: false
                         }
                     }
@@ -221,6 +238,7 @@ Girdi: "iş"
             JSON.stringify({
                 archetype_id: archetypeId,
                 decision_type: result.decision_type || 'binary_decision',
+                decision_complexity: result.decision_complexity || 'moderate',
                 confidence: result.confidence || 0,
                 needs_clarification: result.needs_clarification || false,
                 is_unrealistic: result.is_unrealistic || false,

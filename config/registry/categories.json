@@ -812,6 +812,293 @@
             "field_keys": [
                 "food_service_type"
             ]
+        },
+        {
+            "id": "quick_context",
+            "label": "Anlık Bağlam",
+            "description": "Basit günlük kararlar için hafif bağlam soruları",
+            "field_keys": [
+                "current_mood",
+                "time_constraint"
+            ]
+        },
+        {
+            "id": "simple_preference",
+            "label": "Tercih",
+            "description": "Basit günlük kararlar için öncelik sorusu",
+            "field_keys": [
+                "simple_priority"
+            ]
+        },
+        {
+            "id": "food_simple_context",
+            "label": "Yemek Tercihi",
+            "description": "Basit yemek kararları için kapsamlı sorular",
+            "field_keys": [
+                "food_taste_pref",
+                "food_temp_pref",
+                "food_effort_pref",
+                "food_guest_count",
+                "food_cuisine_pref",
+                "food_skill",
+                "food_prep_time",
+                "food_occasion",
+                "food_alcohol_pref",
+                "food_dietary",
+                "food_portion",
+                "food_presentation",
+                "food_meal_type",
+                "food_cooking_method",
+                "food_spice",
+                "food_texture",
+                "food_protein",
+                "food_carb",
+                "food_veggie",
+                "food_dessert"
+            ]
+        },
+        {
+            "id": "purchase_simple_context",
+            "label": "Satın Alma Tercihi",
+            "description": "Basit satın alma kararları için kapsamlı sorular",
+            "field_keys": [
+                "purchase_value_pref",
+                "purchase_condition",
+                "purchase_urgency_simple",
+                "purchase_research",
+                "purchase_channel",
+                "purchase_payment",
+                "purchase_warranty",
+                "purchase_return",
+                "purchase_eco",
+                "purchase_size",
+                "purchase_color",
+                "purchase_brand",
+                "purchase_features",
+                "purchase_frequency",
+                "purchase_replace_upgrade",
+                "purchase_gift",
+                "purchase_comparison",
+                "purchase_reviews",
+                "purchase_impulse",
+                "purchase_space"
+            ]
+        },
+        {
+            "id": "health_simple_context",
+            "label": "Sağlık Tercihi",
+            "description": "Basit sağlık/wellness kararları için kapsamlı sorular",
+            "field_keys": [
+                "current_energy",
+                "health_pleasure_pref",
+                "health_activity_type",
+                "health_motivation",
+                "health_time_of_day",
+                "health_focus",
+                "health_solo_group",
+                "health_intensity",
+                "health_duration",
+                "health_location",
+                "health_diet_goal",
+                "health_sleep",
+                "health_stress",
+                "health_limitation",
+                "health_budget",
+                "health_consistency",
+                "health_tracking",
+                "health_guidance",
+                "health_timeline",
+                "health_fitness_level"
+            ]
+        },
+        {
+            "id": "travel_simple_context",
+            "label": "Seyahat Tercihi",
+            "description": "Basit seyahat kararları için kapsamlı sorular",
+            "field_keys": [
+                "travel_mood_pref",
+                "travel_distance_pref",
+                "travel_trip_type",
+                "travel_duration",
+                "travel_budget",
+                "travel_accommodation",
+                "travel_transport",
+                "travel_climate",
+                "travel_activity",
+                "travel_crowd",
+                "travel_cuisine",
+                "travel_planning",
+                "travel_flexibility",
+                "travel_companions",
+                "travel_accessibility",
+                "travel_nightlife",
+                "travel_cultural",
+                "travel_shopping",
+                "travel_relaxation",
+                "travel_photo"
+            ]
+        },
+        {
+            "id": "social_simple_context",
+            "label": "Sosyal Tercih",
+            "description": "Basit sosyal kararlar için kapsamlı sorular",
+            "field_keys": [
+                "social_energy_pref",
+                "current_mood",
+                "social_energy",
+                "social_group_size",
+                "social_conflict_style",
+                "social_boundary",
+                "social_priority",
+                "social_effort",
+                "social_vulnerability",
+                "social_trust",
+                "social_forgiveness",
+                "social_expectation"
+            ]
+        },
+        {
+            "id": "lifestyle_simple_context",
+            "label": "Yaşam Tarzı Tercihi",
+            "description": "Basit yaşam tarzı kararları için kapsamlı sorular",
+            "field_keys": [
+                "current_mood",
+                "comfort_experience",
+                "lifestyle_change_driver",
+                "lifestyle_location",
+                "lifestyle_routine",
+                "lifestyle_social",
+                "lifestyle_environment",
+                "lifestyle_pace",
+                "lifestyle_cost",
+                "lifestyle_commitment",
+                "lifestyle_reversibility",
+                "lifestyle_support",
+                "lifestyle_experience",
+                "lifestyle_comfort_zone",
+                "lifestyle_technology",
+                "lifestyle_simplicity",
+                "lifestyle_nature_freq"
+            ]
+        },
+        {
+            "id": "career_simple_context",
+            "label": "Kariyer Anlık",
+            "description": "Basit kariyer/iş kararları için kapsamlı sorular",
+            "field_keys": [
+                "current_energy",
+                "risk_appetite",
+                "career_satisfaction",
+                "career_growth",
+                "career_work_life",
+                "career_risk",
+                "career_flexibility",
+                "career_autonomy",
+                "career_team_size",
+                "career_industry",
+                "career_salary",
+                "career_commute",
+                "career_remote",
+                "career_stress",
+                "career_learning",
+                "career_leadership",
+                "career_stability"
+            ]
+        },
+        {
+            "id": "parenting_simple_context",
+            "label": "Ebeveynlik Anlık",
+            "description": "Basit ebeveynlik kararları için kapsamlı sorular",
+            "field_keys": [
+                "child_current_mood",
+                "time_constraint",
+                "parenting_child_age",
+                "parenting_style",
+                "parenting_time",
+                "parenting_partner",
+                "parenting_budget",
+                "parenting_help",
+                "parenting_priority",
+                "parenting_challenge",
+                "parenting_screen",
+                "parenting_activity"
+            ]
+        },
+        {
+            "id": "relationship_simple_context",
+            "label": "İlişki Anlık",
+            "description": "Basit ilişki kararları için kapsamlı sorular",
+            "field_keys": [
+                "partner_current_mood",
+                "current_mood",
+                "relationship_status",
+                "relationship_duration",
+                "relationship_communication",
+                "relationship_conflict",
+                "relationship_future",
+                "relationship_effort",
+                "relationship_trust",
+                "relationship_intimacy",
+                "relationship_support",
+                "relationship_growth"
+            ]
+        },
+        {
+            "id": "finance_simple_context",
+            "label": "Finans Anlık",
+            "description": "Basit finans kararları için kapsamlı sorular",
+            "field_keys": [
+                "budget_sensitivity",
+                "simple_urgency",
+                "finance_goal",
+                "finance_timeline",
+                "finance_risk",
+                "finance_knowledge",
+                "finance_priority",
+                "finance_debt",
+                "finance_income",
+                "finance_emergency",
+                "finance_spending",
+                "finance_tracking"
+            ]
+        },
+        {
+            "id": "education_simple_context",
+            "label": "Eğitim Anlık",
+            "description": "Basit eğitim kararları için kapsamlı sorular",
+            "field_keys": [
+                "learning_mode_pref",
+                "time_constraint",
+                "education_goal",
+                "education_format",
+                "education_time",
+                "education_pace",
+                "education_style",
+                "education_structure",
+                "education_support",
+                "education_motivation",
+                "education_depth",
+                "education_certification"
+            ]
+        },
+        {
+            "id": "eldercare_simple_context",
+            "label": "Yaşlı Bakım Anlık",
+            "description": "Basit yaşlı bakım kararları için kapsamlı sorular",
+            "field_keys": [
+                "simple_urgency",
+                "current_mood",
+                "eldercare_living",
+                "eldercare_health",
+                "eldercare_mobility",
+                "eldercare_cognitive",
+                "eldercare_distance",
+                "eldercare_support",
+                "eldercare_budget",
+                "eldercare_time",
+                "eldercare_preference",
+                "eldercare_stress"
+            ]
         }
     ],
     "_meta": {

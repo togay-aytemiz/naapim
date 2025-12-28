@@ -106,4 +106,66 @@ export class RegistryLoader {
 
         return questions;
     }
+
+    /**
+     * Get lightweight questions for simple daily decisions.
+     * If archetypeId is provided, uses archetype-specific simple questions.
+     * Otherwise falls back to core_simple_v1.
+     */
+    static getSimpleQuestions(archetypeId?: string): QuestionDefinition[] {
+        let simpleSetId = 'core_simple_v1';
+
+        // Get archetype-specific simple set if available
+        if (archetypeId) {
+            const archetype = this.archetypes.find(a => a.id === archetypeId);
+            if (archetype && (archetype as any).simple_category_set_id) {
+                simpleSetId = (archetype as any).simple_category_set_id;
+                console.log(`✨ Using archetype-specific simple set: ${simpleSetId} for ${archetypeId}`);
+            }
+        }
+
+        const simpleSet = this.categorySets.find(cs => cs.id === simpleSetId);
+        if (!simpleSet) {
+            console.warn(`${simpleSetId} category set not found, falling back to core_simple_v1`);
+            const fallbackSet = this.categorySets.find(cs => cs.id === 'core_simple_v1');
+            if (!fallbackSet) return [];
+            return this.getQuestionsFromCategorySet(fallbackSet);
+        }
+
+        return this.getQuestionsFromCategorySet(simpleSet);
+    }
+
+    /**
+     * Helper to extract questions from a category set
+     */
+    private static getQuestionsFromCategorySet(catSet: any): QuestionDefinition[] {
+        const questions: QuestionDefinition[] = [];
+
+        for (const catId of catSet.category_ids) {
+            const category = this.categories.find(c => c.id === catId);
+            if (!category) continue;
+
+            for (const fieldKey of category.field_keys) {
+                const field = this.fields.find(f => f.key === fieldKey);
+                if (!field) continue;
+
+                if (field.type !== 'single_select' || !field.option_set_id) continue;
+
+                const optionSet = this.optionSets.find(os => os.id === field.option_set_id);
+                if (!optionSet) continue;
+
+                questions.push({
+                    id: field.key,
+                    text: field.label,
+                    options: optionSet.options.map(opt => ({
+                        id: opt.id,
+                        label: opt.label
+                    })),
+                    categoryLabel: category.label
+                });
+            }
+        }
+
+        return questions;
+    }
 }

@@ -4,6 +4,7 @@
             "id": "career_decisions",
             "label": "Kariyer ve iş",
             "default_followup_days": 30,
+            "simple_category_set_id": "career_simple_v1",
             "category_set_ids": [
                 "core_v1",
                 "career_v1",
@@ -113,6 +114,7 @@
             "id": "parenting_decisions",
             "label": "Ebeveynlik ve çocuk",
             "default_followup_days": 14,
+            "simple_category_set_id": "parenting_simple_v1",
             "category_set_ids": [
                 "core_life_v1",
                 "parenting_v1",
@@ -226,6 +228,7 @@
             "id": "relationship_decisions",
             "label": "İlişki kararları",
             "default_followup_days": 21,
+            "simple_category_set_id": "relationship_simple_v1",
             "category_set_ids": [
                 "core_life_v1",
                 "relationship_v1",
@@ -333,6 +336,7 @@
             "id": "money_finance",
             "label": "Finansal kararlar",
             "default_followup_days": 30,
+            "simple_category_set_id": "finance_simple_v1",
             "category_set_ids": [
                 "core_v1",
                 "financial_v1",
@@ -426,6 +430,7 @@
             "id": "health_wellness",
             "label": "Sağlık ve yaşam",
             "default_followup_days": 14,
+            "simple_category_set_id": "health_simple_v1",
             "category_set_ids": [
                 "core_lifestyle_v1",
                 "health_v1",
@@ -521,6 +526,7 @@
             "id": "education_learning",
             "label": "Eğitim ve öğrenim",
             "default_followup_days": 21,
+            "simple_category_set_id": "education_simple_v1",
             "category_set_ids": [
                 "core_v1",
                 "education_v1",
@@ -612,6 +618,7 @@
             "id": "lifestyle_change",
             "label": "Yaşam tarzı değişikliği",
             "default_followup_days": 30,
+            "simple_category_set_id": "lifestyle_simple_v1",
             "category_set_ids": [
                 "core_lifestyle_v1",
                 "lifestyle_v1",
@@ -703,6 +710,7 @@
             "id": "major_purchase",
             "label": "Büyük satın alımlar",
             "default_followup_days": 21,
+            "simple_category_set_id": "purchase_simple_v1",
             "category_set_ids": [
                 "core_purchase_v1",
                 "purchase_v1",
@@ -794,6 +802,7 @@
             "id": "food_hospitality",
             "label": "Yemek, Restoran ve Ağırlama",
             "default_followup_days": 7,
+            "simple_category_set_id": "food_simple_v1",
             "category_set_ids": [
                 "core_lifestyle_v1",
                 "food_v1",
@@ -1033,6 +1042,7 @@
             "id": "social_decisions",
             "label": "Sosyal İlişkiler ve Arkadaşlık",
             "default_followup_days": 14,
+            "simple_category_set_id": "social_simple_v1",
             "category_set_ids": [
                 "core_lifestyle_v1",
                 "social_v1",
@@ -1126,6 +1136,7 @@
             "id": "eldercare_decisions",
             "label": "Yaşlı Bakımı",
             "default_followup_days": 21,
+            "simple_category_set_id": "eldercare_simple_v1",
             "category_set_ids": [
                 "core_emotional_v2",
                 "eldercare_v1",
@@ -1213,6 +1224,7 @@
             "id": "travel_vacation",
             "label": "Tatil ve Seyahat",
             "default_followup_days": 7,
+            "simple_category_set_id": "travel_simple_v1",
             "category_set_ids": [
                 "core_lifestyle_v1",
                 "travel_v1",

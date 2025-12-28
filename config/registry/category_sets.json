@@ -13,6 +13,15 @@
             ]
         },
         {
+            "id": "core_simple_v1",
+            "label": "Basit karar çekirdeği",
+            "description": "Günlük/anlık kararlar için hafif sorular (kahve/çay, otobüs/araba vb.)",
+            "category_ids": [
+                "quick_context",
+                "simple_preference"
+            ]
+        },
+        {
             "id": "core_emotional_v1",
             "label": "Duygusal odaklı çekirdek (bütçesiz)",
             "category_ids": [
@@ -361,6 +370,102 @@
                 "cuisine_type",
                 "service_type",
                 "dietary_restrictions"
+            ]
+        },
+        {
+            "id": "career_simple_v1",
+            "label": "Kariyer Basit",
+            "description": "Basit kariyer/iş kararları için",
+            "category_ids": [
+                "career_simple_context"
+            ]
+        },
+        {
+            "id": "parenting_simple_v1",
+            "label": "Ebeveynlik Basit",
+            "description": "Basit ebeveynlik kararları için",
+            "category_ids": [
+                "parenting_simple_context"
+            ]
+        },
+        {
+            "id": "relationship_simple_v1",
+            "label": "İlişki Basit",
+            "description": "Basit ilişki kararları için",
+            "category_ids": [
+                "relationship_simple_context"
+            ]
+        },
+        {
+            "id": "finance_simple_v1",
+            "label": "Finans Basit",
+            "description": "Basit finans kararları için",
+            "category_ids": [
+                "finance_simple_context"
+            ]
+        },
+        {
+            "id": "health_simple_v1",
+            "label": "Sağlık Basit",
+            "description": "Basit sağlık/wellness kararları için",
+            "category_ids": [
+                "health_simple_context"
+            ]
+        },
+        {
+            "id": "education_simple_v1",
+            "label": "Eğitim Basit",
+            "description": "Basit eğitim kararları için",
+            "category_ids": [
+                "education_simple_context"
+            ]
+        },
+        {
+            "id": "lifestyle_simple_v1",
+            "label": "Yaşam Tarzı Basit",
+            "description": "Basit yaşam tarzı kararları için",
+            "category_ids": [
+                "lifestyle_simple_context"
+            ]
+        },
+        {
+            "id": "purchase_simple_v1",
+            "label": "Satın Alma Basit",
+            "description": "Basit satın alma kararları için",
+            "category_ids": [
+                "purchase_simple_context"
+            ]
+        },
+        {
+            "id": "food_simple_v1",
+            "label": "Yemek Basit",
+            "description": "Basit yemek kararları için (kahve/çay, ne yesem vb.)",
+            "category_ids": [
+                "food_simple_context"
+            ]
+        },
+        {
+            "id": "social_simple_v1",
+            "label": "Sosyal Basit",
+            "description": "Basit sosyal kararlar için",
+            "category_ids": [
+                "social_simple_context"
+            ]
+        },
+        {
+            "id": "eldercare_simple_v1",
+            "label": "Yaşlı Bakım Basit",
+            "description": "Basit yaşlı bakım kararları için",
+            "category_ids": [
+                "eldercare_simple_context"
+            ]
+        },
+        {
+            "id": "travel_simple_v1",
+            "label": "Seyahat Basit",
+            "description": "Basit seyahat kararları için",
+            "category_ids": [
+                "travel_simple_context"
             ]
         }
     ]

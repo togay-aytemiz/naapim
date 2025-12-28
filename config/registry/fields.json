@@ -779,6 +779,1092 @@
             "label": "Nasıl yemek istiyorsun?",
             "type": "single_select",
             "option_set_id": "food_service_type_v1"
+        },
+        {
+            "key": "current_mood",
+            "label": "Şu an nasıl hissediyorsun?",
+            "type": "single_select",
+            "option_set_id": "current_mood_v1"
+        },
+        {
+            "key": "time_constraint",
+            "label": "Ne kadar zamanın var?",
+            "type": "single_select",
+            "option_set_id": "time_constraint_v1"
+        },
+        {
+            "key": "simple_priority",
+            "label": "Şu an ne daha önemli?",
+            "type": "single_select",
+            "option_set_id": "simple_priority_v1"
+        },
+        {
+            "key": "food_taste_pref",
+            "label": "Ne tarz bir şey yiyeceksin?",
+            "type": "single_select",
+            "option_set_id": "food_taste_v1"
+        },
+        {
+            "key": "food_temp_pref",
+            "label": "Sıcak mı soğuk mu?",
+            "type": "single_select",
+            "option_set_id": "food_temp_v1"
+        },
+        {
+            "key": "food_effort_pref",
+            "label": "Hazırlık için ne kadar emek verebilirsin?",
+            "type": "single_select",
+            "option_set_id": "food_effort_v1"
+        },
+        {
+            "key": "purchase_value_pref",
+            "label": "Satın almada önceliğin ne?",
+            "type": "single_select",
+            "option_set_id": "purchase_value_v1"
+        },
+        {
+            "key": "purchase_condition",
+            "label": "Yeni mi ikinci el mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_newused_v1"
+        },
+        {
+            "key": "current_energy",
+            "label": "Enerjin şu an nasıl?",
+            "type": "single_select",
+            "option_set_id": "energy_level_v1"
+        },
+        {
+            "key": "health_pleasure_pref",
+            "label": "Sağlık mı keyif mi?",
+            "type": "single_select",
+            "option_set_id": "health_vs_pleasure_v1"
+        },
+        {
+            "key": "travel_mood_pref",
+            "label": "Macera mı dinlenme mi?",
+            "type": "single_select",
+            "option_set_id": "travel_mood_v1"
+        },
+        {
+            "key": "travel_distance_pref",
+            "label": "Yakın mı uzak mı?",
+            "type": "single_select",
+            "option_set_id": "travel_distance_v1"
+        },
+        {
+            "key": "social_energy_pref",
+            "label": "Sosyal enerji durumun nasıl?",
+            "type": "single_select",
+            "option_set_id": "social_energy_v1"
+        },
+        {
+            "key": "comfort_experience",
+            "label": "Alışılmış mı yeni deneyim mi?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_comfort_v1"
+        },
+        {
+            "key": "risk_appetite",
+            "label": "Şu an risk almaya açık mısın?",
+            "type": "single_select",
+            "option_set_id": "risk_mood_v1"
+        },
+        {
+            "key": "child_current_mood",
+            "label": "Çocuğunun şu anki ruh hali nasıl?",
+            "type": "single_select",
+            "option_set_id": "child_mood_v1"
+        },
+        {
+            "key": "partner_current_mood",
+            "label": "Eşinle/partnerinle iletişim şu an nasıl?",
+            "type": "single_select",
+            "option_set_id": "partner_mood_v1"
+        },
+        {
+            "key": "learning_mode_pref",
+            "label": "Pratik mi teorik mi?",
+            "type": "single_select",
+            "option_set_id": "learning_mode_simple_v1"
+        },
+        {
+            "key": "simple_urgency",
+            "label": "Bu karar ne kadar acil?",
+            "type": "single_select",
+            "option_set_id": "urgency_simple_v1"
+        },
+        {
+            "key": "budget_sensitivity",
+            "label": "Bütçe hassasiyetin şu an nasıl?",
+            "type": "single_select",
+            "option_set_id": "budget_simple_v1"
+        },
+        {
+            "key": "food_guest_count",
+            "label": "Kaç kişilik hazırlayacaksın?",
+            "type": "single_select",
+            "option_set_id": "food_guest_count_simple_v1"
+        },
+        {
+            "key": "food_cuisine_pref",
+            "label": "Hangi mutfak tarzını tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "food_cuisine_simple_v1"
+        },
+        {
+            "key": "food_skill",
+            "label": "Mutfaktaki beceri seviyen nasıl?",
+            "type": "single_select",
+            "option_set_id": "food_skill_level_v1"
+        },
+        {
+            "key": "food_prep_time",
+            "label": "Ne kadar süre ayırabilirsin?",
+            "type": "single_select",
+            "option_set_id": "food_prep_time_v1"
+        },
+        {
+            "key": "food_occasion",
+            "label": "Bu yemek hangi vesileyle?",
+            "type": "single_select",
+            "option_set_id": "food_occasion_simple_v1"
+        },
+        {
+            "key": "food_alcohol_pref",
+            "label": "Alkollü içecek eşliğinde mi?",
+            "type": "single_select",
+            "option_set_id": "food_alcohol_v1"
+        },
+        {
+            "key": "food_dietary",
+            "label": "Diyet kısıtlaması var mı?",
+            "type": "single_select",
+            "option_set_id": "food_dietary_simple_v1"
+        },
+        {
+            "key": "food_portion",
+            "label": "Ne kadar doyurucu olsun?",
+            "type": "single_select",
+            "option_set_id": "food_portion_v1"
+        },
+        {
+            "key": "food_presentation",
+            "label": "Sunum ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "food_presentation_v1"
+        },
+        {
+            "key": "food_meal_type",
+            "label": "Hangi öğün için?",
+            "type": "single_select",
+            "option_set_id": "food_meal_type_v1"
+        },
+        {
+            "key": "food_cooking_method",
+            "label": "Nasıl pişirmek istersin?",
+            "type": "single_select",
+            "option_set_id": "food_cooking_method_v1"
+        },
+        {
+            "key": "food_spice",
+            "label": "Baharat seviyesi nasıl olsun?",
+            "type": "single_select",
+            "option_set_id": "food_spice_level_v1"
+        },
+        {
+            "key": "food_texture",
+            "label": "Doku tercihin var mı?",
+            "type": "single_select",
+            "option_set_id": "food_texture_v1"
+        },
+        {
+            "key": "food_protein",
+            "label": "Protein olarak ne tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "food_protein_v1"
+        },
+        {
+            "key": "food_carb",
+            "label": "Karbonhidrat tercihin?",
+            "type": "single_select",
+            "option_set_id": "food_carb_pref_v1"
+        },
+        {
+            "key": "food_veggie",
+            "label": "Sebze ne kadar olsun?",
+            "type": "single_select",
+            "option_set_id": "food_veggie_interest_v1"
+        },
+        {
+            "key": "food_dessert",
+            "label": "Tatlı da olsun mu?",
+            "type": "single_select",
+            "option_set_id": "food_dessert_mood_v1"
+        },
+        {
+            "key": "purchase_urgency_simple",
+            "label": "Ne kadar acil bu alım?",
+            "type": "single_select",
+            "option_set_id": "purchase_urgency_v1"
+        },
+        {
+            "key": "purchase_research",
+            "label": "Ne kadar araştırma yaptın?",
+            "type": "single_select",
+            "option_set_id": "purchase_research_v1"
+        },
+        {
+            "key": "purchase_channel",
+            "label": "Nereden almak istersin?",
+            "type": "single_select",
+            "option_set_id": "purchase_channel_v1"
+        },
+        {
+            "key": "purchase_payment",
+            "label": "Ödeme tercihin?",
+            "type": "single_select",
+            "option_set_id": "purchase_payment_v1"
+        },
+        {
+            "key": "purchase_warranty",
+            "label": "Garanti ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "purchase_warranty_v1"
+        },
+        {
+            "key": "purchase_return",
+            "label": "İade edilebilir olması önemli mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_return_v1"
+        },
+        {
+            "key": "purchase_eco",
+            "label": "Çevre dostu olması önemli mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_eco_v1"
+        },
+        {
+            "key": "purchase_size",
+            "label": "Boyut tercihin?",
+            "type": "single_select",
+            "option_set_id": "purchase_size_v1"
+        },
+        {
+            "key": "purchase_color",
+            "label": "Renk tercihin var mı?",
+            "type": "single_select",
+            "option_set_id": "purchase_color_v1"
+        },
+        {
+            "key": "purchase_brand",
+            "label": "Marka tercihin var mı?",
+            "type": "single_select",
+            "option_set_id": "purchase_brand_loyalty_v1"
+        },
+        {
+            "key": "purchase_features",
+            "label": "Ne kadar özellik istiyorsun?",
+            "type": "single_select",
+            "option_set_id": "purchase_feature_v1"
+        },
+        {
+            "key": "purchase_frequency",
+            "label": "Ne sıklıkta kullanacaksın?",
+            "type": "single_select",
+            "option_set_id": "purchase_frequency_v1"
+        },
+        {
+            "key": "purchase_replace_upgrade",
+            "label": "İlk alım mı değiştirme mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_replace_upgrade_v1"
+        },
+        {
+            "key": "purchase_gift",
+            "label": "Kendine mi hediye mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_gift_v1"
+        },
+        {
+            "key": "purchase_comparison",
+            "label": "Kaç seçenek değerlendiriyorsun?",
+            "type": "single_select",
+            "option_set_id": "purchase_comparison_v1"
+        },
+        {
+            "key": "purchase_reviews",
+            "label": "Kullanıcı yorumları önemli mi?",
+            "type": "single_select",
+            "option_set_id": "purchase_reviews_v1"
+        },
+        {
+            "key": "purchase_impulse",
+            "label": "Planlı mı anlık mı bir karar?",
+            "type": "single_select",
+            "option_set_id": "purchase_impulse_v1"
+        },
+        {
+            "key": "purchase_space",
+            "label": "Koyacak yerin var mı?",
+            "type": "single_select",
+            "option_set_id": "purchase_space_v1"
+        },
+        {
+            "key": "health_activity_type",
+            "label": "Ne tür aktivite düşünüyorsun?",
+            "type": "single_select",
+            "option_set_id": "health_activity_type_v1"
+        },
+        {
+            "key": "health_motivation",
+            "label": "Motivasyon seviyen nasıl?",
+            "type": "single_select",
+            "option_set_id": "health_motivation_v1"
+        },
+        {
+            "key": "health_time_of_day",
+            "label": "Günün hangi saatini tercih edersin?",
+            "type": "single_select",
+            "option_set_id": "health_time_of_day_v1"
+        },
+        {
+            "key": "health_focus",
+            "label": "Fiziksel mi zihinsel sağlık mı?",
+            "type": "single_select",
+            "option_set_id": "health_focus_v1"
+        },
+        {
+            "key": "health_solo_group",
+            "label": "Yalnız mı grupla mı?",
+            "type": "single_select",
+            "option_set_id": "health_solo_group_v1"
+        },
+        {
+            "key": "health_intensity",
+            "label": "Ne yoğunlukta?",
+            "type": "single_select",
+            "option_set_id": "health_intensity_v1"
+        },
+        {
+            "key": "health_duration",
+            "label": "Ne kadar süre ayırabilirsin?",
+            "type": "single_select",
+            "option_set_id": "health_duration_v1"
+        },
+        {
+            "key": "health_location",
+            "label": "Nerede yapmak istersin?",
+            "type": "single_select",
+            "option_set_id": "health_location_v1"
+        },
+        {
+            "key": "health_diet_goal",
+            "label": "Beslenme hedefin ne?",
+            "type": "single_select",
+            "option_set_id": "health_diet_goal_v1"
+        },
+        {
+            "key": "health_sleep",
+            "label": "Uyku kaliteniz nasıl?",
+            "type": "single_select",
+            "option_set_id": "health_sleep_v1"
+        },
+        {
+            "key": "health_stress",
+            "label": "Stres seviyen nasıl?",
+            "type": "single_select",
+            "option_set_id": "health_stress_v1"
+        },
+        {
+            "key": "health_limitation",
+            "label": "Fiziksel kısıtlaman var mı?",
+            "type": "single_select",
+            "option_set_id": "health_limitation_v1"
+        },
+        {
+            "key": "health_budget",
+            "label": "Sağlık için bütçen?",
+            "type": "single_select",
+            "option_set_id": "health_budget_v1"
+        },
+        {
+            "key": "health_consistency",
+            "label": "Ne sıklıkta yapabilirsin?",
+            "type": "single_select",
+            "option_set_id": "health_consistency_v1"
+        },
+        {
+            "key": "health_tracking",
+            "label": "İlerlemeyi takip etmek ister misin?",
+            "type": "single_select",
+            "option_set_id": "health_tracking_v1"
+        },
+        {
+            "key": "health_guidance",
+            "label": "Profesyonel yardım ister misin?",
+            "type": "single_select",
+            "option_set_id": "health_guidance_v1"
+        },
+        {
+            "key": "health_timeline",
+            "label": "Hedef zaman dilimin ne?",
+            "type": "single_select",
+            "option_set_id": "health_timeline_v1"
+        },
+        {
+            "key": "health_fitness_level",
+            "label": "Mevcut fitness seviyen?",
+            "type": "single_select",
+            "option_set_id": "health_fitness_level_v1"
+        },
+        {
+            "key": "travel_trip_type",
+            "label": "Ne tür bir tatil düşünüyorsun?",
+            "type": "single_select",
+            "option_set_id": "travel_trip_type_v1"
+        },
+        {
+            "key": "travel_duration",
+            "label": "Kaç günlük tatil?",
+            "type": "single_select",
+            "option_set_id": "travel_duration_v1"
+        },
+        {
+            "key": "travel_budget",
+            "label": "Tatil bütçen nasıl?",
+            "type": "single_select",
+            "option_set_id": "travel_budget_v1"
+        },
+        {
+            "key": "travel_accommodation",
+            "label": "Konaklama tercihin?",
+            "type": "single_select",
+            "option_set_id": "travel_accommodation_v1"
+        },
+        {
+            "key": "travel_transport",
+            "label": "Nasıl ulaşmak istersin?",
+            "type": "single_select",
+            "option_set_id": "travel_transport_v1"
+        },
+        {
+            "key": "travel_climate",
+            "label": "Hava durumu tercihin?",
+            "type": "single_select",
+            "option_set_id": "travel_climate_v1"
+        },
+        {
+            "key": "travel_activity",
+            "label": "Aktif mi dinlenmeli mi?",
+            "type": "single_select",
+            "option_set_id": "travel_activity_v1"
+        },
+        {
+            "key": "travel_crowd",
+            "label": "Kalabalık mı sakin mi?",
+            "type": "single_select",
+            "option_set_id": "travel_crowd_v1"
+        },
+        {
+            "key": "travel_cuisine",
+            "label": "Yerel yemekler önemli mi?",
+            "type": "single_select",
+            "option_set_id": "travel_cuisine_v1"
+        },
+        {
+            "key": "travel_planning",
+            "label": "Detaylı plan mı spontane mi?",
+            "type": "single_select",
+            "option_set_id": "travel_planning_v1"
+        },
+        {
+            "key": "travel_flexibility",
+            "label": "Tarihler esnek mi?",
+            "type": "single_select",
+            "option_set_id": "travel_flexibility_v1"
+        },
+        {
+            "key": "travel_companions",
+            "label": "Kimlerle gidiyorsun?",
+            "type": "single_select",
+            "option_set_id": "travel_companions_v1"
+        },
+        {
+            "key": "travel_accessibility",
+            "label": "Erişilebilirlik gerekli mi?",
+            "type": "single_select",
+            "option_set_id": "travel_accessibility_v1"
+        },
+        {
+            "key": "travel_nightlife",
+            "label": "Gece hayatı önemli mi?",
+            "type": "single_select",
+            "option_set_id": "travel_nightlife_v1"
+        },
+        {
+            "key": "travel_cultural",
+            "label": "Müze/tarihi yerler?",
+            "type": "single_select",
+            "option_set_id": "travel_cultural_v1"
+        },
+        {
+            "key": "travel_shopping",
+            "label": "Alışveriş yapacak mısın?",
+            "type": "single_select",
+            "option_set_id": "travel_shopping_v1"
+        },
+        {
+            "key": "travel_relaxation",
+            "label": "Dinlenme mi aktivite mi?",
+            "type": "single_select",
+            "option_set_id": "travel_relaxation_v1"
+        },
+        {
+            "key": "travel_photo",
+            "label": "Fotoğraflık yerler önemli mi?",
+            "type": "single_select",
+            "option_set_id": "travel_photo_v1"
+        },
+        {
+            "key": "lifestyle_change_driver",
+            "label": "Değişim isteğinin sebebi?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_change_driver_v1"
+        },
+        {
+            "key": "lifestyle_location",
+            "label": "Lokasyon tercihin?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_location_v1"
+        },
+        {
+            "key": "lifestyle_routine",
+            "label": "Rutin ister misin?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_routine_v1"
+        },
+        {
+            "key": "lifestyle_social",
+            "label": "Sosyal ihtiyacın?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_social_v1"
+        },
+        {
+            "key": "lifestyle_environment",
+            "label": "Çevre tercihin?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_environment_v1"
+        },
+        {
+            "key": "lifestyle_pace",
+            "label": "Yaşam hızı tercihin?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_pace_v1"
+        },
+        {
+            "key": "lifestyle_cost",
+            "label": "Maliyet önemli mi?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_cost_v1"
+        },
+        {
+            "key": "lifestyle_commitment",
+            "label": "Ne kadar süreliğine?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_commitment_v1"
+        },
+        {
+            "key": "lifestyle_reversibility",
+            "label": "Geri dönebilmek önemli mi?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_reversibility_v1"
+        },
+        {
+            "key": "lifestyle_support",
+            "label": "Destek lazım mı?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_support_v1"
+        },
+        {
+            "key": "lifestyle_experience",
+            "label": "Yeni mi tanıdık mı?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_experience_v1"
+        },
+        {
+            "key": "lifestyle_comfort_zone",
+            "label": "Konfor alanından çıkmak ister misin?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_comfort_zone_v1"
+        },
+        {
+            "key": "lifestyle_technology",
+            "label": "Teknoloji yaklaşımın?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_technology_v1"
+        },
+        {
+            "key": "lifestyle_simplicity",
+            "label": "Sadelik önemli mi?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_simplicity_v1"
+        },
+        {
+            "key": "lifestyle_nature_freq",
+            "label": "Doğayla ne sıklıkta?",
+            "type": "single_select",
+            "option_set_id": "lifestyle_nature_freq_v1"
+        },
+        {
+            "key": "career_satisfaction",
+            "label": "Mevcut işinden memnun musun?",
+            "type": "single_select",
+            "option_set_id": "career_satisfaction_v1"
+        },
+        {
+            "key": "career_growth",
+            "label": "Büyüme fırsatı önemli mi?",
+            "type": "single_select",
+            "option_set_id": "career_growth_v1"
+        },
+        {
+            "key": "career_work_life",
+            "label": "İş-yaşam dengesi?",
+            "type": "single_select",
+            "option_set_id": "career_work_life_v1"
+        },
+        {
+            "key": "career_risk",
+            "label": "Risk toleransın?",
+            "type": "single_select",
+            "option_set_id": "career_risk_v1"
+        },
+        {
+            "key": "career_flexibility",
+            "label": "Esneklik önemli mi?",
+            "type": "single_select",
+            "option_set_id": "career_flexibility_v1"
+        },
+        {
+            "key": "career_autonomy",
+            "label": "Bağımsız çalışmak ister misin?",
+            "type": "single_select",
+            "option_set_id": "career_autonomy_v1"
+        },
+        {
+            "key": "career_team_size",
+            "label": "Takım boyutu tercihin?",
+            "type": "single_select",
+            "option_set_id": "career_team_size_v1"
+        },
+        {
+            "key": "career_industry",
+            "label": "Sektör değiştirmek ister misin?",
+            "type": "single_select",
+            "option_set_id": "career_industry_v1"
+        },
+        {
+            "key": "career_salary",
+            "label": "Maaş ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "career_salary_v1"
+        },
+        {
+            "key": "career_commute",
+            "label": "Ulaşım süresi önemli mi?",
+            "type": "single_select",
+            "option_set_id": "career_commute_v1"
+        },
+        {
+            "key": "career_remote",
+            "label": "Uzaktan çalışma tercihin?",
+            "type": "single_select",
+            "option_set_id": "career_remote_v1"
+        },
+        {
+            "key": "career_stress",
+            "label": "Stres toleransın?",
+            "type": "single_select",
+            "option_set_id": "career_stress_v1"
+        },
+        {
+            "key": "career_learning",
+            "label": "Sürekli öğrenme ister misin?",
+            "type": "single_select",
+            "option_set_id": "career_learning_v1"
+        },
+        {
+            "key": "career_leadership",
+            "label": "Liderlik yapmak ister misin?",
+            "type": "single_select",
+            "option_set_id": "career_leadership_v1"
+        },
+        {
+            "key": "career_stability",
+            "label": "İş güvencesi ne kadar önemli?",
+            "type": "single_select",
+            "option_set_id": "career_stability_v1"
+        },
+        {
+            "key": "parenting_child_age",
+            "label": "Çocuğun yaşı?",
+            "type": "single_select",
+            "option_set_id": "parenting_child_age_v1"
+        },
+        {
+            "key": "parenting_style",
+            "label": "Ebeveynlik tarzın?",
+            "type": "single_select",
+            "option_set_id": "parenting_style_v1"
+        },
+        {
+            "key": "parenting_time",
+            "label": "Çocuğa ne kadar zaman ayırabiliyorsun?",
+            "type": "single_select",
+            "option_set_id": "parenting_time_v1"
+        },
+        {
+            "key": "parenting_partner",
+            "label": "Partner desteğin nasıl?",
+            "type": "single_select",
+            "option_set_id": "parenting_partner_v1"
+        },
+        {
+            "key": "parenting_budget",
+            "label": "Çocuk için bütçen?",
+            "type": "single_select",
+            "option_set_id": "parenting_budget_v1"
+        },
+        {
+            "key": "parenting_help",
+            "label": "Yardım kaynağın var mı?",
+            "type": "single_select",
+            "option_set_id": "parenting_help_v1"
+        },
+        {
+            "key": "parenting_priority",
+            "label": "En önemli önceliğin?",
+            "type": "single_select",
+            "option_set_id": "parenting_priority_v1"
+        },
+        {
+            "key": "parenting_challenge",
+            "label": "En büyük zorluk?",
+            "type": "single_select",
+            "option_set_id": "parenting_challenge_v1"
+        },
+        {
+            "key": "parenting_screen",
+            "label": "Ekran süresi yaklaşımın?",
+            "type": "single_select",
+            "option_set_id": "parenting_screen_v1"
+        },
+        {
+            "key": "parenting_activity",
+            "label": "Aktivite tercihin?",
+            "type": "single_select",
+            "option_set_id": "parenting_activity_v1"
+        },
+        {
+            "key": "relationship_status",
+            "label": "İlişki durumun?",
+            "type": "single_select",
+            "option_set_id": "relationship_status_v1"
+        },
+        {
+            "key": "relationship_duration",
+            "label": "Ne kadar süredir birliktesiniz?",
+            "type": "single_select",
+            "option_set_id": "relationship_duration_v1"
+        },
+        {
+            "key": "relationship_communication",
+            "label": "İletişiminiz nasıl?",
+            "type": "single_select",
+            "option_set_id": "relationship_communication_v1"
+        },
+        {
+            "key": "relationship_conflict",
+            "label": "Tartışma sıklığı?",
+            "type": "single_select",
+            "option_set_id": "relationship_conflict_v1"
+        },
+        {
+            "key": "relationship_future",
+            "label": "Gelecek planlarınız uyumlu mu?",
+            "type": "single_select",
+            "option_set_id": "relationship_future_v1"
+        },
+        {
+            "key": "relationship_effort",
+            "label": "Çaba gösterme durumu?",
+            "type": "single_select",
+            "option_set_id": "relationship_effort_v1"
+        },
+        {
+            "key": "relationship_trust",
+            "label": "Güven durumu?",
+            "type": "single_select",
+            "option_set_id": "relationship_trust_v1"
+        },
+        {
+            "key": "relationship_intimacy",
+            "label": "Yakınlık hissi?",
+            "type": "single_select",
+            "option_set_id": "relationship_intimacy_v1"
+        },
+        {
+            "key": "relationship_support",
+            "label": "Birbirinizi destekliyor musunuz?",
+            "type": "single_select",
+            "option_set_id": "relationship_support_v1"
+        },
+        {
+            "key": "relationship_growth",
+            "label": "Birlikte gelişiyor musunuz?",
+            "type": "single_select",
+            "option_set_id": "relationship_growth_v1"
+        },
+        {
+            "key": "finance_goal",
+            "label": "Finansal hedefin?",
+            "type": "single_select",
+            "option_set_id": "finance_goal_v1"
+        },
+        {
+            "key": "finance_timeline",
+            "label": "Zaman diliminiz?",
+            "type": "single_select",
+            "option_set_id": "finance_timeline_v1"
+        },
+        {
+            "key": "finance_risk",
+            "label": "Risk toleransın?",
+            "type": "single_select",
+            "option_set_id": "finance_risk_v1"
+        },
+        {
+            "key": "finance_knowledge",
+            "label": "Finans bilgin?",
+            "type": "single_select",
+            "option_set_id": "finance_knowledge_v1"
+        },
+        {
+            "key": "finance_priority",
+            "label": "Parayla ilgili önceliğin?",
+            "type": "single_select",
+            "option_set_id": "finance_priority_v1"
+        },
+        {
+            "key": "finance_debt",
+            "label": "Borç durumun?",
+            "type": "single_select",
+            "option_set_id": "finance_debt_v1"
+        },
+        {
+            "key": "finance_income",
+            "label": "Gelir durumun?",
+            "type": "single_select",
+            "option_set_id": "finance_income_v1"
+        },
+        {
+            "key": "finance_emergency",
+            "label": "Acil durum fonun var mı?",
+            "type": "single_select",
+            "option_set_id": "finance_emergency_v1"
+        },
+        {
+            "key": "finance_spending",
+            "label": "Harcama alışkanlığın?",
+            "type": "single_select",
+            "option_set_id": "finance_spending_v1"
+        },
+        {
+            "key": "finance_tracking",
+            "label": "Bütçe takibi yapıyor musun?",
+            "type": "single_select",
+            "option_set_id": "finance_tracking_v1"
+        },
+        {
+            "key": "education_goal",
+            "label": "Eğitim hedefin?",
+            "type": "single_select",
+            "option_set_id": "education_goal_v1"
+        },
+        {
+            "key": "education_format",
+            "label": "Format tercihin?",
+            "type": "single_select",
+            "option_set_id": "education_format_v1"
+        },
+        {
+            "key": "education_time",
+            "label": "Ne kadar zaman ayırabilirsin?",
+            "type": "single_select",
+            "option_set_id": "education_time_v1"
+        },
+        {
+            "key": "education_pace",
+            "label": "Öğrenme hızın?",
+            "type": "single_select",
+            "option_set_id": "education_pace_v1"
+        },
+        {
+            "key": "education_style",
+            "label": "Öğrenme tarzın?",
+            "type": "single_select",
+            "option_set_id": "education_style_v1"
+        },
+        {
+            "key": "education_structure",
+            "label": "Yapı tercihin?",
+            "type": "single_select",
+            "option_set_id": "education_structure_v1"
+        },
+        {
+            "key": "education_support",
+            "label": "Destek ihtiyacın?",
+            "type": "single_select",
+            "option_set_id": "education_support_v1"
+        },
+        {
+            "key": "education_motivation",
+            "label": "Motivasyonun nasıl?",
+            "type": "single_select",
+            "option_set_id": "education_motivation_v1"
+        },
+        {
+            "key": "education_depth",
+            "label": "Ne kadar derine inmek istiyorsun?",
+            "type": "single_select",
+            "option_set_id": "education_depth_v1"
+        },
+        {
+            "key": "education_certification",
+            "label": "Sertifika önemli mi?",
+            "type": "single_select",
+            "option_set_id": "education_certification_v1"
+        },
+        {
+            "key": "social_energy",
+            "label": "Sosyal enerji seviyen?",
+            "type": "single_select",
+            "option_set_id": "social_energy_v1"
+        },
+        {
+            "key": "social_group_size",
+            "label": "Grup boyutu tercihin?",
+            "type": "single_select",
+            "option_set_id": "social_group_size_v1"
+        },
+        {
+            "key": "social_conflict_style",
+            "label": "Çatışma tarzın?",
+            "type": "single_select",
+            "option_set_id": "social_conflict_style_v1"
+        },
+        {
+            "key": "social_boundary",
+            "label": "Sınır koyma yeteneğin?",
+            "type": "single_select",
+            "option_set_id": "social_boundary_v1"
+        },
+        {
+            "key": "social_priority",
+            "label": "İlişkilerde neye öncelik verirsin?",
+            "type": "single_select",
+            "option_set_id": "social_priority_v1"
+        },
+        {
+            "key": "social_effort",
+            "label": "İlk adımı atar mısın?",
+            "type": "single_select",
+            "option_set_id": "social_effort_v1"
+        },
+        {
+            "key": "social_vulnerability",
+            "label": "İnsanlara açılır mısın?",
+            "type": "single_select",
+            "option_set_id": "social_vulnerability_v1"
+        },
+        {
+            "key": "social_trust",
+            "label": "Güven verme hızın?",
+            "type": "single_select",
+            "option_set_id": "social_trust_v1"
+        },
+        {
+            "key": "social_forgiveness",
+            "label": "Affetme yeteneğin?",
+            "type": "single_select",
+            "option_set_id": "social_forgiveness_v1"
+        },
+        {
+            "key": "social_expectation",
+            "label": "Beklentilerin?",
+            "type": "single_select",
+            "option_set_id": "social_expectation_v1"
+        },
+        {
+            "key": "eldercare_living",
+            "label": "Yakının yaşam düzeni?",
+            "type": "single_select",
+            "option_set_id": "eldercare_living_v1"
+        },
+        {
+            "key": "eldercare_health",
+            "label": "Sağlık durumu?",
+            "type": "single_select",
+            "option_set_id": "eldercare_health_v1"
+        },
+        {
+            "key": "eldercare_mobility",
+            "label": "Hareketliliği?",
+            "type": "single_select",
+            "option_set_id": "eldercare_mobility_v1"
+        },
+        {
+            "key": "eldercare_cognitive",
+            "label": "Zihinsel durumu?",
+            "type": "single_select",
+            "option_set_id": "eldercare_cognitive_v1"
+        },
+        {
+            "key": "eldercare_distance",
+            "label": "Ondan ne kadar uzaktasın?",
+            "type": "single_select",
+            "option_set_id": "eldercare_distance_v1"
+        },
+        {
+            "key": "eldercare_support",
+            "label": "Bakım paylaşımı?",
+            "type": "single_select",
+            "option_set_id": "eldercare_support_v1"
+        },
+        {
+            "key": "eldercare_budget",
+            "label": "Bakım bütçesi?",
+            "type": "single_select",
+            "option_set_id": "eldercare_budget_v1"
+        },
+        {
+            "key": "eldercare_time",
+            "label": "Ayırabileceğin zaman?",
+            "type": "single_select",
+            "option_set_id": "eldercare_time_v1"
+        },
+        {
+            "key": "eldercare_preference",
+            "label": "Bakım tercihin?",
+            "type": "single_select",
+            "option_set_id": "eldercare_preference_v1"
+        },
+        {
+            "key": "eldercare_stress",
+            "label": "Bakıcı olarak stres seviyen?",
+            "type": "single_select",
+            "option_set_id": "eldercare_stress_v1"
         }
     ]
 }

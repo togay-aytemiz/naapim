@@ -43,6 +43,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     const [archetypeId, setArchetypeId] = useState<string | undefined>(initialArchetypeId);
     const [selectedFieldKeys, setSelectedFieldKeys] = useState<string[] | undefined>(initialSelectedFieldKeys);
     const [decisionType, setDecisionType] = useState<string>('binary_decision');
+    const [decisionComplexity, setDecisionComplexity] = useState<'simple' | 'moderate' | 'complex'>('moderate');
 
     // Loading state - start loading if we have userInput but no archetype yet
     const [isLoading, setIsLoading] = useState<boolean>(!!userInput && !initialArchetypeId);
@@ -138,10 +139,11 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 );
                 console.log('✅ Selection result:', selectionResult);
 
-                console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys);
+                console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys, 'complexity:', classificationResult.decision_complexity);
                 setArchetypeId(classificationResult.archetype_id);
                 setSelectedFieldKeys(selectionResult.selectedFieldKeys);
                 setDecisionType(classificationResult.decision_type || 'binary_decision');
+                setDecisionComplexity(classificationResult.decision_complexity || 'moderate');
 
                 // For blocked_topics, skip the loading wait - show immediately
                 if (classificationResult.archetype_id === 'blocked_topics') {
@@ -183,16 +185,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         return () => clearInterval(interval);
     }, [isLoading]);
 
-    // Load questions: use selectedFieldKeys if provided, otherwise fall back to archetype default
+    // Load questions based on decision complexity:
+    // - Simple decisions: use lightweight archetype-specific simple questions
+    // - Moderate/Complex: use LLM-selected field keys or archetype default
     const questions = useMemo(() => {
         if (!archetypeId) return [];
 
+        // For simple daily decisions, use archetype-specific lightweight questions
+        if (decisionComplexity === 'simple') {
+            console.log('✨ Using simple questions for decision complexity: simple, archetype:', archetypeId);
+            return RegistryLoader.getSimpleQuestions(archetypeId);
+        }
+
+        // For moderate/complex decisions, use LLM-selected or archetype default
         if (selectedFieldKeys && selectedFieldKeys.length > 0) {
             return RegistryLoader.getQuestionsForFieldKeys(selectedFieldKeys);
         }
         return RegistryLoader.getQuestionsForArchetype(archetypeId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [archetypeId, JSON.stringify(selectedFieldKeys)]);
+    }, [archetypeId, decisionComplexity, JSON.stringify(selectedFieldKeys)]);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     // Key is field_key, value is option_id
@@ -352,6 +363,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     setArchetypeId(classificationResult.archetype_id);
                     setSelectedFieldKeys(selectionResult.selectedFieldKeys);
                     setDecisionType(classificationResult.decision_type || 'binary_decision');
+                    setDecisionComplexity(classificationResult.decision_complexity || 'moderate');
                     setQuestionsReady(true); // Mark questions as ready
                 } catch (error) {
                     console.error('❌ Reclassification failed:', error);

@@ -2977,6 +2977,3404 @@
                     "label": "Catering/hazır gelen"
                 }
             ]
+        },
+        {
+            "id": "current_mood_v1",
+            "description": "Anlık ruh hali - basit kararlar için",
+            "options": [
+                {
+                    "id": "energetic",
+                    "label": "Enerjik, aktif hissediyorum"
+                },
+                {
+                    "id": "calm",
+                    "label": "Sakin, rahat"
+                },
+                {
+                    "id": "tired",
+                    "label": "Yorgun, tembel"
+                },
+                {
+                    "id": "undecided",
+                    "label": "Kararsız, ne istediğimi bilmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "time_constraint_v1",
+            "description": "Zaman kısıtı - basit kararlar için",
+            "options": [
+                {
+                    "id": "no_rush",
+                    "label": "Acelemiz yok"
+                },
+                {
+                    "id": "some_rush",
+                    "label": "Biraz acelem var"
+                },
+                {
+                    "id": "urgent",
+                    "label": "Çok hızlı karar vermem lazım"
+                }
+            ]
+        },
+        {
+            "id": "simple_priority_v1",
+            "description": "Basit tercih önceliği - günlük kararlar için",
+            "options": [
+                {
+                    "id": "practical",
+                    "label": "Pratiklik"
+                },
+                {
+                    "id": "enjoyment",
+                    "label": "Keyif / Zevk"
+                },
+                {
+                    "id": "health",
+                    "label": "Sağlık"
+                },
+                {
+                    "id": "economy",
+                    "label": "Ekonomi / Tasarruf"
+                }
+            ]
+        },
+        {
+            "id": "food_taste_v1",
+            "description": "Yemek lezzet tercihi - basit",
+            "options": [
+                {
+                    "id": "salty",
+                    "label": "Tuzlu / Çerez"
+                },
+                {
+                    "id": "sweet",
+                    "label": "Tatlı"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık / Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_temp_v1",
+            "description": "Sıcaklık tercihi - basit",
+            "options": [
+                {
+                    "id": "hot",
+                    "label": "Sıcak"
+                },
+                {
+                    "id": "cold",
+                    "label": "Soğuk"
+                },
+                {
+                    "id": "room_temp",
+                    "label": "Oda sıcaklığı / Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_effort_v1",
+            "description": "Hazırlık efor tercihi - basit",
+            "options": [
+                {
+                    "id": "quick",
+                    "label": "Hızlı ve pratik"
+                },
+                {
+                    "id": "special",
+                    "label": "Özel ve zahmetli olabilir"
+                }
+            ]
+        },
+        {
+            "id": "purchase_value_v1",
+            "description": "Satın alma değer tercihi - basit",
+            "options": [
+                {
+                    "id": "brand",
+                    "label": "Marka / Kalite öncelikli"
+                },
+                {
+                    "id": "price",
+                    "label": "Fiyat öncelikli"
+                },
+                {
+                    "id": "balance",
+                    "label": "Dengeli tercih"
+                }
+            ]
+        },
+        {
+            "id": "purchase_newused_v1",
+            "description": "Yeni vs kullanılmış tercihi - basit",
+            "options": [
+                {
+                    "id": "new",
+                    "label": "Kesinlikle yeni"
+                },
+                {
+                    "id": "used_ok",
+                    "label": "İkinci el de olur"
+                },
+                {
+                    "id": "no_pref",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "energy_level_v1",
+            "description": "Anlık enerji seviyesi - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Enerjik"
+                },
+                {
+                    "id": "medium",
+                    "label": "Normal"
+                },
+                {
+                    "id": "low",
+                    "label": "Yorgun / Düşük"
+                }
+            ]
+        },
+        {
+            "id": "health_vs_pleasure_v1",
+            "description": "Sağlık vs keyif tercihi - basit",
+            "options": [
+                {
+                    "id": "health",
+                    "label": "Sağlıklı olan"
+                },
+                {
+                    "id": "pleasure",
+                    "label": "Keyifli olan"
+                },
+                {
+                    "id": "balanced",
+                    "label": "İkisinin ortası"
+                }
+            ]
+        },
+        {
+            "id": "travel_mood_v1",
+            "description": "Seyahat ruh hali - basit",
+            "options": [
+                {
+                    "id": "adventure",
+                    "label": "Macera / Keşif"
+                },
+                {
+                    "id": "relax",
+                    "label": "Dinlenme / Rahatlama"
+                },
+                {
+                    "id": "mix",
+                    "label": "İkisi de"
+                }
+            ]
+        },
+        {
+            "id": "travel_distance_v1",
+            "description": "Seyahat mesafe tercihi - basit",
+            "options": [
+                {
+                    "id": "close",
+                    "label": "Yakın mesafe"
+                },
+                {
+                    "id": "far",
+                    "label": "Uzak mesafe"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "social_energy_v1",
+            "description": "Sosyal enerji seviyesi - basit",
+            "options": [
+                {
+                    "id": "social",
+                    "label": "Sosyal / insanlarla olmak"
+                },
+                {
+                    "id": "alone",
+                    "label": "Yalnız / kendi başıma"
+                },
+                {
+                    "id": "small_group",
+                    "label": "Küçük grup"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_comfort_v1",
+            "description": "Konfor vs deneyim - basit",
+            "options": [
+                {
+                    "id": "comfort",
+                    "label": "Konfor / Alışıldık"
+                },
+                {
+                    "id": "experience",
+                    "label": "Yeni deneyim"
+                }
+            ]
+        },
+        {
+            "id": "risk_mood_v1",
+            "description": "Anlık risk iştahı - basit",
+            "options": [
+                {
+                    "id": "safe",
+                    "label": "Güvenli / Bilinen"
+                },
+                {
+                    "id": "risky",
+                    "label": "Riskli / Yeni"
+                }
+            ]
+        },
+        {
+            "id": "child_mood_v1",
+            "description": "Çocuğun ruh hali - basit",
+            "options": [
+                {
+                    "id": "happy",
+                    "label": "Mutlu / Enerjik"
+                },
+                {
+                    "id": "tired",
+                    "label": "Yorgun / Uykulu"
+                },
+                {
+                    "id": "cranky",
+                    "label": "Huysuz / Hırçın"
+                },
+                {
+                    "id": "calm",
+                    "label": "Sakin"
+                }
+            ]
+        },
+        {
+            "id": "partner_mood_v1",
+            "description": "Partner/eş ile iletişim durumu - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi / Uyumlu"
+                },
+                {
+                    "id": "tense",
+                    "label": "Gergin"
+                },
+                {
+                    "id": "neutral",
+                    "label": "Normal"
+                }
+            ]
+        },
+        {
+            "id": "learning_mode_simple_v1",
+            "description": "Öğrenme modu - basit",
+            "options": [
+                {
+                    "id": "practical",
+                    "label": "Pratik / Uygulamalı"
+                },
+                {
+                    "id": "theoretical",
+                    "label": "Teorik / Okuma"
+                }
+            ]
+        },
+        {
+            "id": "urgency_simple_v1",
+            "description": "Aciliyet - basit",
+            "options": [
+                {
+                    "id": "urgent",
+                    "label": "Acil"
+                },
+                {
+                    "id": "normal",
+                    "label": "Normal"
+                },
+                {
+                    "id": "no_rush",
+                    "label": "Acele yok"
+                }
+            ]
+        },
+        {
+            "id": "budget_simple_v1",
+            "description": "Bütçe hassasiyeti - basit",
+            "options": [
+                {
+                    "id": "tight",
+                    "label": "Sıkı tutmalıyım"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                },
+                {
+                    "id": "no_limit",
+                    "label": "Önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "food_guest_count_simple_v1",
+            "description": "Kaç kişilik - basit",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Sadece ben"
+                },
+                {
+                    "id": "couple",
+                    "label": "2 kişi"
+                },
+                {
+                    "id": "small_group",
+                    "label": "3-5 kişi"
+                },
+                {
+                    "id": "large_group",
+                    "label": "6+ kişi"
+                }
+            ]
+        },
+        {
+            "id": "food_cuisine_simple_v1",
+            "description": "Mutfak tercihi - basit",
+            "options": [
+                {
+                    "id": "turkish",
+                    "label": "Türk mutfağı"
+                },
+                {
+                    "id": "international",
+                    "label": "Dünya mutfakları"
+                },
+                {
+                    "id": "fusion",
+                    "label": "Karışık/Füzyon"
+                },
+                {
+                    "id": "no_pref",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_skill_level_v1",
+            "description": "Mutfak becerisi - basit",
+            "options": [
+                {
+                    "id": "beginner",
+                    "label": "Acemiyim"
+                },
+                {
+                    "id": "intermediate",
+                    "label": "İdare ederim"
+                },
+                {
+                    "id": "advanced",
+                    "label": "Tecrübeliyim"
+                }
+            ]
+        },
+        {
+            "id": "food_prep_time_v1",
+            "description": "Hazırlık süresi - basit",
+            "options": [
+                {
+                    "id": "quick",
+                    "label": "15 dakikadan az"
+                },
+                {
+                    "id": "medium",
+                    "label": "15-45 dakika"
+                },
+                {
+                    "id": "long",
+                    "label": "45+ dakika, sorun değil"
+                }
+            ]
+        },
+        {
+            "id": "food_occasion_simple_v1",
+            "description": "Yemek vesilesi - basit",
+            "options": [
+                {
+                    "id": "casual",
+                    "label": "Günlük/sıradan"
+                },
+                {
+                    "id": "special",
+                    "label": "Özel gün"
+                },
+                {
+                    "id": "romantic",
+                    "label": "Romantik"
+                },
+                {
+                    "id": "party",
+                    "label": "Parti/kutlama"
+                }
+            ]
+        },
+        {
+            "id": "food_alcohol_v1",
+            "description": "Alkol tercihi - basit",
+            "options": [
+                {
+                    "id": "with_alcohol",
+                    "label": "Alkollü içecek eşliğinde"
+                },
+                {
+                    "id": "no_alcohol",
+                    "label": "Alkolsüz"
+                },
+                {
+                    "id": "optional",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_dietary_simple_v1",
+            "description": "Diyet kısıtlaması - basit",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Yok, her şey olur"
+                },
+                {
+                    "id": "vegetarian",
+                    "label": "Vejetaryen"
+                },
+                {
+                    "id": "vegan",
+                    "label": "Vegan"
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "Glutensiz"
+                },
+                {
+                    "id": "low_carb",
+                    "label": "Düşük karbonhidrat"
+                }
+            ]
+        },
+        {
+            "id": "food_portion_v1",
+            "description": "Porsiyon tercihi - basit",
+            "options": [
+                {
+                    "id": "light",
+                    "label": "Hafif/az"
+                },
+                {
+                    "id": "normal",
+                    "label": "Normal"
+                },
+                {
+                    "id": "generous",
+                    "label": "Bol/doyurucu"
+                }
+            ]
+        },
+        {
+            "id": "food_presentation_v1",
+            "description": "Sunum önemi - basit",
+            "options": [
+                {
+                    "id": "simple",
+                    "label": "Basit olsun"
+                },
+                {
+                    "id": "nice",
+                    "label": "Güzel görünsün"
+                },
+                {
+                    "id": "impressive",
+                    "label": "Etkileyici olmalı"
+                }
+            ]
+        },
+        {
+            "id": "food_meal_type_v1",
+            "description": "Öğün tipi - basit",
+            "options": [
+                {
+                    "id": "breakfast",
+                    "label": "Kahvaltı"
+                },
+                {
+                    "id": "lunch",
+                    "label": "Öğle yemeği"
+                },
+                {
+                    "id": "dinner",
+                    "label": "Akşam yemeği"
+                },
+                {
+                    "id": "snack",
+                    "label": "Atıştırmalık"
+                },
+                {
+                    "id": "dessert",
+                    "label": "Tatlı"
+                }
+            ]
+        },
+        {
+            "id": "food_cooking_method_v1",
+            "description": "Pişirme yöntemi - basit",
+            "options": [
+                {
+                    "id": "no_cook",
+                    "label": "Pişirmesiz"
+                },
+                {
+                    "id": "stovetop",
+                    "label": "Ocakta"
+                },
+                {
+                    "id": "oven",
+                    "label": "Fırında"
+                },
+                {
+                    "id": "grill",
+                    "label": "Izgara/mangal"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_spice_level_v1",
+            "description": "Baharat seviyesi - basit",
+            "options": [
+                {
+                    "id": "mild",
+                    "label": "Hafif/baharatsız"
+                },
+                {
+                    "id": "medium",
+                    "label": "Orta"
+                },
+                {
+                    "id": "spicy",
+                    "label": "Acılı/baharatlı"
+                }
+            ]
+        },
+        {
+            "id": "food_texture_v1",
+            "description": "Doku tercihi - basit",
+            "options": [
+                {
+                    "id": "soft",
+                    "label": "Yumuşak"
+                },
+                {
+                    "id": "crunchy",
+                    "label": "Çıtır/gevrek"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "food_protein_v1",
+            "description": "Protein tercihi - basit",
+            "options": [
+                {
+                    "id": "meat",
+                    "label": "Et (kırmızı/beyaz)"
+                },
+                {
+                    "id": "fish",
+                    "label": "Balık/deniz ürünü"
+                },
+                {
+                    "id": "eggs",
+                    "label": "Yumurta"
+                },
+                {
+                    "id": "legumes",
+                    "label": "Baklagil"
+                },
+                {
+                    "id": "no_pref",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "food_carb_pref_v1",
+            "description": "Karbonhidrat tercihi - basit",
+            "options": [
+                {
+                    "id": "rice",
+                    "label": "Pirinç/pilav"
+                },
+                {
+                    "id": "pasta",
+                    "label": "Makarna"
+                },
+                {
+                    "id": "bread",
+                    "label": "Ekmek"
+                },
+                {
+                    "id": "potato",
+                    "label": "Patates"
+                },
+                {
+                    "id": "low_carb",
+                    "label": "Karbonhidrat istemem"
+                }
+            ]
+        },
+        {
+            "id": "food_veggie_interest_v1",
+            "description": "Sebze ilgisi - basit",
+            "options": [
+                {
+                    "id": "love",
+                    "label": "Sebze severim"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz olsun"
+                },
+                {
+                    "id": "minimal",
+                    "label": "Minimum sebze"
+                }
+            ]
+        },
+        {
+            "id": "food_dessert_mood_v1",
+            "description": "Tatlı isteği - basit",
+            "options": [
+                {
+                    "id": "definitely",
+                    "label": "Kesinlikle tatlı olsun"
+                },
+                {
+                    "id": "maybe",
+                    "label": "Belki, hafif bir şey"
+                },
+                {
+                    "id": "no",
+                    "label": "Tatlı istemem"
+                }
+            ]
+        },
+        {
+            "id": "purchase_urgency_v1",
+            "description": "Satın alma aciliyeti - basit",
+            "options": [
+                {
+                    "id": "immediate",
+                    "label": "Bugün almam lazım"
+                },
+                {
+                    "id": "this_week",
+                    "label": "Bu hafta içinde"
+                },
+                {
+                    "id": "no_rush",
+                    "label": "Acele yok, araştırıyorum"
+                }
+            ]
+        },
+        {
+            "id": "purchase_research_v1",
+            "description": "Araştırma seviyesi - basit",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Hiç araştırmadım"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz baktım"
+                },
+                {
+                    "id": "extensive",
+                    "label": "Detaylı araştırdım"
+                }
+            ]
+        },
+        {
+            "id": "purchase_channel_v1",
+            "description": "Alışveriş kanalı - basit",
+            "options": [
+                {
+                    "id": "online",
+                    "label": "Online tercih ederim"
+                },
+                {
+                    "id": "store",
+                    "label": "Mağazadan almak isterim"
+                },
+                {
+                    "id": "either",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "purchase_payment_v1",
+            "description": "Ödeme yöntemi - basit",
+            "options": [
+                {
+                    "id": "cash",
+                    "label": "Peşin"
+                },
+                {
+                    "id": "installment",
+                    "label": "Taksitli"
+                },
+                {
+                    "id": "depends",
+                    "label": "Duruma göre"
+                }
+            ]
+        },
+        {
+            "id": "purchase_warranty_v1",
+            "description": "Garanti önemi - basit",
+            "options": [
+                {
+                    "id": "critical",
+                    "label": "Çok önemli"
+                },
+                {
+                    "id": "nice_to_have",
+                    "label": "Olsa iyi"
+                },
+                {
+                    "id": "not_important",
+                    "label": "Önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "purchase_return_v1",
+            "description": "İade politikası - basit",
+            "options": [
+                {
+                    "id": "must_have",
+                    "label": "İade edilebilir olmalı"
+                },
+                {
+                    "id": "preferred",
+                    "label": "Tercih ederim"
+                },
+                {
+                    "id": "not_concerned",
+                    "label": "Düşünmüyorum"
+                }
+            ]
+        },
+        {
+            "id": "purchase_eco_v1",
+            "description": "Çevreci tercih - basit",
+            "options": [
+                {
+                    "id": "priority",
+                    "label": "Çevre dostu önemli"
+                },
+                {
+                    "id": "consider",
+                    "label": "Mümkünse olsun"
+                },
+                {
+                    "id": "not_factor",
+                    "label": "Kritik değil"
+                }
+            ]
+        },
+        {
+            "id": "purchase_size_v1",
+            "description": "Boyut tercihi - basit",
+            "options": [
+                {
+                    "id": "compact",
+                    "label": "Küçük/kompakt"
+                },
+                {
+                    "id": "standard",
+                    "label": "Standart"
+                },
+                {
+                    "id": "large",
+                    "label": "Büyük"
+                }
+            ]
+        },
+        {
+            "id": "purchase_color_v1",
+            "description": "Renk tercihi - basit",
+            "options": [
+                {
+                    "id": "specific",
+                    "label": "Belirli renk istiyorum"
+                },
+                {
+                    "id": "neutral",
+                    "label": "Nötr renkler"
+                },
+                {
+                    "id": "no_pref",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "purchase_brand_loyalty_v1",
+            "description": "Marka bağlılığı - basit",
+            "options": [
+                {
+                    "id": "loyal",
+                    "label": "Belirli markaya bağlıyım"
+                },
+                {
+                    "id": "open",
+                    "label": "Markaya açığım"
+                },
+                {
+                    "id": "no_brand",
+                    "label": "Marka önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "purchase_feature_v1",
+            "description": "Özellik önceliği - basit",
+            "options": [
+                {
+                    "id": "basic",
+                    "label": "Temel özellikler yeterli"
+                },
+                {
+                    "id": "mid",
+                    "label": "Orta seviye"
+                },
+                {
+                    "id": "premium",
+                    "label": "En iyi özellikler"
+                }
+            ]
+        },
+        {
+            "id": "purchase_frequency_v1",
+            "description": "Kullanım sıklığı - basit",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün kullanacağım"
+                },
+                {
+                    "id": "weekly",
+                    "label": "Haftada birkaç kez"
+                },
+                {
+                    "id": "occasionally",
+                    "label": "Ara sıra"
+                }
+            ]
+        },
+        {
+            "id": "purchase_replace_upgrade_v1",
+            "description": "Değiştirme/yükseltme - basit",
+            "options": [
+                {
+                    "id": "first_time",
+                    "label": "İlk kez alıyorum"
+                },
+                {
+                    "id": "replace",
+                    "label": "Eskisini değiştiriyorum"
+                },
+                {
+                    "id": "upgrade",
+                    "label": "Daha iyisine geçiyorum"
+                }
+            ]
+        },
+        {
+            "id": "purchase_gift_v1",
+            "description": "Hediye mi kişisel mi - basit",
+            "options": [
+                {
+                    "id": "personal",
+                    "label": "Kendime"
+                },
+                {
+                    "id": "gift",
+                    "label": "Hediye"
+                },
+                {
+                    "id": "shared",
+                    "label": "Ortak kullanım"
+                }
+            ]
+        },
+        {
+            "id": "purchase_comparison_v1",
+            "description": "Karşılaştırma - basit",
+            "options": [
+                {
+                    "id": "one",
+                    "label": "Tek seçenek var aklımda"
+                },
+                {
+                    "id": "few",
+                    "label": "2-3 seçenek arasında"
+                },
+                {
+                    "id": "many",
+                    "label": "Çok seçenek değerlendiriyorum"
+                }
+            ]
+        },
+        {
+            "id": "purchase_reviews_v1",
+            "description": "Yorum önemi - basit",
+            "options": [
+                {
+                    "id": "critical",
+                    "label": "Yorumları mutlaka okurum"
+                },
+                {
+                    "id": "helpful",
+                    "label": "Yardımcı olur"
+                },
+                {
+                    "id": "not_follow",
+                    "label": "Pek bakmam"
+                }
+            ]
+        },
+        {
+            "id": "purchase_impulse_v1",
+            "description": "Dürtüsel mi planlı mı - basit",
+            "options": [
+                {
+                    "id": "impulse",
+                    "label": "Anlık karar veriyorum"
+                },
+                {
+                    "id": "planned",
+                    "label": "Planlı alışveriş"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Duruma göre"
+                }
+            ]
+        },
+        {
+            "id": "purchase_space_v1",
+            "description": "Depolama alanı - basit",
+            "options": [
+                {
+                    "id": "limited",
+                    "label": "Yerim sınırlı"
+                },
+                {
+                    "id": "enough",
+                    "label": "Yeterli yerim var"
+                },
+                {
+                    "id": "not_concern",
+                    "label": "Sorun değil"
+                }
+            ]
+        },
+        {
+            "id": "health_activity_type_v1",
+            "description": "Aktivite tipi - basit",
+            "options": [
+                {
+                    "id": "cardio",
+                    "label": "Kardiyo (koşu, yüzme)"
+                },
+                {
+                    "id": "strength",
+                    "label": "Güç antrenmanı"
+                },
+                {
+                    "id": "flexibility",
+                    "label": "Esneklik (yoga, pilates)"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "health_motivation_v1",
+            "description": "Motivasyon seviyesi - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Çok motiveyim"
+                },
+                {
+                    "id": "medium",
+                    "label": "Orta düzey"
+                },
+                {
+                    "id": "low",
+                    "label": "Motivasyon bulmakta zorlanıyorum"
+                }
+            ]
+        },
+        {
+            "id": "health_time_of_day_v1",
+            "description": "Gün içi tercih - basit",
+            "options": [
+                {
+                    "id": "morning",
+                    "label": "Sabah"
+                },
+                {
+                    "id": "afternoon",
+                    "label": "Öğleden sonra"
+                },
+                {
+                    "id": "evening",
+                    "label": "Akşam"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                }
+            ]
+        },
+        {
+            "id": "health_focus_v1",
+            "description": "Fiziksel mi zihinsel mi - basit",
+            "options": [
+                {
+                    "id": "physical",
+                    "label": "Fiziksel sağlık"
+                },
+                {
+                    "id": "mental",
+                    "label": "Zihinsel sağlık"
+                },
+                {
+                    "id": "both",
+                    "label": "İkisi de"
+                }
+            ]
+        },
+        {
+            "id": "health_solo_group_v1",
+            "description": "Yalnız mı grupla mı - basit",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Yalnız tercih ederim"
+                },
+                {
+                    "id": "group",
+                    "label": "Grupla daha iyi"
+                },
+                {
+                    "id": "partner",
+                    "label": "Bir partnerle"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "health_intensity_v1",
+            "description": "Yoğunluk seviyesi - basit",
+            "options": [
+                {
+                    "id": "light",
+                    "label": "Hafif"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "intense",
+                    "label": "Yoğun"
+                }
+            ]
+        },
+        {
+            "id": "health_duration_v1",
+            "description": "Süre tercihi - basit",
+            "options": [
+                {
+                    "id": "short",
+                    "label": "15-20 dakika"
+                },
+                {
+                    "id": "medium",
+                    "label": "30-45 dakika"
+                },
+                {
+                    "id": "long",
+                    "label": "1 saat+"
+                }
+            ]
+        },
+        {
+            "id": "health_location_v1",
+            "description": "Mekan tercihi - basit",
+            "options": [
+                {
+                    "id": "home",
+                    "label": "Evde"
+                },
+                {
+                    "id": "gym",
+                    "label": "Spor salonunda"
+                },
+                {
+                    "id": "outdoor",
+                    "label": "Açık havada"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "health_diet_goal_v1",
+            "description": "Diyet hedefi - basit",
+            "options": [
+                {
+                    "id": "lose_weight",
+                    "label": "Kilo vermek"
+                },
+                {
+                    "id": "gain_muscle",
+                    "label": "Kas kazanmak"
+                },
+                {
+                    "id": "maintain",
+                    "label": "Korumak"
+                },
+                {
+                    "id": "healthier",
+                    "label": "Daha sağlıklı yemek"
+                }
+            ]
+        },
+        {
+            "id": "health_sleep_v1",
+            "description": "Uyku kalitesi - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi uyuyorum"
+                },
+                {
+                    "id": "average",
+                    "label": "Orta"
+                },
+                {
+                    "id": "poor",
+                    "label": "Kötü uyuyorum"
+                }
+            ]
+        },
+        {
+            "id": "health_stress_v1",
+            "description": "Stres seviyesi - basit",
+            "options": [
+                {
+                    "id": "low",
+                    "label": "Düşük stres"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta stres"
+                },
+                {
+                    "id": "high",
+                    "label": "Yüksek stres"
+                }
+            ]
+        },
+        {
+            "id": "health_limitation_v1",
+            "description": "Kısıtlama/sakatlık - basit",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Yok"
+                },
+                {
+                    "id": "minor",
+                    "label": "Küçük bir kısıtlama var"
+                },
+                {
+                    "id": "significant",
+                    "label": "Önemli bir kısıtlama var"
+                }
+            ]
+        },
+        {
+            "id": "health_budget_v1",
+            "description": "Sağlık bütçesi - basit",
+            "options": [
+                {
+                    "id": "free",
+                    "label": "Ücretsiz olmalı"
+                },
+                {
+                    "id": "low",
+                    "label": "Düşük bütçe"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Bütçe esnek"
+                }
+            ]
+        },
+        {
+            "id": "health_consistency_v1",
+            "description": "Tutarlılık - basit",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün yapabilirim"
+                },
+                {
+                    "id": "few_times",
+                    "label": "Haftada birkaç kez"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Ara sıra"
+                }
+            ]
+        },
+        {
+            "id": "health_tracking_v1",
+            "description": "Takip tercihi - basit",
+            "options": [
+                {
+                    "id": "app",
+                    "label": "Uygulama ile takip"
+                },
+                {
+                    "id": "manual",
+                    "label": "Manuel takip"
+                },
+                {
+                    "id": "no_tracking",
+                    "label": "Takip istemem"
+                }
+            ]
+        },
+        {
+            "id": "health_guidance_v1",
+            "description": "Profesyonel rehberlik - basit",
+            "options": [
+                {
+                    "id": "need",
+                    "label": "Profesyonel yardım isterim"
+                },
+                {
+                    "id": "maybe",
+                    "label": "Belki"
+                },
+                {
+                    "id": "self",
+                    "label": "Kendi başıma yaparım"
+                }
+            ]
+        },
+        {
+            "id": "health_timeline_v1",
+            "description": "Hedef zaman - basit",
+            "options": [
+                {
+                    "id": "short",
+                    "label": "1-4 hafta"
+                },
+                {
+                    "id": "medium",
+                    "label": "1-3 ay"
+                },
+                {
+                    "id": "long",
+                    "label": "Uzun vadeli yaşam tarzı"
+                }
+            ]
+        },
+        {
+            "id": "health_fitness_level_v1",
+            "description": "Fitness seviyesi - basit",
+            "options": [
+                {
+                    "id": "beginner",
+                    "label": "Başlangıç"
+                },
+                {
+                    "id": "intermediate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "advanced",
+                    "label": "İleri"
+                }
+            ]
+        },
+        {
+            "id": "travel_trip_type_v1",
+            "description": "Tatil tipi - basit",
+            "options": [
+                {
+                    "id": "beach",
+                    "label": "Deniz/plaj"
+                },
+                {
+                    "id": "city",
+                    "label": "Şehir turu"
+                },
+                {
+                    "id": "nature",
+                    "label": "Doğa/kamp"
+                },
+                {
+                    "id": "cultural",
+                    "label": "Kültür/tarih"
+                }
+            ]
+        },
+        {
+            "id": "travel_duration_v1",
+            "description": "Tatil süresi - basit",
+            "options": [
+                {
+                    "id": "weekend",
+                    "label": "Hafta sonu (2-3 gün)"
+                },
+                {
+                    "id": "week",
+                    "label": "Bir hafta"
+                },
+                {
+                    "id": "longer",
+                    "label": "10+ gün"
+                }
+            ]
+        },
+        {
+            "id": "travel_budget_v1",
+            "description": "Tatil bütçesi - basit",
+            "options": [
+                {
+                    "id": "budget",
+                    "label": "Ekonomik"
+                },
+                {
+                    "id": "mid",
+                    "label": "Orta bütçe"
+                },
+                {
+                    "id": "luxury",
+                    "label": "Lüks"
+                }
+            ]
+        },
+        {
+            "id": "travel_accommodation_v1",
+            "description": "Konaklama tercihi - basit",
+            "options": [
+                {
+                    "id": "hotel",
+                    "label": "Otel"
+                },
+                {
+                    "id": "airbnb",
+                    "label": "Kiralık daire/Airbnb"
+                },
+                {
+                    "id": "resort",
+                    "label": "Her şey dahil resort"
+                },
+                {
+                    "id": "hostel",
+                    "label": "Hostel/pansiyon"
+                }
+            ]
+        },
+        {
+            "id": "travel_transport_v1",
+            "description": "Ulaşım tercihi - basit",
+            "options": [
+                {
+                    "id": "plane",
+                    "label": "Uçak"
+                },
+                {
+                    "id": "car",
+                    "label": "Arabayla"
+                },
+                {
+                    "id": "bus_train",
+                    "label": "Otobüs/tren"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "travel_climate_v1",
+            "description": "İklim tercihi - basit",
+            "options": [
+                {
+                    "id": "hot",
+                    "label": "Sıcak"
+                },
+                {
+                    "id": "mild",
+                    "label": "Ilıman"
+                },
+                {
+                    "id": "cold",
+                    "label": "Soğuk/kar"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "travel_activity_v1",
+            "description": "Aktivite tercihi - basit",
+            "options": [
+                {
+                    "id": "active",
+                    "label": "Aktif (yürüyüş, spor)"
+                },
+                {
+                    "id": "relaxed",
+                    "label": "Dinlence odaklı"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "travel_crowd_v1",
+            "description": "Kalabalık tercihi - basit",
+            "options": [
+                {
+                    "id": "popular",
+                    "label": "Popüler yerler olabilir"
+                },
+                {
+                    "id": "off_beaten",
+                    "label": "Sakin/az bilinen"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "travel_cuisine_v1",
+            "description": "Yemek önemi - basit",
+            "options": [
+                {
+                    "id": "important",
+                    "label": "Yerel lezzetler önemli"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta önemde"
+                },
+                {
+                    "id": "not_priority",
+                    "label": "Öncelik değil"
+                }
+            ]
+        },
+        {
+            "id": "travel_planning_v1",
+            "description": "Planlama tarzı - basit",
+            "options": [
+                {
+                    "id": "detailed",
+                    "label": "Her şey planlanmış"
+                },
+                {
+                    "id": "loose",
+                    "label": "Esnek plan"
+                },
+                {
+                    "id": "spontaneous",
+                    "label": "Anlık kararlar"
+                }
+            ]
+        },
+        {
+            "id": "travel_flexibility_v1",
+            "description": "Tarih esnekliği - basit",
+            "options": [
+                {
+                    "id": "fixed",
+                    "label": "Tarihler sabit"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek tarihler"
+                },
+                {
+                    "id": "very_flexible",
+                    "label": "Çok esnek"
+                }
+            ]
+        },
+        {
+            "id": "travel_companions_v1",
+            "description": "Kimle gidiyorsun - basit",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Yalnız"
+                },
+                {
+                    "id": "partner",
+                    "label": "Eş/partner"
+                },
+                {
+                    "id": "family",
+                    "label": "Aile (çocuklu)"
+                },
+                {
+                    "id": "friends",
+                    "label": "Arkadaşlar"
+                }
+            ]
+        },
+        {
+            "id": "travel_accessibility_v1",
+            "description": "Erişilebilirlik ihtiyacı - basit",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Yok"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz gerekli"
+                },
+                {
+                    "id": "important",
+                    "label": "Çok önemli"
+                }
+            ]
+        },
+        {
+            "id": "travel_nightlife_v1",
+            "description": "Gece hayatı - basit",
+            "options": [
+                {
+                    "id": "important",
+                    "label": "Önemli"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Ara sıra"
+                },
+                {
+                    "id": "not_interested",
+                    "label": "İlgilenmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "travel_cultural_v1",
+            "description": "Kültürel ilgi - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Müze/tarihi yerler önemli"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz gezeyim"
+                },
+                {
+                    "id": "low",
+                    "label": "Pek ilgilenmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "travel_shopping_v1",
+            "description": "Alışveriş ilgisi - basit",
+            "options": [
+                {
+                    "id": "important",
+                    "label": "Alışveriş yapacağım"
+                },
+                {
+                    "id": "maybe",
+                    "label": "Belki biraz"
+                },
+                {
+                    "id": "not_interested",
+                    "label": "İlgilenmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "travel_relaxation_v1",
+            "description": "Dinlenme seviyesi - basit",
+            "options": [
+                {
+                    "id": "full_relax",
+                    "label": "Tam dinlenme"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "active",
+                    "label": "Aktif tatil"
+                }
+            ]
+        },
+        {
+            "id": "travel_photo_v1",
+            "description": "Fotoğraf çekimi - basit",
+            "options": [
+                {
+                    "id": "important",
+                    "label": "Instagram'lık yerler önemli"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz çekerim"
+                },
+                {
+                    "id": "not_priority",
+                    "label": "Öncelik değil"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_change_driver_v1",
+            "description": "Değişim sebebi - basit",
+            "options": [
+                {
+                    "id": "boredom",
+                    "label": "Sıkıldım"
+                },
+                {
+                    "id": "growth",
+                    "label": "Gelişmek istiyorum"
+                },
+                {
+                    "id": "necessity",
+                    "label": "Zorunluluk"
+                },
+                {
+                    "id": "curiosity",
+                    "label": "Merak"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_location_v1",
+            "description": "Lokasyon tercihi - basit",
+            "options": [
+                {
+                    "id": "urban",
+                    "label": "Şehir"
+                },
+                {
+                    "id": "suburban",
+                    "label": "Şehir dışı/banliyö"
+                },
+                {
+                    "id": "rural",
+                    "label": "Kırsal"
+                },
+                {
+                    "id": "any",
+                    "label": "Fark etmez"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_routine_v1",
+            "description": "Rutin tercihi - basit",
+            "options": [
+                {
+                    "id": "structured",
+                    "label": "Düzenli rutin isterim"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek olsun"
+                },
+                {
+                    "id": "minimal",
+                    "label": "Az rutin"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_social_v1",
+            "description": "Sosyal ihtiyaç - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Çok sosyal olmak isterim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta düzey"
+                },
+                {
+                    "id": "low",
+                    "label": "Daha yalnız olabilirim"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_environment_v1",
+            "description": "Çevre tercihi - basit",
+            "options": [
+                {
+                    "id": "nature",
+                    "label": "Doğaya yakın"
+                },
+                {
+                    "id": "city",
+                    "label": "Şehir hayatı"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_pace_v1",
+            "description": "Yaşam hızı - basit",
+            "options": [
+                {
+                    "id": "fast",
+                    "label": "Hızlı tempolu"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta tempolu"
+                },
+                {
+                    "id": "slow",
+                    "label": "Yavaş/sakin"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_cost_v1",
+            "description": "Maliyet endişesi - basit",
+            "options": [
+                {
+                    "id": "low_cost",
+                    "label": "Ucuz olmalı"
+                },
+                {
+                    "id": "reasonable",
+                    "label": "Makul olsun"
+                },
+                {
+                    "id": "not_concern",
+                    "label": "Para önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_commitment_v1",
+            "description": "Bağlılık süresi - basit",
+            "options": [
+                {
+                    "id": "short",
+                    "label": "Kısa vadeli deneme"
+                },
+                {
+                    "id": "medium",
+                    "label": "Birkaç ay"
+                },
+                {
+                    "id": "long",
+                    "label": "Uzun vadeli"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_reversibility_v1",
+            "description": "Geri dönüş - basit",
+            "options": [
+                {
+                    "id": "must",
+                    "label": "Geri dönebilmeliyim"
+                },
+                {
+                    "id": "preferred",
+                    "label": "Tercih ederim"
+                },
+                {
+                    "id": "not_needed",
+                    "label": "Gerekli değil"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_support_v1",
+            "description": "Destek ihtiyacı - basit",
+            "options": [
+                {
+                    "id": "need",
+                    "label": "Destek lazım"
+                },
+                {
+                    "id": "some",
+                    "label": "Biraz yardım iyi olur"
+                },
+                {
+                    "id": "independent",
+                    "label": "Kendi başıma yaparım"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_experience_v1",
+            "description": "Deneyim önceliği - basit",
+            "options": [
+                {
+                    "id": "new",
+                    "label": "Yeni deneyimler"
+                },
+                {
+                    "id": "familiar",
+                    "label": "Tanıdık şeyler"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_comfort_zone_v1",
+            "description": "Konfor alanı - basit",
+            "options": [
+                {
+                    "id": "push",
+                    "label": "Kendimi zorlamak isterim"
+                },
+                {
+                    "id": "gradual",
+                    "label": "Yavaş yavaş"
+                },
+                {
+                    "id": "stay",
+                    "label": "Rahat alanımda kalmak isterim"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_technology_v1",
+            "description": "Teknoloji ilgisi - basit",
+            "options": [
+                {
+                    "id": "digital",
+                    "label": "Dijital/teknolojik"
+                },
+                {
+                    "id": "analog",
+                    "label": "Geleneksel"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_simplicity_v1",
+            "description": "Sadelik - basit",
+            "options": [
+                {
+                    "id": "minimalist",
+                    "label": "Minimalist hayat"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "abundant",
+                    "label": "Bolluğu severim"
+                }
+            ]
+        },
+        {
+            "id": "lifestyle_nature_freq_v1",
+            "description": "Doğa sıklığı - basit",
+            "options": [
+                {
+                    "id": "daily",
+                    "label": "Her gün doğada olmak"
+                },
+                {
+                    "id": "weekly",
+                    "label": "Haftalık"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Ara sıra"
+                }
+            ]
+        },
+        {
+            "id": "career_satisfaction_v1",
+            "description": "İş memnuniyeti - basit",
+            "options": [
+                {
+                    "id": "happy",
+                    "label": "Mutluyum"
+                },
+                {
+                    "id": "neutral",
+                    "label": "İdare eder"
+                },
+                {
+                    "id": "unhappy",
+                    "label": "Mutsuzum"
+                }
+            ]
+        },
+        {
+            "id": "career_growth_v1",
+            "description": "Büyüme fırsatı - basit",
+            "options": [
+                {
+                    "id": "important",
+                    "label": "Çok önemli"
+                },
+                {
+                    "id": "nice",
+                    "label": "Olsa iyi"
+                },
+                {
+                    "id": "not_priority",
+                    "label": "Öncelik değil"
+                }
+            ]
+        },
+        {
+            "id": "career_work_life_v1",
+            "description": "İş-yaşam dengesi - basit",
+            "options": [
+                {
+                    "id": "priority",
+                    "label": "En önemli şey"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Denge kuruyorum"
+                },
+                {
+                    "id": "work_focused",
+                    "label": "İş odaklıyım"
+                }
+            ]
+        },
+        {
+            "id": "career_risk_v1",
+            "description": "Risk toleransı - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Risk alabilirim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Hesaplı risk"
+                },
+                {
+                    "id": "low",
+                    "label": "Güvenli tercih"
+                }
+            ]
+        },
+        {
+            "id": "career_flexibility_v1",
+            "description": "Esneklik - basit",
+            "options": [
+                {
+                    "id": "must",
+                    "label": "Esneklik şart"
+                },
+                {
+                    "id": "preferred",
+                    "label": "Tercih ederim"
+                },
+                {
+                    "id": "structured",
+                    "label": "Düzenli program iyi"
+                }
+            ]
+        },
+        {
+            "id": "career_autonomy_v1",
+            "description": "Özerklik - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Bağımsız çalışmak isterim"
+                },
+                {
+                    "id": "guided",
+                    "label": "Rehberlik isterim"
+                },
+                {
+                    "id": "team",
+                    "label": "Takımla çalışmak isterim"
+                }
+            ]
+        },
+        {
+            "id": "career_team_size_v1",
+            "description": "Takım boyutu - basit",
+            "options": [
+                {
+                    "id": "solo",
+                    "label": "Tek başına"
+                },
+                {
+                    "id": "small",
+                    "label": "Küçük takım"
+                },
+                {
+                    "id": "large",
+                    "label": "Büyük organizasyon"
+                }
+            ]
+        },
+        {
+            "id": "career_industry_v1",
+            "description": "Sektör ilgisi - basit",
+            "options": [
+                {
+                    "id": "same",
+                    "label": "Aynı sektörde"
+                },
+                {
+                    "id": "related",
+                    "label": "Yakın sektör"
+                },
+                {
+                    "id": "new",
+                    "label": "Tamamen farklı"
+                }
+            ]
+        },
+        {
+            "id": "career_salary_v1",
+            "description": "Maaş önemi - basit",
+            "options": [
+                {
+                    "id": "priority",
+                    "label": "En önemli faktör"
+                },
+                {
+                    "id": "important",
+                    "label": "Önemli ama tek değil"
+                },
+                {
+                    "id": "secondary",
+                    "label": "İkincil"
+                }
+            ]
+        },
+        {
+            "id": "career_commute_v1",
+            "description": "Ulaşım - basit",
+            "options": [
+                {
+                    "id": "short",
+                    "label": "Kısa ulaşım şart"
+                },
+                {
+                    "id": "acceptable",
+                    "label": "Makul olsun"
+                },
+                {
+                    "id": "not_factor",
+                    "label": "Önemli değil"
+                }
+            ]
+        },
+        {
+            "id": "career_remote_v1",
+            "description": "Uzaktan çalışma - basit",
+            "options": [
+                {
+                    "id": "full_remote",
+                    "label": "Tam uzaktan"
+                },
+                {
+                    "id": "hybrid",
+                    "label": "Hibrit"
+                },
+                {
+                    "id": "office",
+                    "label": "Ofisten çalışmak isterim"
+                }
+            ]
+        },
+        {
+            "id": "career_stress_v1",
+            "description": "Stres toleransı - basit",
+            "options": [
+                {
+                    "id": "low_stress",
+                    "label": "Düşük stresli iş isterim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta olabilir"
+                },
+                {
+                    "id": "high_ok",
+                    "label": "Yüksek stres kaldırırım"
+                }
+            ]
+        },
+        {
+            "id": "career_learning_v1",
+            "description": "Öğrenme isteği - basit",
+            "options": [
+                {
+                    "id": "eager",
+                    "label": "Sürekli öğrenmek isterim"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Ara sıra"
+                },
+                {
+                    "id": "stable",
+                    "label": "Bildiklerimi yapmak isterim"
+                }
+            ]
+        },
+        {
+            "id": "career_leadership_v1",
+            "description": "Liderlik - basit",
+            "options": [
+                {
+                    "id": "want",
+                    "label": "Liderlik yapmak isterim"
+                },
+                {
+                    "id": "maybe",
+                    "label": "Belki ileride"
+                },
+                {
+                    "id": "individual",
+                    "label": "Bireysel katkı tercih ederim"
+                }
+            ]
+        },
+        {
+            "id": "career_stability_v1",
+            "description": "İstikrar - basit",
+            "options": [
+                {
+                    "id": "priority",
+                    "label": "İş güvencesi şart"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengelemek isterim"
+                },
+                {
+                    "id": "risk_ok",
+                    "label": "Belirsizlik sorun değil"
+                }
+            ]
+        },
+        {
+            "id": "parenting_child_age_v1",
+            "description": "Çocuk yaşı - basit",
+            "options": [
+                {
+                    "id": "baby",
+                    "label": "Bebek (0-2)"
+                },
+                {
+                    "id": "toddler",
+                    "label": "Küçük çocuk (2-5)"
+                },
+                {
+                    "id": "school",
+                    "label": "Okul çağı (6-12)"
+                },
+                {
+                    "id": "teen",
+                    "label": "Ergen (13+)"
+                }
+            ]
+        },
+        {
+            "id": "parenting_style_v1",
+            "description": "Ebeveynlik tarzı - basit",
+            "options": [
+                {
+                    "id": "strict",
+                    "label": "Disiplinli"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "permissive",
+                    "label": "Serbest"
+                }
+            ]
+        },
+        {
+            "id": "parenting_time_v1",
+            "description": "Çocuğa ayrılan zaman - basit",
+            "options": [
+                {
+                    "id": "full_time",
+                    "label": "Tam zamanlı birlikte"
+                },
+                {
+                    "id": "working",
+                    "label": "Çalışıyorum, akşamları"
+                },
+                {
+                    "id": "limited",
+                    "label": "Sınırlı zaman"
+                }
+            ]
+        },
+        {
+            "id": "parenting_partner_v1",
+            "description": "Partner desteği - basit",
+            "options": [
+                {
+                    "id": "supportive",
+                    "label": "Destekleyici partner"
+                },
+                {
+                    "id": "limited",
+                    "label": "Sınırlı destek"
+                },
+                {
+                    "id": "single",
+                    "label": "Tek ebeveyn"
+                }
+            ]
+        },
+        {
+            "id": "parenting_budget_v1",
+            "description": "Çocuk bütçesi - basit",
+            "options": [
+                {
+                    "id": "tight",
+                    "label": "Sıkı bütçe"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                }
+            ]
+        },
+        {
+            "id": "parenting_help_v1",
+            "description": "Yardım kaynağı - basit",
+            "options": [
+                {
+                    "id": "family",
+                    "label": "Aile yardımı var"
+                },
+                {
+                    "id": "paid",
+                    "label": "Ücretli yardım"
+                },
+                {
+                    "id": "none",
+                    "label": "Yardım yok"
+                }
+            ]
+        },
+        {
+            "id": "parenting_priority_v1",
+            "description": "Öncelik - basit",
+            "options": [
+                {
+                    "id": "education",
+                    "label": "Eğitim"
+                },
+                {
+                    "id": "happiness",
+                    "label": "Mutluluk"
+                },
+                {
+                    "id": "health",
+                    "label": "Sağlık"
+                },
+                {
+                    "id": "social",
+                    "label": "Sosyal beceriler"
+                }
+            ]
+        },
+        {
+            "id": "parenting_challenge_v1",
+            "description": "Zorluk - basit",
+            "options": [
+                {
+                    "id": "behavior",
+                    "label": "Davranış sorunları"
+                },
+                {
+                    "id": "education",
+                    "label": "Eğitim kararları"
+                },
+                {
+                    "id": "health",
+                    "label": "Sağlık konuları"
+                },
+                {
+                    "id": "balance",
+                    "label": "Denge kurma"
+                }
+            ]
+        },
+        {
+            "id": "parenting_screen_v1",
+            "description": "Ekran süresi - basit",
+            "options": [
+                {
+                    "id": "no_screen",
+                    "label": "Çok sınırlı"
+                },
+                {
+                    "id": "controlled",
+                    "label": "Kontrollü"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                }
+            ]
+        },
+        {
+            "id": "parenting_activity_v1",
+            "description": "Aktivite tercihi - basit",
+            "options": [
+                {
+                    "id": "outdoor",
+                    "label": "Açık hava"
+                },
+                {
+                    "id": "indoor",
+                    "label": "Ev içi"
+                },
+                {
+                    "id": "educational",
+                    "label": "Eğitici"
+                },
+                {
+                    "id": "creative",
+                    "label": "Yaratıcı"
+                }
+            ]
+        },
+        {
+            "id": "relationship_status_v1",
+            "description": "İlişki durumu - basit",
+            "options": [
+                {
+                    "id": "dating",
+                    "label": "Flört"
+                },
+                {
+                    "id": "committed",
+                    "label": "Ciddi ilişki"
+                },
+                {
+                    "id": "married",
+                    "label": "Evli"
+                },
+                {
+                    "id": "complicated",
+                    "label": "Karmaşık"
+                }
+            ]
+        },
+        {
+            "id": "relationship_duration_v1",
+            "description": "İlişki süresi - basit",
+            "options": [
+                {
+                    "id": "new",
+                    "label": "Yeni (1 yıldan az)"
+                },
+                {
+                    "id": "established",
+                    "label": "1-5 yıl"
+                },
+                {
+                    "id": "long",
+                    "label": "5+ yıl"
+                }
+            ]
+        },
+        {
+            "id": "relationship_communication_v1",
+            "description": "İletişim - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi iletişim kuruyoruz"
+                },
+                {
+                    "id": "needs_work",
+                    "label": "Geliştirmemiz lazım"
+                },
+                {
+                    "id": "poor",
+                    "label": "Zor iletişim"
+                }
+            ]
+        },
+        {
+            "id": "relationship_conflict_v1",
+            "description": "Çatışma - basit",
+            "options": [
+                {
+                    "id": "rare",
+                    "label": "Nadiren tartışırız"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Ara sıra"
+                },
+                {
+                    "id": "frequent",
+                    "label": "Sık sık"
+                }
+            ]
+        },
+        {
+            "id": "relationship_future_v1",
+            "description": "Gelecek planı - basit",
+            "options": [
+                {
+                    "id": "aligned",
+                    "label": "Planlarımız uyumlu"
+                },
+                {
+                    "id": "discussing",
+                    "label": "Konuşuyoruz"
+                },
+                {
+                    "id": "uncertain",
+                    "label": "Belirsiz"
+                }
+            ]
+        },
+        {
+            "id": "relationship_effort_v1",
+            "description": "Çaba - basit",
+            "options": [
+                {
+                    "id": "both",
+                    "label": "İkimiz de çaba gösteriyoruz"
+                },
+                {
+                    "id": "one_sided",
+                    "label": "Tek taraflı"
+                },
+                {
+                    "id": "neither",
+                    "label": "İkimiz de yetersiz"
+                }
+            ]
+        },
+        {
+            "id": "relationship_trust_v1",
+            "description": "Güven - basit",
+            "options": [
+                {
+                    "id": "full",
+                    "label": "Tam güven var"
+                },
+                {
+                    "id": "mostly",
+                    "label": "Çoğunlukla"
+                },
+                {
+                    "id": "issues",
+                    "label": "Güven sorunları var"
+                }
+            ]
+        },
+        {
+            "id": "relationship_intimacy_v1",
+            "description": "Yakınlık - basit",
+            "options": [
+                {
+                    "id": "strong",
+                    "label": "Güçlü bağ"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "distant",
+                    "label": "Mesafeli hissediyorum"
+                }
+            ]
+        },
+        {
+            "id": "relationship_support_v1",
+            "description": "Destek - basit",
+            "options": [
+                {
+                    "id": "supportive",
+                    "label": "Birbirimizi destekliyoruz"
+                },
+                {
+                    "id": "sometimes",
+                    "label": "Bazen"
+                },
+                {
+                    "id": "lacking",
+                    "label": "Eksik"
+                }
+            ]
+        },
+        {
+            "id": "relationship_growth_v1",
+            "description": "Birlikte büyüme - basit",
+            "options": [
+                {
+                    "id": "growing",
+                    "label": "Birlikte gelişiyoruz"
+                },
+                {
+                    "id": "stagnant",
+                    "label": "Durağan"
+                },
+                {
+                    "id": "growing_apart",
+                    "label": "Ayrılıyoruz gibi"
+                }
+            ]
+        },
+        {
+            "id": "finance_goal_v1",
+            "description": "Finansal hedef - basit",
+            "options": [
+                {
+                    "id": "save",
+                    "label": "Birikim yapmak"
+                },
+                {
+                    "id": "invest",
+                    "label": "Yatırım yapmak"
+                },
+                {
+                    "id": "debt",
+                    "label": "Borç ödemek"
+                },
+                {
+                    "id": "spend",
+                    "label": "Harcamak"
+                }
+            ]
+        },
+        {
+            "id": "finance_timeline_v1",
+            "description": "Zaman dilimi - basit",
+            "options": [
+                {
+                    "id": "short",
+                    "label": "Kısa vadeli (1 yıldan az)"
+                },
+                {
+                    "id": "medium",
+                    "label": "Orta vadeli (1-5 yıl)"
+                },
+                {
+                    "id": "long",
+                    "label": "Uzun vadeli (5+ yıl)"
+                }
+            ]
+        },
+        {
+            "id": "finance_risk_v1",
+            "description": "Risk toleransı - basit",
+            "options": [
+                {
+                    "id": "low",
+                    "label": "Düşük risk"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta risk"
+                },
+                {
+                    "id": "high",
+                    "label": "Yüksek risk alabilirim"
+                }
+            ]
+        },
+        {
+            "id": "finance_knowledge_v1",
+            "description": "Finans bilgisi - basit",
+            "options": [
+                {
+                    "id": "beginner",
+                    "label": "Başlangıç"
+                },
+                {
+                    "id": "intermediate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "advanced",
+                    "label": "İleri"
+                }
+            ]
+        },
+        {
+            "id": "finance_priority_v1",
+            "description": "Öncelik - basit",
+            "options": [
+                {
+                    "id": "security",
+                    "label": "Güvenlik"
+                },
+                {
+                    "id": "growth",
+                    "label": "Büyüme"
+                },
+                {
+                    "id": "income",
+                    "label": "Gelir"
+                },
+                {
+                    "id": "flexibility",
+                    "label": "Esneklik"
+                }
+            ]
+        },
+        {
+            "id": "finance_debt_v1",
+            "description": "Borç durumu - basit",
+            "options": [
+                {
+                    "id": "none",
+                    "label": "Borç yok"
+                },
+                {
+                    "id": "manageable",
+                    "label": "İdare edilebilir"
+                },
+                {
+                    "id": "high",
+                    "label": "Yüksek borç"
+                }
+            ]
+        },
+        {
+            "id": "finance_income_v1",
+            "description": "Gelir durumu - basit",
+            "options": [
+                {
+                    "id": "steady",
+                    "label": "Düzenli gelir"
+                },
+                {
+                    "id": "variable",
+                    "label": "Değişken"
+                },
+                {
+                    "id": "uncertain",
+                    "label": "Belirsiz"
+                }
+            ]
+        },
+        {
+            "id": "finance_emergency_v1",
+            "description": "Acil durum fonu - basit",
+            "options": [
+                {
+                    "id": "yes",
+                    "label": "Var"
+                },
+                {
+                    "id": "building",
+                    "label": "Oluşturuyorum"
+                },
+                {
+                    "id": "none",
+                    "label": "Yok"
+                }
+            ]
+        },
+        {
+            "id": "finance_spending_v1",
+            "description": "Harcama alışkanlığı - basit",
+            "options": [
+                {
+                    "id": "frugal",
+                    "label": "Tutumlu"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                },
+                {
+                    "id": "spender",
+                    "label": "Harcamayı severim"
+                }
+            ]
+        },
+        {
+            "id": "finance_tracking_v1",
+            "description": "Takip - basit",
+            "options": [
+                {
+                    "id": "detailed",
+                    "label": "Detaylı takip"
+                },
+                {
+                    "id": "basic",
+                    "label": "Temel takip"
+                },
+                {
+                    "id": "none",
+                    "label": "Takip etmiyorum"
+                }
+            ]
+        },
+        {
+            "id": "education_goal_v1",
+            "description": "Eğitim hedefi - basit",
+            "options": [
+                {
+                    "id": "career",
+                    "label": "Kariyer için"
+                },
+                {
+                    "id": "personal",
+                    "label": "Kişisel gelişim"
+                },
+                {
+                    "id": "hobby",
+                    "label": "Hobi"
+                },
+                {
+                    "id": "certificate",
+                    "label": "Sertifika/diploma"
+                }
+            ]
+        },
+        {
+            "id": "education_format_v1",
+            "description": "Format tercihi - basit",
+            "options": [
+                {
+                    "id": "online",
+                    "label": "Online"
+                },
+                {
+                    "id": "in_person",
+                    "label": "Yüz yüze"
+                },
+                {
+                    "id": "hybrid",
+                    "label": "Hibrit"
+                },
+                {
+                    "id": "self",
+                    "label": "Kendi kendime"
+                }
+            ]
+        },
+        {
+            "id": "education_time_v1",
+            "description": "Zaman ayırma - basit",
+            "options": [
+                {
+                    "id": "full_time",
+                    "label": "Tam zamanlı"
+                },
+                {
+                    "id": "part_time",
+                    "label": "Yarı zamanlı"
+                },
+                {
+                    "id": "occasional",
+                    "label": "Ara sıra"
+                }
+            ]
+        },
+        {
+            "id": "education_pace_v1",
+            "description": "Öğrenme hızı - basit",
+            "options": [
+                {
+                    "id": "fast",
+                    "label": "Hızlı öğrenirim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "slow",
+                    "label": "Yavaş, detaylı"
+                }
+            ]
+        },
+        {
+            "id": "education_style_v1",
+            "description": "Öğrenme tarzı - basit",
+            "options": [
+                {
+                    "id": "visual",
+                    "label": "Görsel"
+                },
+                {
+                    "id": "reading",
+                    "label": "Okuyarak"
+                },
+                {
+                    "id": "hands_on",
+                    "label": "Uygulama yaparak"
+                },
+                {
+                    "id": "listening",
+                    "label": "Dinleyerek"
+                }
+            ]
+        },
+        {
+            "id": "education_structure_v1",
+            "description": "Yapı tercihi - basit",
+            "options": [
+                {
+                    "id": "structured",
+                    "label": "Yapılandırılmış"
+                },
+                {
+                    "id": "flexible",
+                    "label": "Esnek"
+                },
+                {
+                    "id": "self_paced",
+                    "label": "Kendi hızımda"
+                }
+            ]
+        },
+        {
+            "id": "education_support_v1",
+            "description": "Destek ihtiyacı - basit",
+            "options": [
+                {
+                    "id": "mentor",
+                    "label": "Mentor isterim"
+                },
+                {
+                    "id": "community",
+                    "label": "Topluluk/grup"
+                },
+                {
+                    "id": "independent",
+                    "label": "Bağımsız"
+                }
+            ]
+        },
+        {
+            "id": "education_motivation_v1",
+            "description": "Motivasyon - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Çok motiveyim"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "need_push",
+                    "label": "İtici güç lazım"
+                }
+            ]
+        },
+        {
+            "id": "education_depth_v1",
+            "description": "Derinlik - basit",
+            "options": [
+                {
+                    "id": "overview",
+                    "label": "Genel bakış yeterli"
+                },
+                {
+                    "id": "intermediate",
+                    "label": "Orta derinlik"
+                },
+                {
+                    "id": "deep",
+                    "label": "Derin bilgi"
+                }
+            ]
+        },
+        {
+            "id": "education_certification_v1",
+            "description": "Sertifika önemi - basit",
+            "options": [
+                {
+                    "id": "must",
+                    "label": "Sertifika şart"
+                },
+                {
+                    "id": "nice",
+                    "label": "Olsa iyi"
+                },
+                {
+                    "id": "not_needed",
+                    "label": "Gerekli değil"
+                }
+            ]
+        },
+        {
+            "id": "social_energy_v1",
+            "description": "Sosyal enerji - basit",
+            "options": [
+                {
+                    "id": "introvert",
+                    "label": "İçe dönük"
+                },
+                {
+                    "id": "ambivert",
+                    "label": "Ortada"
+                },
+                {
+                    "id": "extrovert",
+                    "label": "Dışa dönük"
+                }
+            ]
+        },
+        {
+            "id": "social_group_size_v1",
+            "description": "Grup boyutu - basit",
+            "options": [
+                {
+                    "id": "one_on_one",
+                    "label": "Birebir"
+                },
+                {
+                    "id": "small",
+                    "label": "Küçük grup"
+                },
+                {
+                    "id": "large",
+                    "label": "Büyük grup"
+                }
+            ]
+        },
+        {
+            "id": "social_conflict_style_v1",
+            "description": "Çatışma tarzı - basit",
+            "options": [
+                {
+                    "id": "confront",
+                    "label": "Yüzleşirim"
+                },
+                {
+                    "id": "avoid",
+                    "label": "Kaçınırım"
+                },
+                {
+                    "id": "mediate",
+                    "label": "Arabuluculuk"
+                }
+            ]
+        },
+        {
+            "id": "social_boundary_v1",
+            "description": "Sınır koyma - basit",
+            "options": [
+                {
+                    "id": "clear",
+                    "label": "Net sınırlarım var"
+                },
+                {
+                    "id": "learning",
+                    "label": "Öğreniyorum"
+                },
+                {
+                    "id": "difficult",
+                    "label": "Zor geliyor"
+                }
+            ]
+        },
+        {
+            "id": "social_priority_v1",
+            "description": "İlişki önceliği - basit",
+            "options": [
+                {
+                    "id": "quality",
+                    "label": "Kalite"
+                },
+                {
+                    "id": "quantity",
+                    "label": "Çok kişi"
+                },
+                {
+                    "id": "balance",
+                    "label": "Denge"
+                }
+            ]
+        },
+        {
+            "id": "social_effort_v1",
+            "description": "İlişki çabası - basit",
+            "options": [
+                {
+                    "id": "proactive",
+                    "label": "İlk adımı atarım"
+                },
+                {
+                    "id": "reactive",
+                    "label": "Beklerim"
+                },
+                {
+                    "id": "balanced",
+                    "label": "Dengeli"
+                }
+            ]
+        },
+        {
+            "id": "social_vulnerability_v1",
+            "description": "Açılma - basit",
+            "options": [
+                {
+                    "id": "easy",
+                    "label": "Kolayca açılırım"
+                },
+                {
+                    "id": "selective",
+                    "label": "Seçici olurum"
+                },
+                {
+                    "id": "difficult",
+                    "label": "Zor açılırım"
+                }
+            ]
+        },
+        {
+            "id": "social_trust_v1",
+            "description": "Güven verme - basit",
+            "options": [
+                {
+                    "id": "quick",
+                    "label": "Çabuk güvenirim"
+                },
+                {
+                    "id": "gradual",
+                    "label": "Yavaş yavaş"
+                },
+                {
+                    "id": "cautious",
+                    "label": "Temkinli olurum"
+                }
+            ]
+        },
+        {
+            "id": "social_forgiveness_v1",
+            "description": "Affetme - basit",
+            "options": [
+                {
+                    "id": "easy",
+                    "label": "Kolay affederim"
+                },
+                {
+                    "id": "takes_time",
+                    "label": "Zaman alır"
+                },
+                {
+                    "id": "difficult",
+                    "label": "Zor affederim"
+                }
+            ]
+        },
+        {
+            "id": "social_expectation_v1",
+            "description": "Beklentiler - basit",
+            "options": [
+                {
+                    "id": "high",
+                    "label": "Yüksek beklentilerim var"
+                },
+                {
+                    "id": "realistic",
+                    "label": "Gerçekçi"
+                },
+                {
+                    "id": "low",
+                    "label": "Az beklenti"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_living_v1",
+            "description": "Yaşam düzeni - basit",
+            "options": [
+                {
+                    "id": "independent",
+                    "label": "Bağımsız yaşıyor"
+                },
+                {
+                    "id": "with_family",
+                    "label": "Aileyle yaşıyor"
+                },
+                {
+                    "id": "assisted",
+                    "label": "Yardımlı yaşam"
+                },
+                {
+                    "id": "care_home",
+                    "label": "Bakım evinde"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_health_v1",
+            "description": "Sağlık durumu - basit",
+            "options": [
+                {
+                    "id": "good",
+                    "label": "İyi"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Orta"
+                },
+                {
+                    "id": "needs_care",
+                    "label": "Bakım gerektiriyor"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_mobility_v1",
+            "description": "Hareketlilik - basit",
+            "options": [
+                {
+                    "id": "independent",
+                    "label": "Bağımsız hareket ediyor"
+                },
+                {
+                    "id": "some_help",
+                    "label": "Biraz yardım lazım"
+                },
+                {
+                    "id": "needs_assist",
+                    "label": "Yardım gerekli"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_cognitive_v1",
+            "description": "Zihinsel durum - basit",
+            "options": [
+                {
+                    "id": "clear",
+                    "label": "Zihinsel olarak iyi"
+                },
+                {
+                    "id": "mild",
+                    "label": "Hafif unutkanlık"
+                },
+                {
+                    "id": "significant",
+                    "label": "Önemli sorunlar var"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_distance_v1",
+            "description": "Mesafe - basit",
+            "options": [
+                {
+                    "id": "nearby",
+                    "label": "Yakında yaşıyor"
+                },
+                {
+                    "id": "same_city",
+                    "label": "Aynı şehirde"
+                },
+                {
+                    "id": "far",
+                    "label": "Uzakta"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_support_v1",
+            "description": "Destek ağı - basit",
+            "options": [
+                {
+                    "id": "shared",
+                    "label": "Kardeşlerle paylaşıyoruz"
+                },
+                {
+                    "id": "mostly_me",
+                    "label": "Çoğunlukla ben"
+                },
+                {
+                    "id": "alone",
+                    "label": "Tek başınayım"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_budget_v1",
+            "description": "Bakım bütçesi - basit",
+            "options": [
+                {
+                    "id": "comfortable",
+                    "label": "Rahat"
+                },
+                {
+                    "id": "tight",
+                    "label": "Sınırlı"
+                },
+                {
+                    "id": "struggling",
+                    "label": "Zorlanıyoruz"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_time_v1",
+            "description": "Ayırabildiğim zaman - basit",
+            "options": [
+                {
+                    "id": "full",
+                    "label": "Tam zamanlı bakabilirim"
+                },
+                {
+                    "id": "part",
+                    "label": "Kısmi zaman"
+                },
+                {
+                    "id": "limited",
+                    "label": "Çok sınırlı"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_preference_v1",
+            "description": "Bakım tercihi - basit",
+            "options": [
+                {
+                    "id": "home",
+                    "label": "Evde bakım"
+                },
+                {
+                    "id": "professional",
+                    "label": "Profesyonel bakım"
+                },
+                {
+                    "id": "mixed",
+                    "label": "Karışık"
+                }
+            ]
+        },
+        {
+            "id": "eldercare_stress_v1",
+            "description": "Bakıcı stresi - basit",
+            "options": [
+                {
+                    "id": "low",
+                    "label": "Başa çıkıyorum"
+                },
+                {
+                    "id": "moderate",
+                    "label": "Bazen zor"
+                },
+                {
+                    "id": "high",
+                    "label": "Çok stresli"
+                }
+            ]
         }
     ],
     "_meta": {

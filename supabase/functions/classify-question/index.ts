@@ -18,6 +18,7 @@ interface ClassifyRequest {
             exclusions: string[];
         };
     }>;
+    simple_question_pools?: Record<string, { key: string; label: string }[]>;
 }
 
 serve(async (req) => {
@@ -26,7 +27,7 @@ serve(async (req) => {
     }
 
     try {
-        const { user_question, archetypes }: ClassifyRequest = await req.json()
+        const { user_question, archetypes, simple_question_pools }: ClassifyRequest = await req.json()
 
         if (!user_question || !archetypes) {
             return new Response(
@@ -103,55 +104,71 @@ Bu tür sorularda needs_clarification: false olmalı ve lifestyle_change veya en
 - Belirsiz ama anlaşılır ifadelerde confidence 0.6-0.7 olmalı, needs_clarification: false
 - Tamamen anlamsız veya tek kelimelik ifadeler için clarification iste
 
-GERÇEK DIŞI/FANTASTİK SORU TESPİTİ:
+BASİT KARARLAR İÇİN SORU SEÇİMİ (ZORUNLU):
+Eğer decision_complexity: "simple" ise, AŞAĞIDAKİ HAVUZDAN MUTLAKA 2-5 SORU SEÇMELİSİN.
+"selected_simple_field_keys" alanı BOŞ OLAMAZ.
+Kullanıcının sorusuyla (archetype_id) eşleşen havuzdan seçim yap.
+Kullanıcının sorusuyla (archetype_id) eşleşen havuzdan seçim yap.
+GERÇEK DIŞI / FANTASTİK SORU TESPİTİ:
 Aşağıdaki durumlarda MUTLAKA is_unrealistic: true VE needs_clarification: true olmalı:
-- Süper kahramanlar, kurgusal karakterler (Superman, Batman, Harry Potter...)
-- İmkansız senaryolar (zamanda yolculuk, uçma yeteneği, unicorn)
-- Şaka/trolleme amaçlı absürt sorular
-- Gerçek hayatta var olmayan durumlar
+        - Süper kahramanlar, kurgusal karakterler(Superman, Batman, Harry Potter...)
+            - İmkansız senaryolar(zamanda yolculuk, uçma yeteneği, unicorn)
+                - Şaka / trolleme amaçlı absürt sorular
+                    - Gerçek hayatta var olmayan durumlar
 
-KATEGORİLER:
-`
+        KATEGORİLER:
+        `
 
         archetypes.forEach(arch => {
-            systemPrompt += `\n--- ${arch.label} (ID: ${arch.id}) ---\n`
-            systemPrompt += `Tanım: ${arch.routing_hints.definition}\n`
-            systemPrompt += `Anahtar kelimeler: ${arch.routing_hints.keywords.join(', ')}\n`
-            systemPrompt += `Örnek sorular: ${arch.routing_hints.positive_examples.slice(0, 3).join(' | ')}\n`
+            systemPrompt += `\n-- - ${arch.label} (ID: ${arch.id}) ---\n`
+            systemPrompt += `Tanım: ${arch.routing_hints.definition} \n`
+            systemPrompt += `Anahtar kelimeler: ${arch.routing_hints.keywords.join(', ')} \n`
+            systemPrompt += `Örnek sorular: ${arch.routing_hints.positive_examples.slice(0, 3).join(' | ')} \n`
             if (arch.routing_hints.exclusions.length > 0) {
-                systemPrompt += `Bu kategoriye DAHİL DEĞİL: ${arch.routing_hints.exclusions.join(', ')}\n`
+                systemPrompt += `Bu kategoriye DAHİL DEĞİL: ${arch.routing_hints.exclusions.join(', ')} \n`
             }
         })
 
+        // Add simple question pools to prompt if available
+        if (simple_question_pools) {
+            systemPrompt += `\nBASİT SORU HAVUZLARI(decision_complexity: simple ise buradan 2 - 5 soru seç): \n`;
+            for (const [archetypeId, questions] of Object.entries(simple_question_pools)) {
+                systemPrompt += `\n${archetypeId}: \n`;
+                questions.slice(0, 25).forEach(q => {
+                    systemPrompt += `  - ${q.key}: "${q.label}"\n`;
+                });
+            }
+        }
+
         systemPrompt += `\nÖRNEK ANALİZLER:
 
-Girdi: "acaba ikinci çocuk?"
-Çıktı: {"archetype_id": "parenting_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz."}
+        Girdi: "acaba ikinci çocuk?"
+        Çıktı: { "archetype_id": "parenting_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.75, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İkinci çocuk sahibi olmayı düşünüyorsunuz ve bu kararı tartmak istiyorsunuz." }
 
-Girdi: "Kahve mi içsem çay mı?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Kahve ve çay arasında seçim yapmak istiyorsunuz."}
+        Girdi: "Kahve mi içsem çay mı?"
+        Çıktı: { "archetype_id": "food_hospitality", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Kahve ve çay arasında seçim yapmak istiyorsunuz.", "selected_simple_field_keys": ["current_mood", "time_constraint", "food_caffeine_need"] }
 
-Girdi: "Otobüsle mi gideyim arabayla mı?"
-Çıktı: {"archetype_id": "lifestyle_change", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İşe/okula nasıl gideceğinize karar vermek istiyorsunuz."}
+        Girdi: "Otobüsle mi gideyim arabayla mı?"
+        Çıktı: { "archetype_id": "lifestyle_change", "decision_type": "comparison", "decision_complexity": "simple", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "İşe/okula nasıl gideceğinize karar vermek istiyorsunuz." }
 
-Girdi: "MacBook mu alsam Windows laptop mu?"
-Çıktı: {"archetype_id": "major_purchase", "decision_type": "comparison", "decision_complexity": "moderate", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "MacBook ve Windows laptop arasında seçim yapmaya çalışıyorsunuz."}
+        Girdi: "MacBook mu alsam Windows laptop mu?"
+        Çıktı: { "archetype_id": "major_purchase", "decision_type": "comparison", "decision_complexity": "moderate", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "MacBook ve Windows laptop arasında seçim yapmaya çalışıyorsunuz." }
 
-Girdi: "Ne zaman ev almalıyım?"
-Çıktı: {"archetype_id": "money_finance", "decision_type": "timing", "decision_complexity": "complex", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Ev satın almak için doğru zamanlamayı belirlemeye çalışıyorsunuz."}
+        Girdi: "Ne zaman ev almalıyım?"
+        Çıktı: { "archetype_id": "money_finance", "decision_type": "timing", "decision_complexity": "complex", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Ev satın almak için doğru zamanlamayı belirlemeye çalışıyorsunuz." }
 
-Girdi: "Sıcak şarabın yanına ne hazırlayım?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "simple", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz."}
+        Girdi: "Sıcak şarabın yanına ne hazırlayım?"
+        Çıktı: { "archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "simple", "confidence": 0.8, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Sıcak şarap eşliğinde sunmak için meze/atıştırmalık fikirleri arıyorsunuz." }
 
-Girdi: "Yıldönümü için hangi restorana gitsek?"
-Çıktı: {"archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Eşinizle yıldönümü için romantik bir restoran arıyorsunuz."}
+        Girdi: "Yıldönümü için hangi restorana gitsek?"
+        Çıktı: { "archetype_id": "food_hospitality", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.85, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Eşinizle yıldönümü için romantik bir restoran arıyorsunuz." }
 
-Girdi: "İşten ayrılmalı mıyım?"
-Çıktı: {"archetype_id": "career_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut işinizden ayrılmayı düşünüyorsunuz."}
+        Girdi: "İşten ayrılmalı mıyım?"
+        Çıktı: { "archetype_id": "career_decisions", "decision_type": "binary_decision", "decision_complexity": "complex", "confidence": 0.9, "needs_clarification": false, "is_unrealistic": false, "interpreted_question": "Mevcut işinizden ayrılmayı düşünüyorsunuz." }
 
-Girdi: "iş"
-Çıktı: {"archetype_id": "career_decisions", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?"}
-`
+        Girdi: "iş"
+        Çıktı: { "archetype_id": "career_decisions", "decision_type": "exploration", "decision_complexity": "moderate", "confidence": 0.3, "needs_clarification": true, "is_unrealistic": false, "clarification_prompt": "İşinizle ilgili nasıl bir karar vermek istiyorsunuz?" }
+        `
 
         // Build valid archetype IDs for enum
         const validArchetypeIds = archetypes.map(a => a.id)
@@ -160,7 +177,7 @@ Girdi: "iş"
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${openaiApiKey}`,
+                'Authorization': `Bearer ${openaiApiKey} `,
             },
             body: JSON.stringify({
                 model: 'gpt-4o-mini',
@@ -211,9 +228,14 @@ Girdi: "iş"
                                 interpreted_question: {
                                     type: ['string', 'null'],
                                     description: 'Kullanıcının niyetinin tam cümle hali'
+                                },
+                                selected_simple_field_keys: {
+                                    type: ['array', 'null'],
+                                    items: { type: 'string' },
+                                    description: 'Simple kararlar için seçilen 2-5 soru field key listesi (decision_complexity: simple ise doldur)'
                                 }
                             },
-                            required: ['archetype_id', 'decision_type', 'decision_complexity', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question'],
+                            required: ['archetype_id', 'decision_type', 'decision_complexity', 'confidence', 'needs_clarification', 'is_unrealistic', 'clarification_prompt', 'interpreted_question', 'selected_simple_field_keys'],
                             additionalProperties: false
                         }
                     }
@@ -222,7 +244,7 @@ Girdi: "iş"
         })
 
         if (!response.ok) {
-            throw new Error(`OpenAI error: ${response.status}`)
+            throw new Error(`OpenAI error: ${response.status} `)
         }
 
         const data = await response.json()
@@ -243,7 +265,8 @@ Girdi: "iş"
                 needs_clarification: result.needs_clarification || false,
                 is_unrealistic: result.is_unrealistic || false,
                 clarification_prompt: result.clarification_prompt || null,
-                interpreted_question: result.interpreted_question || null
+                interpreted_question: result.interpreted_question || null,
+                selected_simple_field_keys: result.selected_simple_field_keys || null
             }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )

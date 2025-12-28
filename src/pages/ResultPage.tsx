@@ -27,9 +27,9 @@ export const ResultPage = () => {
     const [sessionAnswers, setSessionAnswers] = useState<Record<string, string> | undefined>(location.state?.answers);
     const [sessionArchetypeId, setSessionArchetypeId] = useState<string | undefined>(location.state?.archetypeId);
     const sessionId = location.state?.sessionId as string | undefined;
-
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
     const [showRecoveryCode, setShowRecoveryCode] = useState(false);
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
@@ -62,6 +62,12 @@ export const ResultPage = () => {
     // Prevent double API call in React StrictMode
     const hasCalledAnalysis = React.useRef(false);
 
+    // Simplified loading completion
+    const finishLoading = React.useCallback(() => {
+        // Just stop loading, the UI will update sequentially
+        setIsLoading(false);
+    }, []);
+
     // Ref for smooth height animation
     const analysisContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -92,8 +98,9 @@ export const ResultPage = () => {
                     }
                 } catch (error) {
                     console.error('Error fetching saved analysis:', error);
+                    setIsLoading(false); // fast fail on error
                 } finally {
-                    setIsLoading(false);
+                    if (hasCalledAnalysis.current) finishLoading();
                 }
             }
             // Case 2: Creating new session (code IS 'creating')
@@ -142,11 +149,16 @@ export const ResultPage = () => {
                     }
                 } catch (error) {
                     console.error('Error generating result:', error);
-                } finally {
                     setIsLoading(false);
+                } finally {
+                    // Success path uses transition
+                    // Note: If error caught above, isLoading is already false, so this might prompt a transition if not careful.
+                    // But finishLoading sets isLoading(false) again which is fine.
+                    // To be safe, let's only transition if we have analysis or just run it.
+                    finishLoading();
                 }
             } else {
-                // No valid code - stop loading
+                // No valid code - stop loading immediately
                 setIsLoading(false);
             }
         };
@@ -249,14 +261,13 @@ export const ResultPage = () => {
         navigate('/');
     };
 
-    // Rotating loading messages
+    // Rotating loading messages - more conversational for chat style
     const loadingMessages = [
-        "Analiz ediliyor...",
-        "Durumun değerlendiriliyor...",
-        "Önerilen adımlar belirleniyor...",
-        "Çıkarımlar yapılıyor...",
-        "Plan hazırlanıyor...",
-        "Son detaylar ekleniyor..."
+        "Sorunu analiz ediyorum...",
+        "Durumunu değerlendiriyorum...",
+        "Öneriler hazırlıyorum...",
+        "Detaylara bakıyorum...",
+        "Neredeyse hazır..."
     ];
 
     const [loadingMessageIndex, setLoadingMessageIndex] = React.useState(0);
@@ -269,60 +280,24 @@ export const ResultPage = () => {
         return () => clearInterval(interval);
     }, [isLoading, loadingMessages.length]);
 
-    // Full-page loading state
-    if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] px-5">
-                <div className="text-center space-y-8 max-w-sm">
-                    {/* Animated spinner */}
-                    <div className="relative mx-auto w-16 h-16">
-                        <div
-                            className="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
-                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--coral-primary)' }}
-                        />
-                        <div
-                            className="absolute inset-2 rounded-full border-4 border-t-transparent animate-spin"
-                            style={{ borderColor: 'var(--border-secondary)', borderTopColor: 'var(--charcoal-primary)', animationDirection: 'reverse', animationDuration: '1.5s' }}
-                        />
-                    </div>
+    // Trigger transition animation when loading ends - REMOVED (Handled in finishLoading)
 
-                    {/* Rotating message */}
-                    <div className="h-8 overflow-hidden">
-                        <p
-                            className="text-lg font-medium animate-in fade-in slide-in-from-bottom-2 duration-500"
-                            style={{ color: 'var(--text-primary)' }}
-                            key={loadingMessageIndex}
-                        >
-                            {loadingMessages[loadingMessageIndex]}
-                        </p>
-                    </div>
-
-                    {/* User question reminder */}
-                    {sessionUserInput && (
-                        <div
-                            className="p-4 rounded-xl"
-                            style={{ backgroundColor: 'var(--bg-secondary)' }}
-                        >
-                            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Sorunu analiz ediyoruz:</p>
-                            <p className="font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>"{sessionUserInput}"</p>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    }
-
+    // Main Render
+    // UI Layout:
+    // 1. User Bubble (Top Right)
+    // 2. AI Bubble (Top Left) - Loading or "Done"
+    // 3. Analysis Card (Below AI Bubble) - Only when done
     return (
         <div className="flex flex-col items-center pb-16 pt-8">
             <div className="w-full max-w-lg space-y-8">
-                {/* User's question - Chat bubble style */}
+                {/* User's question - Chat bubble style (same as loaded state) */}
                 {sessionUserInput && (
                     <div className="px-5 flex flex-col items-end gap-1 mb-6">
                         {/* Eyebrow */}
                         <span className="text-[10px] font-medium uppercase tracking-wider mr-1" style={{ color: 'var(--text-muted)' }}>
                             Düşündüğün konu
                         </span>
-                        {/* Bubble - theme aware */}
+                        {/* User Bubble */}
                         <div
                             className="chat-bubble max-w-[85%] px-4 py-3 rounded-2xl rounded-tr-md"
                             style={{
@@ -337,350 +312,426 @@ export const ResultPage = () => {
                     </div>
                 )}
 
-                {/* Analysis Result Section */}
-                <div className="px-5">
+
+
+
+
+
+
+
+                {/* AI Chat Bubble - Always visible (persists) */}
+                <div className="px-5 mb-6">
                     {/* naapim eyebrow */}
-                    {analysis && (
-                        <span className="text-xs font-medium tracking-wider ml-1 mb-2 block" style={{ color: 'var(--text-muted)' }}>
-                            naapim
-                        </span>
-                    )}
-                    {analysis ? (
-                        <div
-                            className="rounded-3xl p-6 md:p-8"
-                            style={{
-                                backgroundColor: 'var(--bg-elevated)',
-                                border: '1px solid var(--border-secondary)',
-                                boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)'
-                            }}
-                        >
-                            {/* AI Badge */}
-                            <div className="flex items-center justify-center gap-2 mb-4">
-                                <span
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
-                                    style={{
-                                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
-                                        color: 'var(--coral-primary)'
-                                    }}
-                                >
-                                    <Sparkles className="w-3.5 h-3.5" fill="currentColor" />
-                                    <span>naapim AI</span>
-                                    <span style={{ color: 'var(--text-muted)' }}>•</span>
-                                    <span style={{ color: 'var(--text-secondary)' }}>Kişiselleştirilmiş Analiz</span>
-                                </span>
-                            </div>
+                    <span className="text-xs font-medium tracking-wider ml-1 mb-2 block" style={{ color: 'var(--text-muted)' }}>
+                        naapim
+                    </span>
 
-                            {/* Title */}
-                            <h1
-                                className="text-2xl font-semibold text-center mb-6 max-w-[90%] mx-auto"
-                                style={{ color: 'var(--text-primary)' }}
-                            >
-                                {analysis.title}
-                            </h1>
-
-                            {/* Recommendation */}
-                            {(() => {
-                                // Sentiment-based colors
-                                const sentimentStyles: Record<string, { bg: string; border: string; text: string }> = {
-                                    positive: { bg: 'var(--emerald-50)', border: 'var(--emerald-300)', text: 'var(--emerald-700)' },
-                                    cautious: { bg: 'var(--amber-50)', border: 'var(--amber-300)', text: 'var(--amber-700)' },
-                                    warning: { bg: 'var(--orange-50)', border: 'var(--orange-300)', text: 'var(--orange-700)' },
-                                    negative: { bg: 'var(--red-50)', border: 'var(--red-300)', text: 'var(--red-700)' },
-                                    neutral: { bg: 'var(--neutral-100)', border: 'var(--neutral-300)', text: 'var(--neutral-700)' }
-                                };
-                                const style = sentimentStyles[analysis.sentiment] || sentimentStyles.neutral;
-                                return (
-                                    <div
-                                        className="p-4 rounded-xl mb-6"
-                                        style={{
-                                            backgroundColor: style.bg,
-                                            border: `1px solid ${style.border}`
-                                        }}
-                                    >
-                                        <p
-                                            className="font-medium text-center"
-                                            style={{ color: style.text }}
-                                        >
-                                            {analysis.recommendation}
-                                        </p>
-                                    </div>
-                                );
-                            })()}
-
-                            {/* Collapsible Analysis Details (NEDEN + ADIMLAR) */}
-                            <div className="relative">
-                                {/* Content container with smooth height transition */}
+                    {/* AI Bubble */}
+                    <div className="ai-chat-bubble animate-in fade-in slide-in-from-bottom-2 duration-500 w-full max-w-[90%]">
+                        <div className={`flex gap-3 ${isLoading ? 'items-start' : 'items-center'}`}>
+                            {/* AI Icon - Only show when loading */}
+                            {isLoading && (
                                 <div
-                                    ref={analysisContentRef}
-                                    className="transition-[height] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+                                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500"
                                     style={{
-                                        height: showFullAnalysis
-                                            ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
-                                            : '240px'
+                                        background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
+                                        transform: 'scale(1)'
                                     }}
                                 >
-                                    {/* Reasoning */}
-                                    <div className="mb-5">
-                                        <h3
-                                            className="text-sm font-semibold uppercase tracking-wider mb-2"
-                                            style={{ color: 'var(--text-muted)' }}
-                                        >
-                                            NEDEN?
-                                        </h3>
-                                        <p
-                                            className="leading-relaxed"
-                                            style={{ color: 'var(--text-secondary)' }}
-                                        >
-                                            {analysis.reasoning}
-                                        </p>
-                                    </div>
+                                    <Sparkles className="w-4 h-4 text-white" />
+                                </div>
+                            )}
 
-                                    {/* Pros & Cons Section */}
-                                    {(analysis.pros?.length || analysis.cons?.length) && (
-                                        <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {/* Artılar */}
-                                            {analysis.pros && analysis.pros.length > 0 && (
-                                                <div
-                                                    className="p-4 rounded-xl"
-                                                    style={{
-                                                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                                        border: '1px solid rgba(16, 185, 129, 0.2)'
-                                                    }}
-                                                >
-                                                    <h4
-                                                        className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                        style={{ color: 'var(--emerald-500)' }}
-                                                    >
-                                                        Artılar
-                                                    </h4>
-                                                    <ul className="space-y-2">
-                                                        {analysis.pros.map((pro, idx) => (
-                                                            <li key={idx} className="flex items-start gap-2">
-                                                                <span
-                                                                    className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                                                                    style={{ backgroundColor: 'var(--emerald-500)' }}
-                                                                />
-                                                                <span
-                                                                    className="text-sm"
-                                                                    style={{ color: 'var(--text-secondary)' }}
-                                                                >
-                                                                    {pro}
-                                                                </span>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
+                            {/* Message Content */}
+                            <div className="flex-1 min-w-0">
+                                <div
+                                    className="text-sm md:text-base font-medium animate-in fade-in duration-300"
+                                    style={{ color: 'var(--text-primary)' }}
+                                    key={isLoading ? `loading-${loadingMessageIndex}` : 'done'}
+                                >
+                                    {isLoading ? (
+                                        loadingMessages[loadingMessageIndex]
+                                    ) : (
+                                        <div className="flex flex-col gap-3 text-sm">
+                                            {/* Line 1: AI Analysis */}
+                                            <span style={{ color: 'var(--text-primary)' }}>
+                                                ✨ AI analizin hazır! Sonuçları inceleyebilirsin <span className="text-base leading-none">↓</span>
+                                            </span>
 
-                                            {/* Eksiler */}
-                                            {analysis.cons && analysis.cons.length > 0 && (
-                                                <div
-                                                    className="p-4 rounded-xl"
-                                                    style={{
-                                                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                                        border: '1px solid rgba(239, 68, 68, 0.2)'
-                                                    }}
+                                            {/* Line 2: Real Stories */}
+                                            <span style={{ color: 'var(--text-primary)' }}>
+                                                👥 <span className="font-semibold">Gerçek kişi hikayelerine</span> göz atmak için{' '}
+                                                <span
+                                                    role="button"
+                                                    onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                                    className="font-semibold underline decoration-dotted hover:decoration-solid cursor-pointer transition-all"
+                                                    style={{ color: 'var(--coral-primary)' }}
                                                 >
-                                                    <h4
-                                                        className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                        style={{ color: 'var(--red-500)' }}
-                                                    >
-                                                        Eksiler
-                                                    </h4>
-                                                    <ul className="space-y-2">
-                                                        {analysis.cons.map((con, idx) => (
-                                                            <li key={idx} className="flex items-start gap-2">
-                                                                <span
-                                                                    className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                                                                    style={{ backgroundColor: 'var(--red-500)' }}
-                                                                />
-                                                                <span
-                                                                    className="text-sm"
-                                                                    style={{ color: 'var(--text-secondary)' }}
-                                                                >
-                                                                    {con}
-                                                                </span>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
+                                                    buraya tıkla.
+                                                </span>
+                                            </span>
                                         </div>
                                     )}
-
-                                    {/* Steps */}
-                                    <div>
-                                        <h3
-                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                            style={{ color: 'var(--text-muted)' }}
-                                        >
-                                            ÖNERİLEN ADIMLAR
-                                        </h3>
-                                        <ul className="space-y-3">
-                                            {analysis.steps.map((step, idx) => (
-                                                <li key={idx} className="flex items-start gap-3">
-                                                    <span
-                                                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
-                                                        style={{
-                                                            backgroundColor: 'var(--accent-100)',
-                                                            color: 'var(--accent-600)'
-                                                        }}
-                                                    >
-                                                        {idx + 1}
-                                                    </span>
-                                                    <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
                                 </div>
 
-                                <div
-                                    className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${showFullAnalysis ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-                                >
-                                    {/* Gradient fade */}
-                                    <div
-                                        className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
-                                        style={{
-                                            background: 'linear-gradient(to top, var(--bg-elevated) 0%, var(--bg-elevated) 20%, transparent 100%)'
-                                        }}
-                                    />
-                                    {/* Button container - sits on top of gradient */}
-                                    <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2 z-20">
-                                        <button
-                                            onClick={() => setShowFullAnalysis(true)}
-                                            className="flex items-center gap-2 px-5 py-2.5 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-md group animate-[subtleBounce_2s_ease-in-out_infinite]"
-                                            style={{
-                                                backgroundColor: 'var(--bg-elevated)',
-                                                border: '1px solid var(--coral-primary)',
-                                                boxShadow: '0 2px 8px rgba(255, 111, 97, 0.15)'
-                                            }}
-                                        >
-                                            <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12" style={{ color: 'var(--coral-primary)' }} />
-                                            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>naapim AI analizinin tamamını oku</span>
-                                            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>↓</span>
-                                        </button>
+                                {isLoading && (
+                                    <div className="flex items-center gap-1.5 mt-3">
+                                        <span className="typing-dot"></span>
+                                        <span className="typing-dot"></span>
+                                        <span className="typing-dot"></span>
                                     </div>
-                                </div>
-
-                                {/* Collapse button when expanded */}
-                                {showFullAnalysis && (
-                                    <button
-                                        onClick={() => setShowFullAnalysis(false)}
-                                        className="w-full text-center text-[11px] pt-3 transition-all hover:opacity-70"
-                                        style={{ color: 'var(--text-muted)' }}
-                                    >
-                                        Kapat ↑
-                                    </button>
                                 )}
                             </div>
-
                         </div>
-                    ) : (
-                        <div
-                            className="text-center py-10 rounded-xl"
-                            style={{ backgroundColor: 'var(--bg-secondary)' }}
-                        >
-                            <p style={{ color: 'var(--text-muted)' }}>Analiz verilerine ulaşılamadı. (Sayfa yenilenmiş olabilir)</p>
-                        </div>
-                    )}
+                    </div>
+                </div>
 
-
-                    {/* Legal Disclaimer - Immediately after card, before community section */}
-                    <p
-                        className="text-xs text-center mt-2 mb-7 px-5"
-                        style={{ color: 'var(--text-muted)' }}
-                    >
-                        naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
-                    </p>
-
-                    {/* AYRICA Divider & Community Button - Outside card */}
-                    {analysis && (
-                        <div className="mt-6 mb-12 space-y-6">
-                            {/* AYRICA Divider */}
-                            <div className="relative flex items-center">
-                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
-                                <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">AYRICA</span>
-                                <div className="flex-grow border-t border-gray-200 opacity-50"></div>
-                            </div>
-
-                            <button
-                                onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="w-full py-3.5 px-4  rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.98]"
+                {/* Analysis Result Section - Appears below bubble */}
+                {!isLoading && (<>
+                    <div className="px-5">
+                        {/* Analysis Card */}
+                        {analysis ? (
+                            <div
+                                className="rounded-3xl p-6 md:p-8 analysis-card-enter"
                                 style={{
-                                    background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
-                                    color: 'white',
-                                    boxShadow: '0 4px 15px rgba(255, 111, 97, 0.3)'
+                                    backgroundColor: 'var(--bg-elevated)',
+                                    border: '1px solid var(--border-secondary)',
+                                    boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)'
                                 }}
                             >
-                                <Users className="w-4 h-4" />
-                                <span>Başkaları neler yapıyor?</span>
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </button>
-                        </div>
-                    )}
-                </div>
+                                {/* AI Badge */}
+                                <div className="flex items-center justify-center gap-2 mb-4">
+                                    <span
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                                        style={{
+                                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                                            color: 'var(--coral-primary)'
+                                        }}
+                                    >
+                                        <Sparkles className="w-3.5 h-3.5" fill="currentColor" />
+                                        <span>naapim AI</span>
+                                        <span style={{ color: 'var(--text-muted)' }}>•</span>
+                                        <span style={{ color: 'var(--text-secondary)' }}>Kişiselleştirilmiş Analiz</span>
+                                    </span>
+                                </div>
+
+                                {/* Title */}
+                                <h1
+                                    className="text-2xl font-semibold text-center mb-6 max-w-[90%] mx-auto"
+                                    style={{ color: 'var(--text-primary)' }}
+                                >
+                                    {analysis.title}
+                                </h1>
+
+                                {/* Recommendation */}
+                                {(() => {
+                                    // Sentiment-based colors
+                                    const sentimentStyles: Record<string, { bg: string; border: string; text: string }> = {
+                                        positive: { bg: 'var(--emerald-50)', border: 'var(--emerald-300)', text: 'var(--emerald-700)' },
+                                        cautious: { bg: 'var(--amber-50)', border: 'var(--amber-300)', text: 'var(--amber-700)' },
+                                        warning: { bg: 'var(--orange-50)', border: 'var(--orange-300)', text: 'var(--orange-700)' },
+                                        negative: { bg: 'var(--red-50)', border: 'var(--red-300)', text: 'var(--red-700)' },
+                                        neutral: { bg: 'var(--neutral-100)', border: 'var(--neutral-300)', text: 'var(--neutral-700)' }
+                                    };
+                                    const style = sentimentStyles[analysis.sentiment] || sentimentStyles.neutral;
+                                    return (
+                                        <div
+                                            className="p-4 rounded-xl mb-6"
+                                            style={{
+                                                backgroundColor: style.bg,
+                                                border: `1px solid ${style.border}`
+                                            }}
+                                        >
+                                            <p
+                                                className="font-medium text-center"
+                                                style={{ color: style.text }}
+                                            >
+                                                {analysis.recommendation}
+                                            </p>
+                                        </div>
+                                    );
+                                })()}
+
+                                {/* Collapsible Analysis Details (NEDEN + ADIMLAR) */}
+                                <div className="relative">
+                                    {/* Content container with smooth height transition */}
+                                    <div
+                                        ref={analysisContentRef}
+                                        className="transition-[height] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+                                        style={{
+                                            height: showFullAnalysis
+                                                ? (analysisContentRef.current ? `${analysisContentRef.current.scrollHeight}px` : 'auto')
+                                                : '240px'
+                                        }}
+                                    >
+                                        {/* Reasoning */}
+                                        <div className="mb-5">
+                                            <h3
+                                                className="text-sm font-semibold uppercase tracking-wider mb-2"
+                                                style={{ color: 'var(--text-muted)' }}
+                                            >
+                                                NEDEN?
+                                            </h3>
+                                            <p
+                                                className="leading-relaxed"
+                                                style={{ color: 'var(--text-secondary)' }}
+                                            >
+                                                {analysis.reasoning}
+                                            </p>
+                                        </div>
+
+                                        {/* Pros & Cons Section */}
+                                        {(analysis.pros?.length || analysis.cons?.length) && (
+                                            <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {/* Artılar */}
+                                                {analysis.pros && analysis.pros.length > 0 && (
+                                                    <div
+                                                        className="p-4 rounded-xl"
+                                                        style={{
+                                                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                                            border: '1px solid rgba(16, 185, 129, 0.2)'
+                                                        }}
+                                                    >
+                                                        <h4
+                                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                                            style={{ color: 'var(--emerald-500)' }}
+                                                        >
+                                                            Artılar
+                                                        </h4>
+                                                        <ul className="space-y-2">
+                                                            {analysis.pros.map((pro, idx) => (
+                                                                <li key={idx} className="flex items-start gap-2">
+                                                                    <span
+                                                                        className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                                                                        style={{ backgroundColor: 'var(--emerald-500)' }}
+                                                                    />
+                                                                    <span
+                                                                        className="text-sm"
+                                                                        style={{ color: 'var(--text-secondary)' }}
+                                                                    >
+                                                                        {pro}
+                                                                    </span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+
+                                                {/* Eksiler */}
+                                                {analysis.cons && analysis.cons.length > 0 && (
+                                                    <div
+                                                        className="p-4 rounded-xl"
+                                                        style={{
+                                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                            border: '1px solid rgba(239, 68, 68, 0.2)'
+                                                        }}
+                                                    >
+                                                        <h4
+                                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                                            style={{ color: 'var(--red-500)' }}
+                                                        >
+                                                            Eksiler
+                                                        </h4>
+                                                        <ul className="space-y-2">
+                                                            {analysis.cons.map((con, idx) => (
+                                                                <li key={idx} className="flex items-start gap-2">
+                                                                    <span
+                                                                        className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                                                                        style={{ backgroundColor: 'var(--red-500)' }}
+                                                                    />
+                                                                    <span
+                                                                        className="text-sm"
+                                                                        style={{ color: 'var(--text-secondary)' }}
+                                                                    >
+                                                                        {con}
+                                                                    </span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Steps */}
+                                        <div>
+                                            <h3
+                                                className="text-sm font-semibold uppercase tracking-wider mb-3"
+                                                style={{ color: 'var(--text-muted)' }}
+                                            >
+                                                ÖNERİLEN ADIMLAR
+                                            </h3>
+                                            <ul className="space-y-3">
+                                                {analysis.steps.map((step, idx) => (
+                                                    <li key={idx} className="flex items-start gap-3">
+                                                        <span
+                                                            className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold"
+                                                            style={{
+                                                                backgroundColor: 'var(--accent-100)',
+                                                                color: 'var(--accent-600)'
+                                                            }}
+                                                        >
+                                                            {idx + 1}
+                                                        </span>
+                                                        <span style={{ color: 'var(--text-secondary)' }}>{step}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${showFullAnalysis ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                                    >
+                                        {/* Gradient fade */}
+                                        <div
+                                            className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
+                                            style={{
+                                                background: 'linear-gradient(to top, var(--bg-elevated) 0%, var(--bg-elevated) 20%, transparent 100%)'
+                                            }}
+                                        />
+                                        {/* Button container - sits on top of gradient */}
+                                        <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2 z-20">
+                                            <button
+                                                onClick={() => setShowFullAnalysis(true)}
+                                                className="flex items-center gap-2 px-5 py-2.5 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-md group animate-[subtleBounce_2s_ease-in-out_infinite]"
+                                                style={{
+                                                    backgroundColor: 'var(--bg-elevated)',
+                                                    border: '1px solid var(--coral-primary)',
+                                                    boxShadow: '0 2px 8px rgba(255, 111, 97, 0.15)'
+                                                }}
+                                            >
+                                                <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12" style={{ color: 'var(--coral-primary)' }} />
+                                                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>naapim AI analizinin tamamını oku</span>
+                                                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>↓</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Collapse button when expanded */}
+                                    {showFullAnalysis && (
+                                        <button
+                                            onClick={() => setShowFullAnalysis(false)}
+                                            className="w-full text-center text-[11px] pt-3 transition-all hover:opacity-70"
+                                            style={{ color: 'var(--text-muted)' }}
+                                        >
+                                            Kapat ↑
+                                        </button>
+                                    )}
+                                </div>
+
+                            </div>
+                        ) : (
+                            <div
+                                className="text-center py-10 rounded-xl"
+                                style={{ backgroundColor: 'var(--bg-secondary)' }}
+                            >
+                                <p style={{ color: 'var(--text-muted)' }}>Analiz verilerine ulaşılamadı. (Sayfa yenilenmiş olabilir)</p>
+                            </div>
+                        )}
 
 
-                <div className="mt-16">
-                    <FollowUpSection
-                        seededOutcomes={seededOutcomes}
-                        isLoadingSeeds={isLoadingSeeds}
-                        isUnlocked={isStoriesUnlocked}
-                        onUnlock={handleUnlockStories}
-                        onUnlockWithEmail={(email, time) => {
-                            setUnlockEmail(email);
-                            setUnlockReminderTime(time);
-                            // Persist to localStorage for page refresh
-                            if (code) {
-                                localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
-                            }
-                        }}
-                        onShareStory={() => setShowRecoveryCode(true)}
-                        code={code}
-                        userQuestion={sessionUserInput}
-                        sessionId={sessionId}
-                        followupQuestion={analysis?.followup_question}
-                        unlockEmail={unlockEmail}
-                        onEmailUpdate={(newEmail) => {
-                            setUnlockEmail(newEmail);
-                            // Update localStorage
-                            if (code) {
-                                localStorage.setItem(`unlock_${code}`, JSON.stringify({
-                                    email: newEmail,
-                                    reminderTime: unlockReminderTime
-                                }));
-                            }
-                        }}
-                    />
-                </div>
+                        {/* Legal Disclaimer - Immediately after card, before community section */}
+                        <p
+                            className="text-xs text-center mt-2 mb-7 px-5"
+                            style={{ color: 'var(--text-muted)' }}
+                        >
+                            naapim AI hata yapabilir. Önemli kararlar için profesyonel danışmanlık alın.
+                        </p>
 
-                {showRecoveryCode && (
-                    <div className="-mt-4">
-                        <RecoveryCode
-                            onReminderSet={handleReminderSet}
-                            initialCode={code}
-                            onStartInteraction={() => { }}
-                            userQuestion={sessionUserInput}
+                        {/* AYRICA Divider & Community Button - Outside card */}
+                        {analysis && (
+                            <div className="mt-6 mb-12 space-y-6">
+                                {/* AYRICA Divider */}
+                                <div className="relative flex items-center">
+                                    <div className="flex-grow border-t border-gray-200 opacity-50"></div>
+                                    <span className="flex-shrink-0 mx-4 text-[10px] font-bold tracking-widest text-gray-400 uppercase">AYRICA</span>
+                                    <div className="flex-grow border-t border-gray-200 opacity-50"></div>
+                                </div>
+
+                                <button
+                                    onClick={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="w-full py-3.5 px-4  rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.98]"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #FF6F61 0%, #FF8A50 100%)',
+                                        color: 'white',
+                                        boxShadow: '0 4px 15px rgba(255, 111, 97, 0.3)'
+                                    }}
+                                >
+                                    <Users className="w-4 h-4" />
+                                    <span>Başkaları neler yapıyor?</span>
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+
+
+
+                    {/* FollowUp Section */}
+                    <div className="mt-16">
+                        <FollowUpSection
                             seededOutcomes={seededOutcomes}
+                            isLoadingSeeds={isLoadingSeeds}
+                            isUnlocked={isStoriesUnlocked}
+                            onUnlock={handleUnlockStories}
+                            onUnlockWithEmail={(email, time) => {
+                                setUnlockEmail(email);
+                                setUnlockReminderTime(time);
+                                // Persist to localStorage for page refresh
+                                if (code) {
+                                    localStorage.setItem(`unlock_${code}`, JSON.stringify({ email, reminderTime: time }));
+                                }
+                            }}
+                            onShareStory={() => setShowRecoveryCode(true)}
+                            code={code}
+                            userQuestion={sessionUserInput}
+                            sessionId={sessionId}
                             followupQuestion={analysis?.followup_question}
                             unlockEmail={unlockEmail}
+                            onEmailUpdate={(newEmail) => {
+                                setUnlockEmail(newEmail);
+                                // Update localStorage
+                                if (code) {
+                                    localStorage.setItem(`unlock_${code}`, JSON.stringify({
+                                        email: newEmail,
+                                        reminderTime: unlockReminderTime
+                                    }));
+                                }
+                            }}
                         />
                     </div>
-                )}
 
-                {/* Start over button */}
-                <div className="text-center pt-8 px-5">
-                    <button
-                        onClick={handleBackToHome}
-                        className="btn-text text-neutral-400 hover:text-neutral-600"
-                    >
-                        Yeni bir karar için baştan başla
-                    </button>
-                </div>
-            </div>
+                    {
+                        showRecoveryCode && (
+                            <div className="-mt-4">
+                                <RecoveryCode
+                                    onReminderSet={handleReminderSet}
+                                    initialCode={code}
+                                    onStartInteraction={() => { }}
+                                    userQuestion={sessionUserInput}
+                                    seededOutcomes={seededOutcomes}
+                                    followupQuestion={analysis?.followup_question}
+                                    unlockEmail={unlockEmail}
+                                />
+                            </div>
+                        )
+                    }
+
+                    {/* Start over button */}
+                    <div className="text-center pt-8 px-5">
+                        <button
+                            onClick={handleBackToHome}
+                            className="btn-text text-neutral-400 hover:text-neutral-600"
+                        >
+                            Yeni bir karar için baştan başla
+                        </button>
+                    </div>
+                </>)}
+            </div >
         </div >
     );
 };

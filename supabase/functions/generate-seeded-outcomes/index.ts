@@ -100,6 +100,46 @@ const PERSONA_POOLS: Record<string, string[]> = {
         'acil fon oluşturmak isteyen; tasarruf alışkanlığı zayıf',
         'kripto veya hisse düşünen; volatilite korkusu; timing endişesi',
     ],
+    // Food, dining, hospitality
+    food_hospitality: [
+        'gurme damak tadına sahip; lezzet odaklı; yeni tatlar denemeyi seven',
+        'evde yemek yapmayı seven; misafir ağırlamaktan keyif alan; sunum önemli',
+        'pratik çözüm arayan çalışan; hızlı ve sağlıklı yemek istiyor; zaman kısıtlı',
+        'özel beslenme rejimi uygulayan; diyet/alerji kısıtlaması var; seçenek arıyor',
+        'bütçe dostu mekan arayan öğrenci; fiyat/performans önemli',
+        'romantik akşam yemeği planlayan; atmosfer ve sakinlik arayan',
+        'kalabalık grup için organizasyon yapan; herkesi memnun etme stresi',
+        'geleneksel tatları seven; macera aramayan; bildiğinden şaşmayan',
+    ],
+    // Social interactions
+    social_decisions: [
+        'sosyal kelebek; sürekli plan yapan; enerjik; yalnız kalmayı sevmeyen',
+        'içine kapanık; az ama öz arkadaş tercih eden; kalabalıktan yorulan',
+        'çatışmadan kaçınan; barışçıl; ara bulucu rolünde; hayır diyemeyen',
+        'yeni çevreye girmiş; uyum sağlamaya çalışan; dışlanma korkusu',
+        'uzun süreli dostlukları olan; vefa ve güvene önem veren',
+        'sınır koymakta zorlanan; fedakar; kendinden ödün veren',
+        'ev arkadaşıyla sorun yaşayan; uyum/düzen takıntısı olan',
+    ],
+    // Eldercare
+    eldercare_decisions: [
+        'yaşlı ebeveynine bakan evlat; yıpranmış; vicdan azabı ve yorgunluk',
+        'uzaktan destek olmaya çalışan; kontrolü kaybetme endişesi; suçluluk',
+        'profesyonel bakım arayan; güvenlik ve hijyen takıntısı; bütçe zorluğu',
+        'kardeşleriyle bakım sorumluluğunu paylaşamayan; yalnız kalmış hisseden',
+        'ebeveyniyle aynı evde yaşayan; özel hayatı kısıtlanmış; sabır testi',
+        'demans/alzheimer ile mücadele eden yakını olan; duygusal tükeniş',
+    ],
+    // Travel
+    travel_vacation: [
+        'macera arayan gezgin; plansız; spontane; deneyim odaklı',
+        'konfor düşkünü tatilci; her şey dahil olsun; yorulmak istemeyen',
+        'kültür turu seven; müze ve tarih meraklısı; yoğun program yapan',
+        'bütçeli gezgin; hostel ve ucuz uçak kovalayan; ekonomi öncelikli',
+        'çocuklu aile; çocuk dostu otel arayan; güvenlik ve kolaylık önemli',
+        'balayı çifti; romantizm ve mahremiyet arayan; özel hissetmek isteyen',
+        'yalnız seyahat eden; kendini keşfetme yolculuğunda; güvenlik endişesi',
+    ],
     // Default fallback
     default: [
         'genel karar verici; araştırma yapan; tereddütlü; farklı görüşler dinliyor',
@@ -343,16 +383,19 @@ JSON formatında yanıt ver: { "personas": ["persona1", "persona2", "persona3"] 
 
 Orijinal soru: "${user_question}"${contextInstruction}
 
+⚠️ KRİTİK KURAL: Hikayeler SADECE ve SADECE yukarıdaki "Orijinal soru" ile ilgili olmalı.
+Örneğin soru "kahve mi çay mı" ise, ASLA "bisiklet" veya "bilgisayar" anlatma. Konu dışına çıkma. Soru neyse bağlam o kalmalı.
+
 KARAR TİPİ: ${decision_type}
 ${decisionTypeInstruction}
 
 HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
-1. EN AZ 2 ALTERNATİF KARŞILAŞTIRMASI: Somut seçenekler (örn: M2 Air vs M3 Air, Air vs Pro, Mac vs Windows)
-2. EN AZ 1 SOMUT KISIT: Bütçe aralığı/taksit limiti VEYA zaman baskısı VEYA stok/bulunabilirlik
-3. SOMUT KULLANIM SENARYOSU: İş, okul, kodlama, toplantı, fotoğraf düzenleme, taşınabilirlik, pil ömrü vb.
-4. SOMUT KRİTER: RAM, SSD, ekran boyutu, ağırlık, pil, servis, ikinci el değeri, klavye, port vb.
-5. SOMUT TETİKLEYİCİ OLAY: İndirim, eski cihaz bozuldu, mağazada denedi, iş gereksinimi, seyahat planı vb.
-6. SOMUT SONRASI GÖZLEM: Pil yetti/yetmedi, performans, pişmanlık nedeni, beklenmedik sorun, memnuniyet nedeni
+1. EN AZ 2 ALTERNATİF KARŞILAŞTIRMASI: Somut seçenekler (Soru ile ilgili mantıklı seçenekler, örn: X Markası vs Y Markası, Gitmek vs Gitmemek)
+2. EN AZ 1 SOMUT KISIT: Soruya uygun kısıtlar (Bütçe, zaman, alerji, mesafe, bulunabilirlik, hava durumu vb.)
+3. SOMUT KULLANIM SENARYOSU: Kararın nerede ve nasıl kullanılacağı (Günlük rutin, iş, özel gün, seyahat, anlık istek vb.)
+4. SOMUT KRİTER: Karar vermeyi etkileyen faktörler (Fiyat, kalite, lezzet, konfor, hız, dayanıklılık, his vb.)
+5. SOMUT TETİKLEYİCİ OLAY: Kararı vermeye iten an (İhtiyaç oluşması, canın çekmesi, bozulma, davet, yorgunluk vb.)
+6. SOMUT SONRASI GÖZLEM: Beklenti karşılandı mı, tatmin düzeyi, pişmanlık nedeni veya iyi ki yapmışım dedirten detay
 
 YASAK İFADELER (bunları ASLA kullanma - tavsiye veren dil):
 "şunu almalısın", "kesinlikle tavsiye ederim", "en iyisi budur", "tavsiye ederim", "garanti ederim", "kesin sonuç alırsın"
@@ -380,7 +423,7 @@ JSON formatında yanıt ver. ÖNEMLİ: YUKARIDAKİ PERSONA, FEELING VE OUTCOME_T
 {
   "outcomes": [
     {
-      "similar_question": "Kısa, spesifik başlık (format: Konu + 1 kısıt + 1 alternatif, örn: '40-55 bin TL bütçe ile M2 Air mi M3 Air mi')",
+      "similar_question": "Kısa, spesifik başlık (format: Konu + 1 kısıt + 1 alternatif, örn: 'Kısıtlı zamanda X mi Y mi')",
       "persona": "Persona etiketi (yukarıdan al)",
       "options_considered": ["alternatif1", "alternatif2"],
       "constraints": ["kısıt1", "kısıt2"],

@@ -114,9 +114,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 const archetypes = (registryData as { archetypes: Archetype[] }).archetypes;
                 console.log('📋 Loaded archetypes:', archetypes.length);
 
-                // Step 1: Classify
+                // Step 1: Classify (with simple question pools for LLM selection)
                 console.log('🚀 Calling ClassificationService...');
-                const classificationResult = await ClassificationService.classifyUserQuestion(userInput, archetypes);
+                const simpleQuestionPools = RegistryLoader.getSimpleQuestionPools();
+                const classificationResult = await ClassificationService.classifyUserQuestion(userInput, archetypes, simpleQuestionPools);
                 console.log('✅ Classification result:', classificationResult);
 
                 // Check if clarification is needed
@@ -132,16 +133,35 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                 }
 
                 // Step 2: Select Questions
-                console.log('🚀 Calling QuestionSelectionService...');
-                const selectionResult = await QuestionSelectionService.selectQuestions(
-                    userInput,
-                    classificationResult.archetype_id
-                );
-                console.log('✅ Selection result:', selectionResult);
+                let selectedKeys: string[] = [];
 
-                console.log('📝 Setting state:', classificationResult.archetype_id, selectionResult.selectedFieldKeys, 'complexity:', classificationResult.decision_complexity);
+                if (classificationResult.decision_complexity === 'simple') {
+                    // Start with LLM selected keys
+                    if (classificationResult.selected_simple_field_keys?.length) {
+                        console.log('✨ Using LLM-selected simple field keys:', classificationResult.selected_simple_field_keys);
+                        selectedKeys = classificationResult.selected_simple_field_keys;
+                    } else {
+                        // Fallback: Pick random 3 simple questions from the archetype pool
+                        console.warn('⚠️ No simple keys selected by LLM, falling back to random 3');
+                        const simpleQuestions = RegistryLoader.getSimpleQuestions(classificationResult.archetype_id);
+                        // Shuffle and pick 3
+                        const shuffled = [...simpleQuestions].sort(() => 0.5 - Math.random());
+                        selectedKeys = shuffled.slice(0, 3).map(q => q.id);
+                    }
+                } else {
+                    // For moderate/complex, use vector search selection
+                    console.log('🚀 Calling QuestionSelectionService for moderate/complex...');
+                    const selectionResult = await QuestionSelectionService.selectQuestions(
+                        userInput,
+                        classificationResult.archetype_id
+                    );
+                    console.log('✅ Selection result:', selectionResult);
+                    selectedKeys = selectionResult.selectedFieldKeys;
+                }
+
+                console.log('📝 Setting state:', classificationResult.archetype_id, selectedKeys, 'complexity:', classificationResult.decision_complexity);
                 setArchetypeId(classificationResult.archetype_id);
-                setSelectedFieldKeys(selectionResult.selectedFieldKeys);
+                setSelectedFieldKeys(selectedKeys);
                 setDecisionType(classificationResult.decision_type || 'binary_decision');
                 setDecisionComplexity(classificationResult.decision_complexity || 'moderate');
 
@@ -150,13 +170,13 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                     setIsLoading(false);
                 }
 
-                setQuestionsReady(true); // Only set when questions are actually ready
+                setQuestionsReady(true);
                 console.log('🏁 Done, questions ready');
             } catch (error) {
                 console.error('❌ Classification failed:', error);
                 // Fallback to default
                 setArchetypeId('career_decisions');
-                setQuestionsReady(true); // Fallback also means ready
+                setQuestionsReady(true);
             } finally {
                 // Do NOT turn off loading here. 
                 // We keep isLoading=true so the LoadingScreen stays visible.
@@ -186,21 +206,18 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }, [isLoading]);
 
     // Load questions based on decision complexity:
-    // - Simple decisions: use lightweight archetype-specific simple questions
+    // - Simple decisions: use LLM-selected simple field keys (2-5 questions from pool)
     // - Moderate/Complex: use LLM-selected field keys or archetype default
     const questions = useMemo(() => {
         if (!archetypeId) return [];
 
-        // For simple daily decisions, use archetype-specific lightweight questions
-        if (decisionComplexity === 'simple') {
-            console.log('✨ Using simple questions for decision complexity: simple, archetype:', archetypeId);
-            return RegistryLoader.getSimpleQuestions(archetypeId);
-        }
-
-        // For moderate/complex decisions, use LLM-selected or archetype default
+        // For both simple and moderate/complex, use LLM-selected field keys if available
         if (selectedFieldKeys && selectedFieldKeys.length > 0) {
+            console.log('✨ Using LLM-selected field keys:', selectedFieldKeys.length, 'questions');
             return RegistryLoader.getQuestionsForFieldKeys(selectedFieldKeys);
         }
+
+        // Fallback: use archetype default questions
         return RegistryLoader.getQuestionsForArchetype(archetypeId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [archetypeId, decisionComplexity, JSON.stringify(selectedFieldKeys)]);
@@ -400,15 +417,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     return (
         <div className="max-w-xl mx-auto px-5 py-6 w-full min-h-screen flex flex-col">
-            {/* User's Question (original or clarified) */}
+            {/* User's Question - Chat bubble style (matches ResultPage) */}
             {effectiveQuestion && (
-                <div className="mb-4 text-center">
-                    <p
-                        className="text-sm italic"
-                        style={{ color: 'var(--text-muted)' }}
+                <div className="flex flex-col items-end gap-1 mb-6">
+                    {/* Eyebrow */}
+                    <span className="text-[10px] font-medium uppercase tracking-wider mr-1" style={{ color: 'var(--text-muted)' }}>
+                        Düşündüğün konu
+                    </span>
+                    {/* User Bubble */}
+                    <div
+                        className="chat-bubble max-w-[85%] px-4 py-3 rounded-2xl rounded-tr-md"
+                        style={{
+                            backgroundColor: 'var(--chat-bubble-bg, #E9EBF0)',
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
+                        }}
                     >
-                        "{effectiveQuestion}"
-                    </p>
+                        <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--chat-bubble-text, #1a1a1a)' }}>
+                            {effectiveQuestion}
+                        </p>
+                    </div>
                 </div>
             )}
 

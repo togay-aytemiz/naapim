@@ -10,6 +10,7 @@ export interface ClassificationResult {
     is_unrealistic?: boolean;
     clarification_prompt?: string;
     interpreted_question?: string;
+    selected_simple_field_keys?: string[];
 }
 
 export class ClassificationService {
@@ -17,7 +18,11 @@ export class ClassificationService {
      * Classifies the user's question into one of the provided archetypes.
      * Returns needs_clarification: true if the input is too vague.
      */
-    static async classifyUserQuestion(userQuestion: string, archetypes: Archetype[]): Promise<ClassificationResult> {
+    static async classifyUserQuestion(
+        userQuestion: string,
+        archetypes: Archetype[],
+        simpleQuestionPools?: Record<string, { key: string; label: string }[]>
+    ): Promise<ClassificationResult> {
         // Check if Supabase is configured
         if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
             console.warn("Supabase not configured. Returning fallback.");
@@ -44,7 +49,8 @@ export class ClassificationService {
                         id: a.id,
                         label: a.label,
                         routing_hints: a.routing_hints
-                    }))
+                    })),
+                    simple_question_pools: simpleQuestionPools
                 })
             });
 
@@ -66,7 +72,8 @@ export class ClassificationService {
                 needs_clarification: result.needs_clarification || false,
                 is_unrealistic: result.is_unrealistic || promptIndicatesUnrealistic || false,
                 clarification_prompt: result.clarification_prompt || undefined,
-                interpreted_question: result.interpreted_question || undefined
+                interpreted_question: result.interpreted_question || undefined,
+                selected_simple_field_keys: result.selected_simple_field_keys || undefined
             };
 
         } catch (error) {

@@ -168,4 +168,43 @@ export class RegistryLoader {
 
         return questions;
     }
+
+    /**
+     * Get all simple question pools for all archetypes.
+     * Returns a map of archetypeId -> array of {key, label} for LLM selection.
+     */
+    static getSimpleQuestionPools(): Record<string, { key: string; label: string }[]> {
+        const pools: Record<string, { key: string; label: string }[]> = {};
+
+        for (const archetype of this.archetypes) {
+            const simpleSetId = (archetype as any).simple_category_set_id;
+            if (!simpleSetId) continue;
+
+            const simpleSet = this.categorySets.find(cs => cs.id === simpleSetId);
+            if (!simpleSet) continue;
+
+            const questions: { key: string; label: string }[] = [];
+
+            for (const catId of simpleSet.category_ids) {
+                const category = this.categories.find(c => c.id === catId);
+                if (!category) continue;
+
+                for (const fieldKey of category.field_keys) {
+                    const field = this.fields.find(f => f.key === fieldKey);
+                    if (!field || field.type !== 'single_select') continue;
+
+                    questions.push({
+                        key: field.key,
+                        label: field.label
+                    });
+                }
+            }
+
+            if (questions.length > 0) {
+                pools[archetype.id] = questions;
+            }
+        }
+
+        return pools;
+    }
 }

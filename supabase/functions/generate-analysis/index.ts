@@ -49,9 +49,16 @@ Generate a CONCISE response in strictly valid JSON:
   "recommendation": "1-2 short, punchy sentences. BE DIRECT. Do not say 'it depends'. Tell them what to do.",
   "reasoning": "2-3 short sentences. Explain WHY this is the best path. Be convincing.",
   "steps": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
+  "alternatives": [
+    { "name": "Alternative Option Name", "description": "Brief reason why this could also work" }
+  ],
   "pros": ["Benefit 1", "Benefit 2", "Benefit 3"],
   "cons": ["Risk 1", "Risk 2"],
   "sentiment": "positive OR cautious OR warning OR negative",
+  "decision_score": 75,
+  "score_label": "Olumlu Yaklaşım",
+  "metre_left_label": "YAPMA",
+  "metre_right_label": "YAP",
   "followup_question": "A natural conversational question to ask the user when they return",
   "specific_suggestions": [
     { "name": "Item Name", "description": "Why this specific option?" }
@@ -63,6 +70,8 @@ RULES:
 1. **BE DIRECT & OPIMIONATED**: 
    - STOP using safe language. TAKE A STAND.
    - Use strong verbs: "Yap", "Git", "Ye", "Al", "İzle".
+   - **NEVER assume user's city or location.** Do NOT use specific neighborhood names (Kadıköy, Beşiktaş, etc.).
+     Instead, use generic phrases like "yakınındaki bir sahil", "şehrindeki bir park", "evine yakın bir cafe".
 
 2. **SPECIFIC SUGGESTIONS (Crucial)**:
    You MUST provide 3-5 specific items in 'specific_suggestions' array IF the question falls into these categories:
@@ -78,7 +87,8 @@ RULES:
 
    C. **ACTIVITIES** (suggestion_type: "activity"):
       - Question: "Bu akşam ne yapsam?", "Haftasonu nereye gitsem?" (General activity)
-      - Suggest: "Kadıköy sahilde yürüyüş", "Yeni açılan X sergisine git", "Boğaz turu yap"
+      - Suggest: "Yakınındaki sahilde yürüyüş", "Şehirdeki bir sergiye git", "Doğa yürüyüşü yap"
+      - DO NOT assume user's city. Use generic location phrases.
 
    D. **TRAVEL & PLACES** (suggestion_type: "travel"):
       - Question: "Balayı için nereye?", "Haftasonu kaçamağı?", "Yaz tatili?"
@@ -97,25 +107,59 @@ RULES:
 
    - IF NO SPECIFIC CATEGORY MATCHES: Return empty array [] for 'specific_suggestions' and suggestion_type "other".
 
-3. **STEPS LOGIC (Important)**:
+3. **ALTERNATIVES (CRITICAL for "ne yapayım" questions)**:
+   - ALWAYS provide 2-4 alternative options in 'alternatives' array, EVEN when you make a strong recommendation.
+   - User asked "ne yapayım?", "ne yesem?", "nereye gitsem?", "hangisini seçsem?" → MUST have alternatives.
+   - Each alternative should be different from your main recommendation.
+   - Example for "Akşama ne yesem?":
+     Main: Kremalı Mantarlı Makarna
+     Alternatives: [{"name": "Ev Yapımı Burger", "description": "Daha doyurucu bir seçenek"}, {"name": "Tavuklu Salata", "description": "Hafif ve sağlıklı"}, {"name": "Sipariş Ver: Pizza", "description": "Hiç uğraşmak istemiyorsan"}]
+   - Even for binary decisions (A vs B), suggest a 3rd creative option if applicable.
+
+4. **STEPS LOGIC (Important)**:
    - **RETURN EMPTY ARRAY []** steps: If the decision is SIMPLE, IMPULSIVE, or PHYSICAL (e.g., "Coffee vs Tea?", "What to eat?", "Should I nap?").
      - DO NOT give stupid steps like "Go to kitchen", "Boil water". JUST RETURN EMPTY STEPS [].
    - **RETURN STRATEGIC STEPS**: If the decision is COMPLEX (e.g., "Buy car?", "Break up?", "Quit job?").
      - Steps must be STRATEGIC actions (e.g., "Check used market prices", "Update CV", "Talk to HR"), NOT physical motions.
 
-4. **Title**: 
+5. **Title**: 
    - MUST be specific. 
    - BAD: "Karar Ver", "Yemek Seçimi"
    - GOOD: "Lahmacun Söyle Keyfine Bak", "Sony Kulaklığı Almalısın", "Sahilde Yürüyüşe Çık"
 
-5. **Sentiment**:
+6. **Sentiment**:
    - "positive": Go for it! Highly recommended.
    - "cautious": Do it, but watch out for X.
    - "warning": Probably don't do it. High risk.
    - "negative": Definitely don't do it. Bad idea.
 
-6. **Follow-up Question**:
+7. **Follow-up Question**:
    - MUST directly reference the user's specific question in the past tense.
+
+8. **Naapim Metre (CRITICAL - Binary decision score)**:
+   - "decision_score": 0-100 arası bir SAYISAL değer. BU ALANIN DOLDURULMASI ZORUNLUDUR.
+     - 0-20 = Kesinlikle YAPMA (çok riskli, kırmızı)
+     - 21-40 = Dikkatli ol (riskler var, turuncu)
+     - 41-60 = Nötr/Her iki tarafı da düşün (sarı)
+     - 61-80 = Olumlu yaklaşım (genel yeşil ışık)
+     - 81-100 = Kesinlikle YAP (çok olumlu, koyu yeşil)
+   - "score_label": Skoru özetleyen kısa Türkçe etiket:
+     - "Kesinlikle Uzak Dur" (0-20)
+     - "Dikkatli Ol" (21-40)
+     - "İki Tarafı da Düşün" (41-60)
+     - "Olumlu Yaklaşım" (61-80)
+     - "Kesinlikle Yap!" (81-100)
+   - "metre_left_label" ve "metre_right_label": Soruya uygun FIIL etiketleri (BÜYÜK HARF):
+     - "Ev almalı mıyım?" → "ALMA" / "AL"
+     - "Tenise başlamalı mıyım?" → "BAŞLAMA" / "BAŞLA"
+     - "İşten ayrılmalı mıyım?" → "AYRILMA" / "AYRIL"
+     - "Git mi gitmesem mi?" → "GİTME" / "GİT"
+     - Varsayılan: "YAPMA" / "YAP"
+   - Skor, sentiment ile UYUMLU olmalı:
+     - sentiment: positive → decision_score: 70-95
+     - sentiment: cautious → decision_score: 50-70
+     - sentiment: warning → decision_score: 25-50
+     - sentiment: negative → decision_score: 5-25
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -147,6 +191,19 @@ RULES:
                                     type: 'array',
                                     items: { type: 'string' },
                                     description: 'Maksimum 5 adım'
+                                },
+                                alternatives: {
+                                    type: 'array',
+                                    description: 'Alternative options for the decision (2-4 items)',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            name: { type: 'string' },
+                                            description: { type: 'string' }
+                                        },
+                                        required: ['name', 'description'],
+                                        additionalProperties: false
+                                    }
                                 },
                                 pros: {
                                     type: 'array',
@@ -181,9 +238,25 @@ RULES:
                                     type: 'string',
                                     enum: ['product', 'food', 'activity', 'travel', 'media', 'gift', 'other'],
                                     description: 'Type of suggestions provided'
+                                },
+                                decision_score: {
+                                    type: 'integer',
+                                    description: 'Karar skoru: 0=YAPMA, 50=NÖTR, 100=YAP. Binary kararlar için metre göstergesi.'
+                                },
+                                score_label: {
+                                    type: 'string',
+                                    description: 'Skoru özetleyen Türkçe etiket: Kesinlikle Uzak Dur, Dikkatli Ol, İki Tarafı da Düşün, Olumlu Yaklaşım, Kesinlikle Yap!'
+                                },
+                                metre_left_label: {
+                                    type: 'string',
+                                    description: 'Metre sol etiketi (negatif taraf): YAPMA, ALMA, BAŞLAMA, GİTME vb.'
+                                },
+                                metre_right_label: {
+                                    type: 'string',
+                                    description: 'Metre sağ etiketi (pozitif taraf): YAP, AL, BAŞLA, GİT vb.'
                                 }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type'],
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label'],
                             additionalProperties: false
                         }
                     }

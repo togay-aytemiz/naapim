@@ -12,12 +12,17 @@ export interface AnalysisResult {
     recommendation: string;
     reasoning: string;
     steps: string[];
+    alternatives?: { name: string; description: string }[];
     pros?: string[];
     cons?: string[];
     sentiment: Sentiment;
     followup_question?: string;
     specific_suggestions?: { name: string; description: string }[];
     suggestion_type?: 'product' | 'food' | 'activity' | 'travel' | 'media' | 'gift' | 'other';
+    decision_score?: number; // 0-100, only for binary_decision (0=YAPMA, 100=YAP)
+    score_label?: string;    // "Olumlu Yaklaşım" etc.
+    metre_left_label?: string;  // "YAPMA", "ALMA", "GİTME" etc.
+    metre_right_label?: string; // "YAP", "AL", "GİT" etc.
 }
 
 export class AnalysisService {

@@ -64,6 +64,13 @@ Generate a CONCISE response in strictly valid JSON:
     { "name": "Seçenek B", "fit_score": 65, "reason": "" },
     { "name": "Seçenek C", "fit_score": 45, "reason": "" }
   ],
+  "timing_recommendation": "6_months",
+  "timing_reason": "Piyasa koşulları iyileşiyor, 6 ay içinde hareket etmek optimal.",
+  "timing_alternatives": [
+    { "label": "Hemen", "value": "now", "fit_score": 40 },
+    { "label": "6 Ay İçinde", "value": "6_months", "fit_score": 85 },
+    { "label": "1 Yıl Sonra", "value": "1_year", "fit_score": 60 }
+  ],
   "followup_question": "A natural conversational question to ask the user when they return",
   "specific_suggestions": [
     { "name": "Item Name", "description": "Why this specific option?" }
@@ -165,15 +172,37 @@ RULES:
      - sentiment: cautious → decision_score: 50-70
      - sentiment: warning → decision_score: 25-50
      - sentiment: negative → decision_score: 5-25
+   - **BU KURAL SADECE BINARY (EVET/HAYIR) SORULAR İÇİN GEÇERLİ**:
+     - "Kahve içeyim mi?" → BINARY → Naapim Metre göster, ranked_options: []
+     - "Ev almalı mıyım?" → BINARY → Naapim Metre göster, ranked_options: []
+     - "Tenise başlamalı mıyım?" → BINARY → Naapim Metre göster, ranked_options: []
 
-9. **Karşılaştırma Sıralaması ("A mı B mi C mi?" tarzı sorular)**:
-   - Kullanıcı birden fazla seçenek sorduğunda "ranked_options" dizisini MUTLAKA doldur.
+9. **Karşılaştırma Sıralaması (SADECE birden fazla seçenek olan sorular)**:
+   - **BU KURAL SADECE KARŞILAŞTIRMA/SEÇENEK SORULARI İÇİN GEÇERLİ**:
+     - "MacBook mı Windows mu?" → KARŞILAŞTIRMA → ranked_options doldur
+     - "Kahve mi çay mı?" → KARŞILAŞTIRMA → ranked_options doldur
+     - "Akşama ne yesem?" → KARŞILAŞTIRMA → ranked_options doldur
+     - "Hangi araba alsam?" → KARŞILAŞTIRMA → ranked_options doldur
    - Seçenekleri fit_score'a göre BÜYÜKTEN KÜÇÜĞE sırala.
    - İlk seçenek için "reason" alanını MUTLAKA doldur (neden en uygun?).
    - Diğer seçenekler için "reason" boş bırakılabilir.
-   - Max 5 seçenek. Daha fazlası varsa son seçenek "Diğer seçenekler" olsun, fit_score: 0.
-   - fit_score kullanıcının kontekstine ve tercihlerine göre belirle (0-100).
-   - Örnek: "MacBook mı Windows mu?" → ranked_options: [{name: "MacBook", fit_score: 82, reason: "Tasarım ve ekosistem avantajı..."}, {name: "Windows", fit_score: 68, reason: ""}]
+   - Max 5 seçenek.
+   - **Binary sorularda ranked_options BOŞ DİZİ [] olmalı!**
+
+10. **KARAR: Binary mi Karşılaştırma mı?**:
+    - Soruda "mı/mi/mu/mü" VAR ve TEK bir eylem (yapmak, gitmek, almak, içmek) → BINARY → decision_score doldur, ranked_options: []
+    - Soruda "mı...mı", "hangisi", "ne X-sem", "X mi Y mi" → KARŞILAŞTIRMA → ranked_options doldur
+    - Şüphe durumunda: Tek eylem = BINARY, Birden fazla seçenek = KARŞILAŞTIRMA
+
+11. **Zamanlama Metresi ("Ne zaman?" tarzı sorular)**:
+    - Soruda "ne zaman", "hangi zamanda", "erken mi", "beklemeli miyim" ifadeleri varsa ZAMANLAMA kararı.
+    - "timing_recommendation": Şu değerlerden biri: "now", "1_month", "3_months", "6_months", "1_year", "2_years", "uncertain"
+    - "timing_reason": Neden bu zamanlama önerildi, kısa açıklama.
+    - "timing_alternatives": Alternatif zamanlamalar ve uygunluk skorları.
+    - Örnekler:
+      - "Ne zaman ev almalıyım?" → timing_recommendation: "1_year", timing_reason: "Faiz oranları düşüşte..."
+      - "Evlenmeyi ne zaman düşünmeliyim?" → timing_recommendation: "6_months"
+    - **Zamanlama dışı sorularda timing alanları boş bırakılmalı!**
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -282,9 +311,32 @@ RULES:
                                         required: ['name', 'fit_score', 'reason'],
                                         additionalProperties: false
                                     }
+                                },
+                                timing_recommendation: {
+                                    type: 'string',
+                                    enum: ['now', '1_month', '3_months', '6_months', '1_year', '2_years', 'uncertain', ''],
+                                    description: 'Zamanlama önerisi (sadece timing soruları için)'
+                                },
+                                timing_reason: {
+                                    type: 'string',
+                                    description: 'Neden bu zamanlama önerildi'
+                                },
+                                timing_alternatives: {
+                                    type: 'array',
+                                    description: 'Alternatif zamanlamalar (timing soruları için)',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            label: { type: 'string', description: 'Görüntülenecek etiket' },
+                                            value: { type: 'string', description: 'Değer: now, 1_month, 3_months, 6_months, 1_year, 2_years, uncertain' },
+                                            fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' }
+                                        },
+                                        required: ['label', 'value', 'fit_score'],
+                                        additionalProperties: false
+                                    }
                                 }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options'],
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives'],
                             additionalProperties: false
                         }
                     }

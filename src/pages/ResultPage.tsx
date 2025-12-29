@@ -4,6 +4,7 @@ import { FollowUpSection } from '../components/FollowUpSection';
 import { RecoveryCode } from '../components/RecoveryCode';
 import { NaapimMetre } from '../components/NaapimMetre';
 import { ComparisonRanking } from '../components/ComparisonRanking';
+import { TimingMetre } from '../components/TimingMetre';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
@@ -425,8 +426,29 @@ export const ResultPage = () => {
                                     {analysis.title}
                                 </h1>
 
-                                {/* Naapim Metre - Only for binary decisions (show if no ranked_options) */}
-                                {analysis.decision_score !== undefined && (!analysis.ranked_options || analysis.ranked_options.length === 0) && (
+                                {/* Widget Selection: Only ONE widget shows at a time */}
+                                {/* Priority: 1. Timing Metre, 2. Comparison Ranking, 3. Naapim Metre */}
+
+                                {/* Timing Metre - For timing decisions (highest priority) */}
+                                {analysis.timing_recommendation && analysis.timing_recommendation !== '' ? (
+                                    <div className="mb-6">
+                                        <TimingMetre
+                                            recommendation={analysis.timing_recommendation}
+                                            reason={analysis.timing_reason || ''}
+                                            alternatives={analysis.timing_alternatives}
+                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                        />
+                                    </div>
+                                ) : analysis.ranked_options && analysis.ranked_options.length > 0 ? (
+                                    /* Comparison Ranking - For comparison decisions with ranked_options */
+                                    <div className="mb-6">
+                                        <ComparisonRanking
+                                            options={analysis.ranked_options}
+                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                        />
+                                    </div>
+                                ) : analysis.decision_score !== undefined ? (
+                                    /* Naapim Metre - Only for binary decisions (lowest priority) */
                                     <div className="mb-6">
                                         <NaapimMetre
                                             score={analysis.decision_score}
@@ -436,17 +458,7 @@ export const ResultPage = () => {
                                             onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
                                         />
                                     </div>
-                                )}
-
-                                {/* Comparison Ranking - For comparison decisions with ranked_options */}
-                                {analysis.ranked_options && analysis.ranked_options.length > 0 && (
-                                    <div className="mb-6">
-                                        <ComparisonRanking
-                                            options={analysis.ranked_options}
-                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                        />
-                                    </div>
-                                )}
+                                ) : null}
 
                                 {/* Recommendation */}
                                 {(() => {

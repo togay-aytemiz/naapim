@@ -13,6 +13,12 @@ export interface RankedOption {
     reason: string;     // Only filled for top option
 }
 
+export interface TimingOption {
+    label: string;
+    value: string;  // "now", "1_month", "3_months", "6_months", "1_year", "2_years", "uncertain"
+    fit_score: number;  // 0-100
+}
+
 export interface AnalysisResult {
     title: string;
     recommendation: string;
@@ -30,6 +36,9 @@ export interface AnalysisResult {
     metre_left_label?: string;  // "YAPMA", "ALMA", "GİTME" etc.
     metre_right_label?: string; // "YAP", "AL", "GİT" etc.
     ranked_options?: RankedOption[]; // For comparison decisions
+    timing_recommendation?: string;  // "now", "3_months", "6_months", etc. for timing decisions
+    timing_reason?: string;          // Why this timing
+    timing_alternatives?: TimingOption[]; // Alternative timings with scores
 }
 
 export class AnalysisService {

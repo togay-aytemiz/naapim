@@ -7,6 +7,12 @@ import archetypesData from '../../config/registry/archetypes.json';
 
 export type Sentiment = 'positive' | 'cautious' | 'warning' | 'negative' | 'neutral';
 
+export interface RankedOption {
+    name: string;
+    fit_score: number;  // 0-100
+    reason: string;     // Only filled for top option
+}
+
 export interface AnalysisResult {
     title: string;
     recommendation: string;
@@ -23,6 +29,7 @@ export interface AnalysisResult {
     score_label?: string;    // "Olumlu Yaklaşım" etc.
     metre_left_label?: string;  // "YAPMA", "ALMA", "GİTME" etc.
     metre_right_label?: string; // "YAP", "AL", "GİT" etc.
+    ranked_options?: RankedOption[]; // For comparison decisions
 }
 
 export class AnalysisService {

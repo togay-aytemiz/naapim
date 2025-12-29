@@ -59,6 +59,11 @@ Generate a CONCISE response in strictly valid JSON:
   "score_label": "Olumlu Yaklaşım",
   "metre_left_label": "YAPMA",
   "metre_right_label": "YAP",
+  "ranked_options": [
+    { "name": "Seçenek A", "fit_score": 88, "reason": "Neden en uygun olduğunu anlatan kısa açıklama." },
+    { "name": "Seçenek B", "fit_score": 65, "reason": "" },
+    { "name": "Seçenek C", "fit_score": 45, "reason": "" }
+  ],
   "followup_question": "A natural conversational question to ask the user when they return",
   "specific_suggestions": [
     { "name": "Item Name", "description": "Why this specific option?" }
@@ -160,6 +165,15 @@ RULES:
      - sentiment: cautious → decision_score: 50-70
      - sentiment: warning → decision_score: 25-50
      - sentiment: negative → decision_score: 5-25
+
+9. **Karşılaştırma Sıralaması ("A mı B mi C mi?" tarzı sorular)**:
+   - Kullanıcı birden fazla seçenek sorduğunda "ranked_options" dizisini MUTLAKA doldur.
+   - Seçenekleri fit_score'a göre BÜYÜKTEN KÜÇÜĞE sırala.
+   - İlk seçenek için "reason" alanını MUTLAKA doldur (neden en uygun?).
+   - Diğer seçenekler için "reason" boş bırakılabilir.
+   - Max 5 seçenek. Daha fazlası varsa son seçenek "Diğer seçenekler" olsun, fit_score: 0.
+   - fit_score kullanıcının kontekstine ve tercihlerine göre belirle (0-100).
+   - Örnek: "MacBook mı Windows mu?" → ranked_options: [{name: "MacBook", fit_score: 82, reason: "Tasarım ve ekosistem avantajı..."}, {name: "Windows", fit_score: 68, reason: ""}]
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -254,9 +268,23 @@ RULES:
                                 metre_right_label: {
                                     type: 'string',
                                     description: 'Metre sağ etiketi (pozitif taraf): YAP, AL, BAŞLA, GİT vb.'
+                                },
+                                ranked_options: {
+                                    type: 'array',
+                                    description: 'Sıralı seçenekler (karşılaştırma kararları için, en yüksen fit_score\'dan en düşüğe)',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            name: { type: 'string', description: 'Seçenek adı' },
+                                            fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' },
+                                            reason: { type: 'string', description: 'Sadece 1. sıra için neden en uygun olduğunu açıkla' }
+                                        },
+                                        required: ['name', 'fit_score', 'reason'],
+                                        additionalProperties: false
+                                    }
                                 }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label'],
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options'],
                             additionalProperties: false
                         }
                     }

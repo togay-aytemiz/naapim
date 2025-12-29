@@ -187,22 +187,37 @@ RULES:
    - İlk seçenek için "reason" alanını MUTLAKA doldur (neden en uygun?).
    - Diğer seçenekler için "reason" boş bırakılabilir.
    - Max 5 seçenek.
-   - **Binary sorularda ranked_options BOŞ DİZİ [] olmalı!**
 
-10. **KARAR: Binary mi Karşılaştırma mı?**:
-    - Soruda "mı/mi/mu/mü" VAR ve TEK bir eylem (yapmak, gitmek, almak, içmek) → BINARY → decision_score doldur, ranked_options: []
-    - Soruda "mı...mı", "hangisi", "ne X-sem", "X mi Y mi" → KARŞILAŞTIRMA → ranked_options doldur
-    - Şüphe durumunda: Tek eylem = BINARY, Birden fazla seçenek = KARŞILAŞTIRMA
+10. **WIDGET SEÇİMİ - ÇOK ÖNEMLİ! SADECE BİR WIDGET DOLDUR:**:
 
-11. **Zamanlama Metresi ("Ne zaman?" tarzı sorular)**:
-    - Soruda "ne zaman", "hangi zamanda", "erken mi", "beklemeli miyim" ifadeleri varsa ZAMANLAMA kararı.
-    - "timing_recommendation": Şu değerlerden biri: "now", "1_month", "3_months", "6_months", "1_year", "2_years", "uncertain"
-    - "timing_reason": Neden bu zamanlama önerildi, kısa açıklama.
-    - "timing_alternatives": Alternatif zamanlamalar ve uygunluk skorları.
-    - Örnekler:
-      - "Ne zaman ev almalıyım?" → timing_recommendation: "1_year", timing_reason: "Faiz oranları düşüşte..."
-      - "Evlenmeyi ne zaman düşünmeliyim?" → timing_recommendation: "6_months"
-    - **Zamanlama dışı sorularda timing alanları boş bırakılmalı!**
+    **A) BINARY SORU (Evet/Hayır):**
+       Örnekler: "Kahve içeyim mi?", "Tenise başlamalı mıyım?", "Ev almalı mıyım?"
+       → decision_score: 0-100 DOLDUR
+       → score_label: DOLDUR
+       → metre_left_label/metre_right_label: DOLDUR
+       → ranked_options: BOŞ DİZİ []
+       → timing_recommendation: BOŞ STRING ""
+       → timing_alternatives: BOŞ DİZİ []
+
+    **B) KARŞILAŞTIRMA SORUSU (A mı B mi?):**
+       Örnekler: "MacBook mı Windows mu?", "Kahve mi çay mı?", "Ne yesem?"
+       → ranked_options: DOLDUR (2-5 seçenek)
+       → decision_score: 50 (nötr, kullanılmayacak)
+       → timing_recommendation: BOŞ STRING ""
+       → timing_alternatives: BOŞ DİZİ []
+
+    **C) ZAMANLAMA SORUSU (Ne zaman?):**
+       Örnekler: "Ne zaman ev almalıyım?", "Ne zaman evlenmeliyim?", "Beklemeli miyim?"
+       → timing_recommendation: DOLDUR ("now", "3_months", "6_months", "1_year", "2_years")
+       → timing_reason: DOLDUR
+       → timing_alternatives: DOLDUR (2-3 alternatif)
+       → ranked_options: BOŞ DİZİ []
+       → decision_score: 50 (nötr, kullanılmayacak)
+
+    **KARAR ŞEMASI:**
+    - "ne zaman", "hangi zamanda", "beklemeli mi", "erken mi" → ZAMANLAMA (C)
+    - "mı...mı", "mi...mi", "hangisi", "ne X-sem", iki+ seçenek → KARŞILAŞTIRMA (B)
+    - tek eylem + "mı/mi/mu/mü" → BINARY (A)
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {

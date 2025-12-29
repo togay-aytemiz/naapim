@@ -1,4 +1,5 @@
-import { supabase } from '../lib/supabase'
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase'
+import { fetchDecoded } from '../lib/apiDecoder'
 
 export interface SubmitSessionParams {
     user_question: string
@@ -14,29 +15,21 @@ export interface SubmitSessionResponse {
 }
 
 export async function submitSession(params: SubmitSessionParams): Promise<SubmitSessionResponse> {
-    const { data, error } = await supabase.functions.invoke('submit-session', {
-        body: params,
-    })
-
-    if (error) {
-        console.error('Submit session error object:', error)
-        let errorMessage = error.message || 'Submission failed';
-
-        // Try to read the response body from the error context if it exists
-        if ('context' in error && (error as any).context instanceof Response) {
-            try {
-                const errorResponse = await (error as any).context.json();
-                console.error('Edge Function Error Response:', errorResponse);
-                if (errorResponse.error) {
-                    errorMessage = `Server Error: ${errorResponse.error}`;
-                }
-            } catch (e) {
-                console.warn('Could not parse error response JSON', e);
-            }
-        }
-
-        throw new Error(errorMessage)
+    if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
+        throw new Error('Supabase not configured')
     }
+
+    const data = await fetchDecoded<SubmitSessionResponse>(
+        `${SUPABASE_FUNCTIONS_URL}/submit-session`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify(params)
+        }
+    )
 
     return data
 }

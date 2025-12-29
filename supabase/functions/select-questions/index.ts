@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -24,32 +25,23 @@ serve(async (req) => {
         const { user_question, archetype_label, available_fields }: SelectQuestionsRequest = await req.json()
 
         if (!user_question || !available_fields) {
-            return new Response(
-                JSON.stringify({ error: 'user_question and available_fields required' }),
-                { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('user_question and available_fields required', corsHeaders, 400)
         }
 
         // If 10 or fewer fields, return all
         if (available_fields.length <= 10) {
-            return new Response(
-                JSON.stringify({
-                    selectedFieldKeys: available_fields.map(f => f.key),
-                    reasoning: 'Using all available fields (10 or fewer)'
-                }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedResponse({
+                selectedFieldKeys: available_fields.map(f => f.key),
+                reasoning: 'Using all available fields (10 or fewer)'
+            }, corsHeaders)
         }
 
         const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
         if (!openaiApiKey) {
-            return new Response(
-                JSON.stringify({
-                    selectedFieldKeys: available_fields.slice(0, 7).map(f => f.key),
-                    reasoning: 'Fallback: no API key'
-                }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedResponse({
+                selectedFieldKeys: available_fields.slice(0, 7).map(f => f.key),
+                reasoning: 'Fallback: no API key'
+            }, corsHeaders)
         }
 
         // Format fields for prompt
@@ -118,22 +110,16 @@ Return JSON:
             validKeys.length = 10
         }
 
-        return new Response(
-            JSON.stringify({
-                selectedFieldKeys: validKeys,
-                reasoning: result.reasoning || 'Selected based on relevance'
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            selectedFieldKeys: validKeys,
+            reasoning: result.reasoning || 'Selected based on relevance'
+        }, corsHeaders)
 
     } catch (err) {
         console.error('Question selection error:', err)
-        return new Response(
-            JSON.stringify({
-                selectedFieldKeys: [],
-                reasoning: 'Fallback due to error'
-            }),
-            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            selectedFieldKeys: [],
+            reasoning: 'Fallback due to error'
+        }, corsHeaders)
     }
 })

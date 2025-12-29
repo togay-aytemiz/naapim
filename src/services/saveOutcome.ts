@@ -1,4 +1,5 @@
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 
 export type OutcomeType = 'decided' | 'thinking' | 'cancelled';
 export type FeelingType = 'happy' | 'neutral' | 'regret' | 'uncertain';
@@ -21,22 +22,17 @@ export interface SaveOutcomeResponse {
 
 export async function saveOutcome(params: SaveOutcomeParams): Promise<SaveOutcomeResponse> {
     try {
-        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/save-outcome`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            },
-            body: JSON.stringify(params)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error('Save outcome failed:', data);
-            return { success: false, error: data.error || 'Failed to save outcome' };
-        }
-
+        const data = await fetchDecoded<SaveOutcomeResponse>(
+            `${SUPABASE_FUNCTIONS_URL}/save-outcome`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify(params)
+            }
+        );
         return data;
     } catch (error) {
         console.error('Save outcome error:', error);

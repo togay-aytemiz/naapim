@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createEncodedResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -75,10 +76,7 @@ Deno.serve(async (req) => {
                 total_outcomes: 0
             }
 
-            return new Response(JSON.stringify(defaultStats), {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200
-            })
+            return createEncodedResponse(defaultStats, corsHeaders)
         }
 
         // Calculate satisfaction rate (happy outcomes / total with feelings)
@@ -159,27 +157,18 @@ Deno.serve(async (req) => {
             total_outcomes: outcomes.length
         }
 
-        return new Response(JSON.stringify(stats), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200
-        })
+        return createEncodedResponse(stats, corsHeaders)
 
     } catch (error) {
         console.error('Error in get-archetype-stats:', error)
-        return new Response(
-            JSON.stringify({
-                error: 'Failed to fetch stats',
-                satisfaction_rate: 85,
-                satisfaction_change: 2,
-                most_common_feeling: 'Rahatlama',
-                most_common_feeling_emoji: '😌',
-                average_decision_days: 14,
-                total_outcomes: 0
-            }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200  // Return 200 with defaults to not break UI
-            }
-        )
+        return createEncodedResponse({
+            error: 'Failed to fetch stats',
+            satisfaction_rate: 85,
+            satisfaction_change: 2,
+            most_common_feeling: 'Rahatlama',
+            most_common_feeling_emoji: '😌',
+            average_decision_days: 14,
+            total_outcomes: 0
+        }, corsHeaders)
     }
 })

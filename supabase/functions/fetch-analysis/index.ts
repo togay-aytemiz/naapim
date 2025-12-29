@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -16,10 +17,7 @@ serve(async (req) => {
         const { code } = await req.json()
 
         if (!code) {
-            return new Response(
-                JSON.stringify({ error: 'Code is required' }),
-                { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('Code is required', corsHeaders, 400)
         }
 
         // Create Supabase client
@@ -35,10 +33,7 @@ serve(async (req) => {
             .single()
 
         if (resultError || !resultData) {
-            return new Response(
-                JSON.stringify({ error: 'Session not found for code', code }),
-                { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('Session not found for code: ' + code, corsHeaders, 404)
         }
 
         // Now fetch the session for user_question, archetype_id, and created_at
@@ -49,10 +44,7 @@ serve(async (req) => {
             .single()
 
         if (sessionError || !sessionData) {
-            return new Response(
-                JSON.stringify({ error: 'Session data not found', session_id: resultData.session_id }),
-                { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('Session data not found: ' + resultData.session_id, corsHeaders, 404)
         }
 
         // Fetch responses for this session
@@ -82,26 +74,20 @@ serve(async (req) => {
             .select('*', { count: 'exact', head: true })
             .eq('code', code)
 
-        return new Response(
-            JSON.stringify({
-                session_id: sessionData.id,
-                code: code,
-                user_question: sessionData.user_question,
-                archetype_id: sessionData.archetype_id,
-                created_at: sessionData.created_at, // For time-gating
-                has_reminder: (reminderCount || 0) > 0, // For reminder CTA
-                answers: answers,
-                analysis: resultData.analysis_json || null,
-                previous_outcomes: outcomesData || []
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            session_id: sessionData.id,
+            code: code,
+            user_question: sessionData.user_question,
+            archetype_id: sessionData.archetype_id,
+            created_at: sessionData.created_at,
+            has_reminder: (reminderCount || 0) > 0,
+            answers: answers,
+            analysis: resultData.analysis_json || null,
+            previous_outcomes: outcomesData || []
+        }, corsHeaders)
 
     } catch (err) {
         console.error('Error:', err)
-        return new Response(
-            JSON.stringify({ error: 'Internal server error', message: String(err) }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedErrorResponse('Internal server error: ' + String(err), corsHeaders, 500)
     }
 })

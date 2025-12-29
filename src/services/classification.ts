@@ -1,4 +1,5 @@
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 import type { Archetype } from '../types/registry';
 
 export interface ClassificationResult {
@@ -37,28 +38,25 @@ export class ClassificationService {
         }
 
         try {
-            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/classify-question`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    user_question: userQuestion,
-                    archetypes: archetypes.map(a => ({
-                        id: a.id,
-                        label: a.label,
-                        routing_hints: a.routing_hints
-                    })),
-                    simple_question_pools: simpleQuestionPools
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Classification API error: ${response.status}`);
-            }
-
-            const result = await response.json();
+            const result = await fetchDecoded<ClassificationResult>(
+                `${SUPABASE_FUNCTIONS_URL}/classify-question`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        user_question: userQuestion,
+                        archetypes: archetypes.map(a => ({
+                            id: a.id,
+                            label: a.label,
+                            routing_hints: a.routing_hints
+                        })),
+                        simple_question_pools: simpleQuestionPools
+                    })
+                }
+            );
 
             // Fallback: if clarification_prompt mentions "gerçek bir karar", treat as unrealistic
             const promptIndicatesUnrealistic = result.clarification_prompt?.includes('gerçek bir karar') ||

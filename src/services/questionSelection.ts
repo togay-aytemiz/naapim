@@ -1,5 +1,6 @@
 import type { Archetype } from '../types/registry';
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 
 // @ts-ignore
 import archetypesData from '../../config/registry/archetypes.json';
@@ -106,28 +107,25 @@ export class QuestionSelectionService {
         }
 
         try {
-            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/select-questions`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    user_question: userQuestion,
-                    archetype_label: archetypeLabel,
-                    available_fields: availableFields.map(f => ({
-                        key: f.key,
-                        label: f.label,
-                        options: f.options.map(o => o.label)
-                    }))
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Question selection API error: ${response.status}`);
-            }
-
-            const result = await response.json();
+            const result = await fetchDecoded<QuestionSelectionResult>(
+                `${SUPABASE_FUNCTIONS_URL}/select-questions`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        user_question: userQuestion,
+                        archetype_label: archetypeLabel,
+                        available_fields: availableFields.map(f => ({
+                            key: f.key,
+                            label: f.label,
+                            options: f.options.map(o => o.label)
+                        }))
+                    })
+                }
+            );
 
             // Validate selected keys exist
             const validKeys = (result.selectedFieldKeys || []).filter((key: string) =>

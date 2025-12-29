@@ -1,4 +1,5 @@
-import { supabase } from '../lib/supabase';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 
 export interface ArchetypeStats {
     satisfaction_rate: number;
@@ -19,16 +20,23 @@ const defaultStats: ArchetypeStats = {
 };
 
 export async function getArchetypeStats(archetypeId?: string): Promise<ArchetypeStats> {
+    if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
+        console.warn('Supabase not configured');
+        return defaultStats;
+    }
+
     try {
-        const { data, error } = await supabase.functions.invoke('get-archetype-stats', {
-            body: { archetype_id: archetypeId },
-        });
-
-        if (error) {
-            console.error('Failed to fetch archetype stats:', error);
-            return defaultStats;
-        }
-
+        const data = await fetchDecoded<ArchetypeStats>(
+            `${SUPABASE_FUNCTIONS_URL}/get-archetype-stats`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ archetype_id: archetypeId })
+            }
+        );
         return data || defaultStats;
     } catch (error) {
         console.error('Error fetching archetype stats:', error);

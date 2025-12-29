@@ -1,4 +1,5 @@
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 
 export interface ModerationResult {
     approved: boolean;
@@ -21,21 +22,17 @@ export async function moderateContent(text: string): Promise<ModerationResult> {
         }
 
         // Call server-side Edge Function
-        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/moderate-content`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            },
-            body: JSON.stringify({ text })
-        });
-
-        if (!response.ok) {
-            console.error('Moderation API error:', response.status);
-            return { approved: true, corrected_text: text };
-        }
-
-        const result: ModerationResult = await response.json();
+        const result = await fetchDecoded<ModerationResult>(
+            `${SUPABASE_FUNCTIONS_URL}/moderate-content`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ text })
+            }
+        );
 
         // Map category to user-friendly Turkish messages
         const categoryMessages: Record<string, string> = {

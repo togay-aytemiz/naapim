@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -30,23 +31,17 @@ serve(async (req) => {
         const { user_question, archetypes, simple_question_pools }: ClassifyRequest = await req.json()
 
         if (!user_question || !archetypes) {
-            return new Response(
-                JSON.stringify({ error: 'user_question and archetypes required' }),
-                { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('user_question and archetypes required', corsHeaders, 400)
         }
 
         const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
         if (!openaiApiKey) {
-            return new Response(
-                JSON.stringify({
-                    archetype_id: archetypes[0]?.id || 'career_decisions',
-                    confidence: 0,
-                    needs_clarification: true,
-                    clarification_prompt: 'Lütfen kararınızı biraz daha açıklayın.'
-                }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedResponse({
+                archetype_id: archetypes[0]?.id || 'career_decisions',
+                confidence: 0,
+                needs_clarification: true,
+                clarification_prompt: 'Lütfen kararınızı biraz daha açıklayın.'
+            }, corsHeaders)
         }
 
         // Enhanced system prompt for better understanding
@@ -256,32 +251,26 @@ Aşağıdaki durumlarda MUTLAKA is_unrealistic: true VE needs_clarification: tru
             ? result.archetype_id
             : archetypes[0]?.id
 
-        return new Response(
-            JSON.stringify({
-                archetype_id: archetypeId,
-                decision_type: result.decision_type || 'binary_decision',
-                decision_complexity: result.decision_complexity || 'moderate',
-                confidence: result.confidence || 0,
-                needs_clarification: result.needs_clarification || false,
-                is_unrealistic: result.is_unrealistic || false,
-                clarification_prompt: result.clarification_prompt || null,
-                interpreted_question: result.interpreted_question || null,
-                selected_simple_field_keys: result.selected_simple_field_keys || null
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            archetype_id: archetypeId,
+            decision_type: result.decision_type || 'binary_decision',
+            decision_complexity: result.decision_complexity || 'moderate',
+            confidence: result.confidence || 0,
+            needs_clarification: result.needs_clarification || false,
+            is_unrealistic: result.is_unrealistic || false,
+            clarification_prompt: result.clarification_prompt || null,
+            interpreted_question: result.interpreted_question || null,
+            selected_simple_field_keys: result.selected_simple_field_keys || null
+        }, corsHeaders)
 
     } catch (err) {
         console.error('Classification error:', err)
-        return new Response(
-            JSON.stringify({
-                archetype_id: 'career_decisions',
-                confidence: 0,
-                needs_clarification: true,
-                clarification_prompt: 'Bir hata oluştu. Lütfen kararınızı biraz daha açıklayarak tekrar deneyin.'
-            }),
-            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            archetype_id: 'career_decisions',
+            confidence: 0,
+            needs_clarification: true,
+            clarification_prompt: 'Bir hata oluştu. Lütfen kararınızı biraz daha açıklayarak tekrar deneyin.'
+        }, corsHeaders)
     }
 })
 

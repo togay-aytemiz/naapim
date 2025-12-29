@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -211,32 +212,26 @@ serve(async (req) => {
         const generatedCount = enrichedStories.filter(s => s.is_generated).length
         const hasMore = offset + enrichedStories.length < totalCount
 
-        return new Response(
-            JSON.stringify({
-                stories: enrichedStories,
-                no_exact_match: noExactMatch,  // NEW: UI can show friendly message
-                pagination: {
-                    offset,
-                    limit,
-                    total: totalCount,
-                    has_more: hasMore,
-                    next_offset: hasMore ? offset + limit : null
-                },
-                stats: {
-                    total: enrichedStories.length,
-                    real_users: realCount,
-                    generated: generatedCount
-                }
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            stories: enrichedStories,
+            no_exact_match: noExactMatch,
+            pagination: {
+                offset,
+                limit,
+                total: totalCount,
+                has_more: hasMore,
+                next_offset: hasMore ? offset + limit : null
+            },
+            stats: {
+                total: enrichedStories.length,
+                real_users: realCount,
+                generated: generatedCount
+            }
+        }, corsHeaders)
 
     } catch (err) {
         console.error('Error:', err)
-        return new Response(
-            JSON.stringify({ error: 'Internal server error', stories: [], pagination: null }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedErrorResponse('Internal server error', corsHeaders, 500)
     }
 })
 

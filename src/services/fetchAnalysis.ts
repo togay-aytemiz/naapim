@@ -1,4 +1,5 @@
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 
 interface FetchAnalysisResult {
     session_id: string;
@@ -22,22 +23,18 @@ export async function fetchAnalysisByCode(code: string): Promise<FetchAnalysisRe
     }
 
     try {
-        const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/fetch-analysis`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ code }),
-        });
-
-        if (!response.ok) {
-            console.error('Failed to fetch analysis:', response.status);
-            return null;
-        }
-
-        const data = await response.json();
-        return data as FetchAnalysisResult;
+        const data = await fetchDecoded<FetchAnalysisResult>(
+            `${SUPABASE_FUNCTIONS_URL}/fetch-analysis`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                },
+                body: JSON.stringify({ code }),
+            }
+        );
+        return data;
     } catch (error) {
         console.error('Error fetching analysis:', error);
         return null;

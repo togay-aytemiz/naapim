@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4"
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -34,13 +35,7 @@ serve(async (req) => {
         const { session_id, code, analysis }: SaveAnalysisRequest = await req.json()
 
         if (!session_id || !analysis) {
-            return new Response(
-                JSON.stringify({ error: 'Missing required fields: session_id, analysis' }),
-                {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                    status: 400,
-                }
-            )
+            return createEncodedErrorResponse('Missing required fields: session_id, analysis', corsHeaders, 400)
         }
 
         // Update the results table with the analysis JSON
@@ -58,26 +53,14 @@ serve(async (req) => {
             throw updateError
         }
 
-        return new Response(
-            JSON.stringify({
-                success: true,
-                message: 'Analysis saved successfully'
-            }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200,
-            }
-        )
+        return createEncodedResponse({
+            success: true,
+            message: 'Analysis saved successfully'
+        }, corsHeaders)
 
     } catch (error) {
         console.error('Save analysis error:', error)
         const errorMessage = error instanceof Error ? error.message : JSON.stringify(error)
-        return new Response(
-            JSON.stringify({ error: errorMessage }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 500,
-            }
-        )
+        return createEncodedErrorResponse(errorMessage, corsHeaders, 500)
     }
 })

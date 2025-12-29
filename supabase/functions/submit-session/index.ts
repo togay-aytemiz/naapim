@@ -1,5 +1,6 @@
 // Supabase Edge Function: submit-session
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -119,17 +120,11 @@ Deno.serve(async (req) => {
 
         if (resultError) throw resultError
 
-        return new Response(
-            JSON.stringify({
-                success: true,
-                session_id: session.id,
-                code: code
-            }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200,
-            }
-        )
+        return createEncodedResponse({
+            success: true,
+            session_id: session.id,
+            code: code
+        }, corsHeaders)
 
     } catch (error) {
         console.error('Submit session error:', error)
@@ -141,12 +136,6 @@ Deno.serve(async (req) => {
             // Supabase errors are often objects with 'message', 'code', 'details'
             errorMessage = JSON.stringify(error);
         }
-        return new Response(
-            JSON.stringify({ error: errorMessage, raw: JSON.stringify(error) }),
-            {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 500,
-            }
-        )
+        return createEncodedErrorResponse(errorMessage + ' | raw: ' + JSON.stringify(error), corsHeaders, 500)
     }
 })

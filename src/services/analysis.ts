@@ -1,5 +1,6 @@
 import { RegistryLoader } from './registryLoader';
 import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 import type { Archetype } from '../types/registry';
 
 // @ts-ignore
@@ -94,26 +95,22 @@ export class AnalysisService {
             console.log('   Context:', context || '(empty)');
 
             // Call server-side Edge Function
-            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-analysis`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    user_question: userQuestion,
-                    context: context,
-                    archetype_label: archetypeLabel
-                })
-            });
+            const result = await fetchDecoded<AnalysisResult>(
+                `${SUPABASE_FUNCTIONS_URL}/generate-analysis`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        user_question: userQuestion,
+                        context: context,
+                        archetype_label: archetypeLabel
+                    })
+                }
+            );
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Analysis API Error:", errorData);
-                throw new Error(errorData.error || 'Analysis failed');
-            }
-
-            const result = await response.json() as AnalysisResult;
             console.log('📊 LLM Analysis Result:', result);
             console.log('🎨 Sentiment:', result.sentiment);
 
@@ -153,30 +150,27 @@ export class AnalysisService {
         }
 
         try {
-            const response = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-seeded-outcomes`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    user_question: userQuestion,
-                    archetype_id: archetypeId,
-                    context: context,  // Pass user's answers for better matching
-                    count: 3,
-                    recovery_code: recoveryCode, // For caching - reuse existing outcomes
-                    decision_type: decisionType // For decision type-specific prompts
-                })
-            });
+            const data = await fetchDecoded<{ outcomes: any[], source?: string, generated_count?: number }>(
+                `${SUPABASE_FUNCTIONS_URL}/generate-seeded-outcomes`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        user_question: userQuestion,
+                        archetype_id: archetypeId,
+                        context: context,
+                        count: 3,
+                        recovery_code: recoveryCode,
+                        decision_type: decisionType
+                    })
+                }
+            );
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('🌱 Generated seeded outcomes:', data.generated_count);
-                return data;
-            } else {
-                console.warn('Seeded outcomes generation failed:', response.status);
-                return null;
-            }
+            console.log('🌱 Generated seeded outcomes:', data.generated_count);
+            return data;
         } catch (err) {
             console.warn('Error generating seeded outcomes:', err);
             return null;

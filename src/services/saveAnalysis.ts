@@ -1,4 +1,5 @@
-import { supabase } from '../lib/supabase';
+import { SUPABASE_FUNCTIONS_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import { fetchDecoded } from '../lib/apiDecoder';
 import type { AnalysisResult } from './analysis';
 
 interface SaveAnalysisParams {
@@ -7,18 +8,32 @@ interface SaveAnalysisParams {
     analysis: AnalysisResult;
 }
 
+interface SaveAnalysisResponse {
+    success: boolean;
+    message?: string;
+    error?: string;
+}
+
 export async function saveAnalysis(params: SaveAnalysisParams): Promise<{ success: boolean; error?: string }> {
     const { session_id, code, analysis } = params;
 
-    try {
-        const { data, error } = await supabase.functions.invoke('save-analysis', {
-            body: { session_id, code, analysis }
-        });
+    if (!SUPABASE_FUNCTIONS_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase not configured');
+        return { success: false, error: 'Supabase not configured' };
+    }
 
-        if (error) {
-            console.error('Save analysis error:', error);
-            return { success: false, error: error.message };
-        }
+    try {
+        const data = await fetchDecoded<SaveAnalysisResponse>(
+            `${SUPABASE_FUNCTIONS_URL}/save-analysis`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ session_id, code, analysis })
+            }
+        );
 
         if (data?.error) {
             console.error('Save analysis response error:', data.error);

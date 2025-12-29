@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 console.log("🚀 Initializing generate-seeded-outcomes (Deno.serve)...")
 
@@ -177,10 +178,7 @@ Deno.serve(async (req) => {
         const { user_question, archetype_id, context = '', count = 3, recovery_code, decision_type = 'binary_decision' } = await req.json()
 
         if (!user_question) {
-            return new Response(
-                JSON.stringify({ error: 'user_question is required' }),
-                { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('user_question is required', corsHeaders, 400)
         }
 
         const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
@@ -189,10 +187,7 @@ Deno.serve(async (req) => {
 
         if (!openaiApiKey) {
             console.error('OPENAI_API_KEY not found')
-            return new Response(
-                JSON.stringify({ error: 'API key not configured' }),
-                { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('API key not configured', corsHeaders, 500)
         }
 
         // Check cache: if recovery_code is provided, look for existing outcomes
@@ -213,13 +208,10 @@ Deno.serve(async (req) => {
                 const cachedOutcomes = await cacheCheckResponse.json()
                 if (cachedOutcomes && cachedOutcomes.length > 0) {
                     console.log(`✅ Found ${cachedOutcomes.length} cached outcomes for recovery_code, returning from cache`)
-                    return new Response(
-                        JSON.stringify({
-                            outcomes: cachedOutcomes,
-                            source: 'cache'
-                        }),
-                        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-                    )
+                    return createEncodedResponse({
+                        outcomes: cachedOutcomes,
+                        source: 'cache'
+                    }, corsHeaders)
                 }
             }
             console.log('📝 No cached outcomes found, generating new ones')
@@ -923,21 +915,15 @@ KATI KURALLAR - İHLAL ETME:
             throw insertError
         }
 
-        return new Response(
-            JSON.stringify({
-                success: true,
-                generated_count: insertedOutcomes?.length || 0,
-                outcomes: insertedOutcomes,
-                validation_warnings: finalInvalidOutcomes.length > 0 ? finalInvalidOutcomes : undefined
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            success: true,
+            generated_count: insertedOutcomes?.length || 0,
+            outcomes: insertedOutcomes,
+            validation_warnings: finalInvalidOutcomes.length > 0 ? finalInvalidOutcomes : undefined
+        }, corsHeaders)
 
     } catch (err) {
         console.error('Error:', err)
-        return new Response(
-            JSON.stringify({ error: 'Failed to generate outcomes', details: String(err) }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedErrorResponse('Failed to generate outcomes: ' + String(err), corsHeaders, 500)
     }
 })

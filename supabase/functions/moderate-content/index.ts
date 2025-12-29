@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createEncodedResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -31,10 +32,7 @@ serve(async (req) => {
         const { text }: ModerationRequest = await req.json()
 
         if (!text || text.trim().length === 0) {
-            return new Response(
-                JSON.stringify({ approved: true, corrected_text: text }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedResponse({ approved: true, corrected_text: text }, corsHeaders)
         }
 
         // Use GPT to check content and fix grammar
@@ -137,32 +135,23 @@ CEVAP FORMATI (JSON):
                     politics: 'Siyasi propaganda veya taraf tutma içeren konular hakkında yardımcı olamıyoruz.'
                 }
 
-                return new Response(
-                    JSON.stringify({
-                        approved: result.approved,
-                        reason: result.approved ? undefined : (categoryMessages[result.category || ''] || result.reason || 'Topluluk kurallarına uymuyor.'),
-                        category: result.category,
-                        corrected_text: result.approved ? (result.corrected_text || text) : undefined
-                    }),
-                    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-                )
+                return createEncodedResponse({
+                    approved: result.approved,
+                    reason: result.approved ? undefined : (categoryMessages[result.category || ''] || result.reason || 'Topluluk kurallarına uymuyor.'),
+                    category: result.category,
+                    corrected_text: result.approved ? (result.corrected_text || text) : undefined
+                }, corsHeaders)
             }
         } catch (parseError) {
             console.error('Failed to parse moderation response:', parseError, content)
         }
 
         // Default to approved if parsing fails
-        return new Response(
-            JSON.stringify({ approved: true, corrected_text: text }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({ approved: true, corrected_text: text }, corsHeaders)
 
     } catch (error) {
         console.error('Moderation error:', error)
         // Fail open - approve if there's an error
-        return new Response(
-            JSON.stringify({ approved: true }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({ approved: true }, corsHeaders)
     }
 })

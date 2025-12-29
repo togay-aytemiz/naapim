@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -21,19 +22,13 @@ serve(async (req) => {
         const { user_question, context, archetype_label }: AnalysisRequest = await req.json()
 
         if (!user_question) {
-            return new Response(
-                JSON.stringify({ error: 'user_question is required' }),
-                { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('user_question is required', corsHeaders, 400)
         }
 
         const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
         if (!openaiApiKey) {
             console.error('OPENAI_API_KEY not found')
-            return new Response(
-                JSON.stringify({ error: 'API key not configured' }),
-                { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            )
+            return createEncodedErrorResponse('API key not configured', corsHeaders, 500)
         }
 
         const systemPrompt = `You are a decisive, opinionated, and highly practical decision-making consultant for "${archetype_label || 'general decisions'}".
@@ -412,24 +407,18 @@ RULES:
         const result = JSON.parse(content)
         console.log('📊 Analysis generated:', result.title)
 
-        return new Response(
-            JSON.stringify(result),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse(result, corsHeaders)
 
     } catch (err) {
         console.error('Error:', err)
-        return new Response(
-            JSON.stringify({
-                error: 'Failed to generate analysis',
-                // Fallback result
-                title: "Analiz Oluşturulamadı",
-                recommendation: "Şu anda teknik bir sorun nedeniyle detaylı analiz hazırlayamadık.",
-                reasoning: "Lütfen daha sonra tekrar deneyiniz.",
-                steps: ["Sayfayı yenile", "Tekrar dene"],
-                sentiment: "neutral"
-            }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return createEncodedResponse({
+            error: 'Failed to generate analysis',
+            // Fallback result
+            title: "Analiz Oluşturulamadı",
+            recommendation: "Şu anda teknik bir sorun nedeniyle detaylı analiz hazırlayamadık.",
+            reasoning: "Lütfen daha sonra tekrar deneyiniz.",
+            steps: ["Sayfayı yenile", "Tekrar dene"],
+            sentiment: "neutral"
+        }, corsHeaders, 500)
     }
 })

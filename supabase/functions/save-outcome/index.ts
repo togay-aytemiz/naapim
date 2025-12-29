@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4"
+import { createEncodedResponse, createEncodedErrorResponse } from '../_shared/encoding.ts'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -57,24 +58,15 @@ serve(async (req) => {
         const { session_id, outcome_type, outcome_text, feeling, archetype_id }: SaveOutcomeRequest = await req.json()
 
         if (!session_id || !outcome_type) {
-            return new Response(
-                JSON.stringify({ error: 'Missing required fields: session_id, outcome_type' }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-            )
+            return createEncodedErrorResponse('Missing required fields: session_id, outcome_type', corsHeaders, 400)
         }
 
         if (!['decided', 'thinking', 'cancelled'].includes(outcome_type)) {
-            return new Response(
-                JSON.stringify({ error: 'Invalid outcome_type' }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-            )
+            return createEncodedErrorResponse('Invalid outcome_type', corsHeaders, 400)
         }
 
         if (feeling && !['happy', 'neutral', 'regret', 'uncertain'].includes(feeling)) {
-            return new Response(
-                JSON.stringify({ error: 'Invalid feeling' }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-            )
+            return createEncodedErrorResponse('Invalid feeling', corsHeaders, 400)
         }
 
         // Fetch session to get user_question, archetype_id, and responses for context
@@ -132,23 +124,17 @@ serve(async (req) => {
             throw insertError
         }
 
-        return new Response(
-            JSON.stringify({
-                success: true,
-                outcome_id: data.id,
-                created_at: data.created_at,
-                has_embedding: !!embedding,
-                message: 'Outcome saved successfully'
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-        )
+        return createEncodedResponse({
+            success: true,
+            outcome_id: data.id,
+            created_at: data.created_at,
+            has_embedding: !!embedding,
+            message: 'Outcome saved successfully'
+        }, corsHeaders)
 
     } catch (error) {
         console.error('Save outcome error:', error)
         const errorMessage = error instanceof Error ? error.message : JSON.stringify(error)
-        return new Response(
-            JSON.stringify({ error: errorMessage }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-        )
+        return createEncodedErrorResponse(errorMessage, corsHeaders, 500)
     }
 })

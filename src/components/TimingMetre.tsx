@@ -124,7 +124,7 @@ export const TimingMetre: React.FC<TimingMetreProps> = ({
                         }}
                     >
                         {/* Timing markers */}
-                        {TIMING_POSITIONS.map((timing, index) => (
+                        {TIMING_POSITIONS.map((timing) => (
                             <div
                                 key={timing.value}
                                 className="absolute top-1/2 -translate-y-1/2"

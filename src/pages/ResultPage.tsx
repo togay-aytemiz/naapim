@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FollowUpSection } from '../components/FollowUpSection';
 import { RecoveryCode } from '../components/RecoveryCode';
-import { NaapimMetre } from '../components/NaapimMetre';
-import { ComparisonRanking } from '../components/ComparisonRanking';
-import { TimingMetre } from '../components/TimingMetre';
-import { MethodRoadmap } from '../components/MethodRoadmap';
+import { DecisionWidgetFactory } from '../components/DecisionWidgetFactory';
+import { SuggestionCards } from '../components/SuggestionCards';
+import { ProsConsList } from '../components/ProsConsList';
+import { AnalysisReasoning } from '../components/AnalysisReasoning';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
-import { Sparkles, Users, ShoppingBag, Utensils, Calendar, Plane, Film, Gift, Lightbulb } from 'lucide-react';
+import { Sparkles, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // Helper types
@@ -427,48 +427,11 @@ export const ResultPage = () => {
                                     {analysis.title}
                                 </h1>
 
-                                {/* Widget Selection: Only ONE widget shows at a time */}
-                                {/* Priority: 1. Method Roadmap, 2. Timing Metre, 3. Comparison Ranking, 4. Naapim Metre */}
-
-                                {/* Method Roadmap - For how-to questions (highest priority) */}
-                                {analysis.method_steps && analysis.method_steps.length > 0 ? (
-                                    <div className="mb-6">
-                                        <MethodRoadmap
-                                            steps={analysis.method_steps}
-                                            summary={analysis.method_summary}
-                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                        />
-                                    </div>
-                                ) : analysis.timing_recommendation && analysis.timing_recommendation !== '' ? (
-                                    /* Timing Metre - For timing decisions */
-                                    <div className="mb-6">
-                                        <TimingMetre
-                                            recommendation={analysis.timing_recommendation}
-                                            reason={analysis.timing_reason || ''}
-                                            alternatives={analysis.timing_alternatives}
-                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                        />
-                                    </div>
-                                ) : analysis.ranked_options && analysis.ranked_options.length > 0 ? (
-                                    /* Comparison Ranking - For comparison decisions */
-                                    <div className="mb-6">
-                                        <ComparisonRanking
-                                            options={analysis.ranked_options}
-                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                        />
-                                    </div>
-                                ) : analysis.decision_score !== undefined ? (
-                                    /* Naapim Metre - For binary decisions (lowest priority) */
-                                    <div className="mb-6">
-                                        <NaapimMetre
-                                            score={analysis.decision_score}
-                                            label={analysis.score_label || 'Değerlendirme'}
-                                            leftLabel={analysis.metre_left_label}
-                                            rightLabel={analysis.metre_right_label}
-                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                        />
-                                    </div>
-                                ) : null}
+                                {/* Widget Selection: Using Factory Component */}
+                                <DecisionWidgetFactory
+                                    analysis={analysis}
+                                    onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                />
 
                                 {/* Recommendation */}
                                 {(() => {
@@ -511,212 +474,20 @@ export const ResultPage = () => {
                                                 : '240px'
                                         }}
                                     >
-                                        {/* Reasoning */}
-                                        <div className="mb-5">
-                                            <h3
-                                                className="text-sm font-semibold uppercase tracking-wider mb-2"
-                                                style={{ color: 'var(--text-muted)' }}
-                                            >
-                                                NEDEN?
-                                            </h3>
-                                            <p
-                                                className="leading-relaxed"
-                                                style={{ color: 'var(--text-secondary)' }}
-                                            >
-                                                {analysis.reasoning}
-                                            </p>
-                                        </div>
+                                        <AnalysisReasoning
+                                            reasoning={analysis.reasoning}
+                                            alternatives={analysis.alternatives}
+                                        />
 
-                                        {/* Alternatives Section */}
-                                        {analysis.alternatives && analysis.alternatives.length > 0 && (
-                                            <div className="mb-6">
-                                                <h3
-                                                    className="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center gap-2"
-                                                    style={{ color: 'var(--text-muted)' }}
-                                                >
-                                                    <Lightbulb className="w-4 h-4" />
-                                                    DİĞER ALTERNATİFLER
-                                                </h3>
-                                                <div className="grid grid-cols-1 gap-2">
-                                                    {analysis.alternatives.map((alt, idx) => (
-                                                        <div
-                                                            key={idx}
-                                                            className="p-3 rounded-xl flex items-start gap-3 transition-colors"
-                                                            style={{
-                                                                border: '1px solid var(--border-secondary)',
-                                                                backgroundColor: 'var(--bg-secondary)'
-                                                            }}
-                                                        >
-                                                            <div
-                                                                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
-                                                                style={{
-                                                                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
-                                                                    border: '1px solid rgba(107, 114, 128, 0.2)'
-                                                                }}
-                                                            >
-                                                                <span className="text-[10px] font-bold text-gray-400">{idx + 1}</span>
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-medium text-sm text-gray-700 leading-tight">
-                                                                    {alt.name}
-                                                                </p>
-                                                                <p className="text-xs text-gray-500 mt-0.5">
-                                                                    {alt.description}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
+                                        <SuggestionCards
+                                            suggestions={analysis.specific_suggestions}
+                                            type={analysis.suggestion_type}
+                                        />
 
-                                        {/* Specific Suggestions (Food / Product / Activity) */}
-                                        {analysis.specific_suggestions && analysis.specific_suggestions.length > 0 && (
-                                            <div className="mb-6">
-                                                {(() => {
-                                                    // Determine visual style based on suggestion type
-                                                    let icon = <ShoppingBag className="w-4 h-4" />;
-                                                    let title = "ÖNERİLENLER";
-
-                                                    switch (analysis.suggestion_type) {
-                                                        case 'food':
-                                                            icon = <Utensils className="w-4 h-4" />;
-                                                            title = "ÖNERİLEN LEZZETLER";
-                                                            break;
-                                                        case 'activity':
-                                                            icon = <Calendar className="w-4 h-4" />;
-                                                            title = "ÖNERİLEN AKTİVİTELER";
-                                                            break;
-                                                        case 'travel':
-                                                            icon = <Plane className="w-4 h-4" />;
-                                                            title = "ÖNERİLEN ROTALAR";
-                                                            break;
-                                                        case 'media':
-                                                            icon = <Film className="w-4 h-4" />;
-                                                            title = "ÖNERİLEN İÇERİKLER";
-                                                            break;
-                                                        case 'gift':
-                                                            icon = <Gift className="w-4 h-4" />;
-                                                            title = "HEDİYE FİKİRLERİ";
-                                                            break;
-                                                        case 'product':
-                                                        default:
-                                                            icon = <ShoppingBag className="w-4 h-4" />;
-                                                            title = "ÖNERİLEN MODELLER";
-                                                            break;
-                                                    }
-
-                                                    return (
-                                                        <>
-                                                            <h3
-                                                                className="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center gap-2"
-                                                                style={{ color: 'var(--text-muted)' }}
-                                                            >
-                                                                {icon}
-                                                                {title}
-                                                            </h3>
-                                                            <div className="grid grid-cols-1 gap-3">
-                                                                {analysis.specific_suggestions!.map((item, idx) => (
-                                                                    <div
-                                                                        key={idx}
-                                                                        className="p-3 rounded-xl flex items-start gap-3 transition-colors hover:bg-neutral-50"
-                                                                        style={{
-                                                                            border: '1px solid var(--border-secondary)',
-                                                                            backgroundColor: 'var(--bg-secondary)'
-                                                                        }}
-                                                                    >
-                                                                        <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-white border border-gray-100 shadow-sm">
-                                                                            <span className="text-xs font-bold text-gray-500">{idx + 1}</span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="font-semibold text-sm text-gray-900 leading-tight mb-1">
-                                                                                {item.name}
-                                                                            </p>
-                                                                            <p className="text-xs text-gray-500 leading-normal">
-                                                                                {item.description}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </>
-                                                    );
-                                                })()}
-                                            </div>
-                                        )}
-
-                                        {/* Pros & Cons Section */}
-                                        {(analysis.pros?.length || analysis.cons?.length) && (
-                                            <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {/* Artılar */}
-                                                {analysis.pros && analysis.pros.length > 0 && (
-                                                    <div
-                                                        className="p-4 rounded-xl"
-                                                        style={{
-                                                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                                            border: '1px solid rgba(16, 185, 129, 0.2)'
-                                                        }}
-                                                    >
-                                                        <h4
-                                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                            style={{ color: 'var(--emerald-500)' }}
-                                                        >
-                                                            Artılar
-                                                        </h4>
-                                                        <ul className="space-y-2">
-                                                            {analysis.pros.map((pro, idx) => (
-                                                                <li key={idx} className="flex items-start gap-2">
-                                                                    <span
-                                                                        className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                                                                        style={{ backgroundColor: 'var(--emerald-500)' }}
-                                                                    />
-                                                                    <span
-                                                                        className="text-sm"
-                                                                        style={{ color: 'var(--text-secondary)' }}
-                                                                    >
-                                                                        {pro}
-                                                                    </span>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
-
-                                                {/* Eksiler */}
-                                                {analysis.cons && analysis.cons.length > 0 && (
-                                                    <div
-                                                        className="p-4 rounded-xl"
-                                                        style={{
-                                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                                            border: '1px solid rgba(239, 68, 68, 0.2)'
-                                                        }}
-                                                    >
-                                                        <h4
-                                                            className="text-sm font-semibold uppercase tracking-wider mb-3"
-                                                            style={{ color: 'var(--red-500)' }}
-                                                        >
-                                                            Eksiler
-                                                        </h4>
-                                                        <ul className="space-y-2">
-                                                            {analysis.cons.map((con, idx) => (
-                                                                <li key={idx} className="flex items-start gap-2">
-                                                                    <span
-                                                                        className="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                                                                        style={{ backgroundColor: 'var(--red-500)' }}
-                                                                    />
-                                                                    <span
-                                                                        className="text-sm"
-                                                                        style={{ color: 'var(--text-secondary)' }}
-                                                                    >
-                                                                        {con}
-                                                                    </span>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
+                                        <ProsConsList
+                                            pros={analysis.pros}
+                                            cons={analysis.cons}
+                                        />
 
                                         {/* Steps */}
                                         {analysis.steps && analysis.steps.length > 0 && (

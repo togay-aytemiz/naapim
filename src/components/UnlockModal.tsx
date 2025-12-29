@@ -115,7 +115,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                                 Hikayelerin Kilidini Aç
                             </h3>
                             <p className="text-sm mt-1.5 text-[var(--text-secondary)]">
-                                E-postanı gir, başkalarının hikayelerini <strong>hemen gör</strong>.
+                                Üyelik yok, hesap yok. Sadece email'ini gir ve hikayeleri <strong>hemen gör</strong>.
                             </p>
                         </div>
 
@@ -166,7 +166,7 @@ export const UnlockModal: React.FC<UnlockModalProps> = ({
                             <div className="flex items-center gap-2">
                                 <span className="flex-shrink-0">🔒</span>
                                 <p className="text-xs text-[var(--text-muted)]">
-                                    Sadece bu karar için kullanılır, reklam yok, spam yok.
+                                    Hesap oluşturmuyorsun. Sadece hatırlatma için, reklam yok, spam yok.
                                 </p>
                             </div>
 

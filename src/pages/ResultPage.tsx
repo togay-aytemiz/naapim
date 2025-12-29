@@ -6,6 +6,7 @@ import { DecisionWidgetFactory } from '../components/DecisionWidgetFactory';
 import { SuggestionCards } from '../components/SuggestionCards';
 import { ProsConsList } from '../components/ProsConsList';
 import { AnalysisReasoning } from '../components/AnalysisReasoning';
+import { OnboardingModal, shouldShowOnboarding } from '../components/OnboardingModal';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
@@ -38,6 +39,7 @@ export const ResultPage = () => {
     const [seededOutcomes, setSeededOutcomes] = useState<any[]>([]);
     const [isLoadingSeeds, setIsLoadingSeeds] = useState(true);
     const [showFullAnalysis, setShowFullAnalysis] = useState(false);
+    const [showOnboarding, setShowOnboarding] = useState(() => shouldShowOnboarding());
 
     // Track unlock email data for downstream components - persist to localStorage
     const [unlockEmail, setUnlockEmail] = useState<string | null>(() => {
@@ -293,6 +295,14 @@ export const ResultPage = () => {
     // 3. Analysis Card (Below AI Bubble) - Only when done
     return (
         <div className="flex flex-col items-center pb-16 pt-8">
+            {/* Onboarding Modal - shows for first-time users until they close it */}
+            {showOnboarding && (
+                <OnboardingModal
+                    isOpen={showOnboarding}
+                    onClose={() => setShowOnboarding(false)}
+                />
+            )}
+
             <div className="w-full max-w-lg space-y-8">
                 {/* User's question - Chat bubble style (same as loaded state) */}
                 {sessionUserInput && (
@@ -474,15 +484,23 @@ export const ResultPage = () => {
                                                 : '240px'
                                         }}
                                     >
+                                        {/* Always show reasoning, but hide alternatives when ranked_options is populated */}
                                         <AnalysisReasoning
                                             reasoning={analysis.reasoning}
-                                            alternatives={analysis.alternatives}
+                                            alternatives={
+                                                (!analysis.ranked_options || analysis.ranked_options.length === 0)
+                                                    ? analysis.alternatives
+                                                    : undefined
+                                            }
                                         />
 
-                                        <SuggestionCards
-                                            suggestions={analysis.specific_suggestions}
-                                            type={analysis.suggestion_type}
-                                        />
+                                        {/* Only show suggestions if ranked_options is empty (to avoid duplication) */}
+                                        {(!analysis.ranked_options || analysis.ranked_options.length === 0) && (
+                                            <SuggestionCards
+                                                suggestions={analysis.specific_suggestions}
+                                                type={analysis.suggestion_type}
+                                            />
+                                        )}
 
                                         <ProsConsList
                                             pros={analysis.pros}

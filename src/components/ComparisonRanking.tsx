@@ -54,30 +54,30 @@ export const ComparisonRanking: React.FC<ComparisonRankingProps> = ({
                     return (
                         <div key={index} className="relative">
                             {/* Option Header */}
-                            <div className="flex items-center justify-between mb-1.5">
-                                <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between mb-1.5 gap-2">
+                                <div className="flex items-center gap-2 flex-wrap min-w-0">
                                     <span
-                                        className="font-semibold text-sm"
+                                        className="font-semibold text-sm truncate"
                                         style={{ color: 'var(--text-primary)' }}
                                     >
                                         {option.name}
                                     </span>
                                     {isTopOption && (
                                         <span
-                                            className="text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide"
+                                            className="text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide whitespace-nowrap flex-shrink-0"
                                             style={{
                                                 backgroundColor: 'rgba(255, 107, 107, 0.15)',
                                                 color: '#FF6B6B',
                                                 border: '1px solid rgba(255, 107, 107, 0.3)'
                                             }}
                                         >
-                                            En Güçlü Aday
+                                            En Güçlü
                                         </span>
                                     )}
                                 </div>
                                 {!isOtherOption && (
                                     <span
-                                        className="text-sm font-medium"
+                                        className="text-sm font-medium whitespace-nowrap flex-shrink-0 ml-auto"
                                         style={{ color: 'var(--text-muted)' }}
                                     >
                                         %{option.fit_score} Uygun

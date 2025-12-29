@@ -45,6 +45,7 @@ ${context || 'No additional context provided'}
 
 Generate a CONCISE response in strictly valid JSON:
 {
+  "decision_type": "binary | comparison | timing | method",
   "title": "A SPECIFIC, ACTION-ORIENTED headline. Do not be vague.",
   "recommendation": "1-2 short, punchy sentences. BE DIRECT. Do not say 'it depends'. Tell them what to do.",
   "reasoning": "2-3 short sentences. Explain WHY this is the best path. Be convincing.",
@@ -85,6 +86,18 @@ Generate a CONCISE response in strictly valid JSON:
   "method_summary": "Sıfırdan başlarken önce dene sonra yatırım yap yöntemi en sürdürülebilir yaklaşımdır."
 }
 
+**CRITICAL - DECISION_TYPE SELECTION (ÖNCELİKLE BU KARARI VER!):**
+- "binary": Evet/hayır soruları. "Yapmalı mıyım?", "Almalı mıyım?", "Gitmeli miyim?"
+- "comparison": İki veya daha fazla seçenek karşılaştırması. "A mı B mi?", "Hangisini seçsem?", "Ne yesem?"
+- "timing": Zamanlama soruları. "Ne zaman yapmalıyım?", "Beklemeli miyim?"
+- "method": Nasıl/yöntem soruları. "Nasıl başlarım?", "Nasıl yaparım?"
+
+ÖRNEKLER:
+- "MacBook Pro almalı mıyım?" → decision_type: "binary" (EVET/HAYIR SORUSU!)
+- "MacBook mı Windows mu?" → decision_type: "comparison"
+- "Laptop almak için ne zaman beklemeliyim?" → decision_type: "timing"
+- "MacBook'a nasıl geçiş yapmalıyım?" → decision_type: "method"
+
 RULES:
 1. **BE DIRECT & OPIMIONATED**: 
    - STOP using safe language. TAKE A STAND.
@@ -92,48 +105,26 @@ RULES:
    - **NEVER assume user's city or location.** Do NOT use specific neighborhood names (Kadıköy, Beşiktaş, etc.).
      Instead, use generic phrases like "yakınındaki bir sahil", "şehrindeki bir park", "evine yakın bir cafe".
 
-2. **SPECIFIC SUGGESTIONS (Crucial)**:
-   You MUST provide 3-5 specific items in 'specific_suggestions' array IF the question falls into these categories:
-
-   A. **MAJOR PURCHASES** (suggestion_type: "product"):
-      - Question: "Hangi kulaklık?", "Hangi telefon?"
-      - Suggest: "Sony WH-1000XM5", "iPhone 15", "Dyson V15" (REAL MODELS)
-
-   B. **FOOD & DINING** (suggestion_type: "food"):
-      - Question: "Akşama ne yesem?", "Dışarıdan ne söylesem?", "Pratik ne pişirsem?"
-      - Suggest: "Lahmacun & Ayran", "Ev Yapımı Burger", "Kremalı Mantarlı Makarna", "Sushi Seti"
-      - Description should be appetizing hints (e.g., "Hem doyurucu hem pratik").
-
-   C. **ACTIVITIES** (suggestion_type: "activity"):
-      - Question: "Bu akşam ne yapsam?", "Haftasonu nereye gitsem?" (General activity)
-      - Suggest: "Yakınındaki sahilde yürüyüş", "Şehirdeki bir sergiye git", "Doğa yürüyüşü yap"
-      - DO NOT assume user's city. Use generic location phrases.
-
-   D. **TRAVEL & PLACES** (suggestion_type: "travel"):
-      - Question: "Balayı için nereye?", "Haftasonu kaçamağı?", "Yaz tatili?"
-      - Suggest: "Kaş, Antalya", "Cunda Adası", "Kapadokya", "Roma, İtalya"
-      - Description: Brief vibe (e.g., "Romantik ve sakin", "Macera dolu")
-
-   E. **MEDIA & ENTERTAINMENT** (suggestion_type: "media"):
-      - Question: "Hangi filmi izlesem?", "Dizi önerisi?", "Ne okusam?"
-      - Suggest: "Oppenheimer", "Succession (Dizi)", "Kürk Mantolu Madonna (Kitap)"
-      - Description: Genre or why (e.g., "Gerilim sevenler için", "Klasik bir eser")
-
-   F. **GIFT IDEAS** (suggestion_type: "gift"):
-      - Question: "Sevgilime ne alsam?", "Anneler günü hediyesi?"
-      - Suggest: "Kişiye Özel Deri Cüzdan", "Spa Masajı Randevusu", "Analog Fotoğraf Makinesi"
-      - Description: Why it fits (e.g., "Anı biriktirmeyi seviyorsa")
-
-   - IF NO SPECIFIC CATEGORY MATCHES: Return empty array [] for 'specific_suggestions' and suggestion_type "other".
-
-3. **ALTERNATIVES (CRITICAL for "ne yapayım" questions)**:
-   - ALWAYS provide 2-4 alternative options in 'alternatives' array, EVEN when you make a strong recommendation.
-   - User asked "ne yapayım?", "ne yesem?", "nereye gitsem?", "hangisini seçsem?" → MUST have alternatives.
-   - Each alternative should be different from your main recommendation.
-   - Example for "Akşama ne yesem?":
-     Main: Kremalı Mantarlı Makarna
-     Alternatives: [{"name": "Ev Yapımı Burger", "description": "Daha doyurucu bir seçenek"}, {"name": "Tavuklu Salata", "description": "Hafif ve sağlıklı"}, {"name": "Sipariş Ver: Pizza", "description": "Hiç uğraşmak istemiyorsan"}]
-   - Even for binary decisions (A vs B), suggest a 3rd creative option if applicable.
+2. **SECENEK LISTELERI (CRITICAL - NO DUPLICATION)**:
+   
+   Asagidaki uc array'den EN UYGUN OLANLARI sec, ama ASLA AYNI OGEYI IKI FARKLI ARRAY'DE GOSTERME!
+   
+   ARRAYS:
+   - ranked_options: Sirali secenekler (comparison sorularinda kullanisli)
+   - specific_suggestions: Spesifik urun/yemek/aktivite onerileri
+   - alternatives: Ana tavsiyeye alternatif yollar
+   
+   KURAL: Bir oge sadece BIR ARRAY'de olabilir!
+   
+   Ornek - comparison sorusu:
+   - ranked_options DOLU
+   - specific_suggestions BOS []
+   - alternatives BOS []
+   
+   Ornek - binary sorusu:
+   - ranked_options BOS []
+   - specific_suggestions DOLU (urun onerileri)
+   - alternatives DOLU (farkli yaklasimlar)
 
 4. **STEPS LOGIC (Important)**:
    - **RETURN EMPTY ARRAY []** steps: If the decision is SIMPLE, IMPULSIVE, or PHYSICAL (e.g., "Coffee vs Tea?", "What to eat?", "Should I nap?").
@@ -195,48 +186,52 @@ RULES:
    - Diğer seçenekler için "reason" boş bırakılabilir.
    - Max 5 seçenek.
 
-10. **WIDGET SEÇİMİ - ÇOK ÖNEMLİ! SADECE BİR WIDGET DOLDUR:**:
+10. **WIDGET SEÇİMİ - DECISION_TYPE'A GÖRE ALAN DOLDUR:**
 
-    **A) BINARY SORU (Evet/Hayır):**
-       Örnekler: "Kahve içeyim mi?", "Tenise başlamalı mıyım?", "Ev almalı mıyım?"
-       → decision_score: 0-100 DOLDUR
-       → score_label: DOLDUR
-       → metre_left_label/metre_right_label: DOLDUR
-       → ranked_options: BOŞ DİZİ []
-       → timing_recommendation: BOŞ STRING ""
-       → timing_alternatives: BOŞ DİZİ []
+     **ÖNCELİKLE decision_type ALANINI DOLDUR!** Bu, kullanıcıya hangi widget'ın gösterileceğini belirler.
 
-    **B) KARŞILAŞTIRMA SORUSU (A mı B mi?):**
-       Örnekler: "MacBook mı Windows mu?", "Kahve mi çay mı?", "Ne yesem?"
-       → ranked_options: DOLDUR (2-5 seçenek)
-       → decision_score: 50 (nötr, kullanılmayacak)
-       → timing_recommendation: BOŞ STRING ""
-       → timing_alternatives: BOŞ DİZİ []
+     **A) decision_type: "binary" (Evet/Hayır soruları):**
+        Örnekler: "Kahve içeyim mi?", "Tenise başlamalı mıyım?", "MacBook almalı mıyım?"
+        → decision_score: 0-100 DOLDUR
+        → score_label: DOLDUR
+        → metre_left_label/metre_right_label: DOLDUR
+        → ranked_options: BOŞ DİZİ []
+        → timing_recommendation: BOŞ STRING "" (BU ÖNEMLİ! İKİSİNİ BİRDEN DOLDURMA!)
+        → timing_alternatives: BOŞ DİZİ []
+        → method_steps: BOŞ DİZİ []
 
-    **C) ZAMANLAMA SORUSU (Ne zaman?):**
-       Örnekler: "Ne zaman ev almalıyım?", "Ne zaman evlenmeliyim?", "Beklemeli miyim?"
-       → timing_recommendation: DOLDUR ("now", "3_months", "6_months", "1_year", "2_years")
-       → timing_reason: DOLDUR
-       → timing_alternatives: DOLDUR (2-3 alternatif)
-       → ranked_options: BOŞ DİZİ []
-       → method_steps: BOŞ DİZİ []
-       → decision_score: 50 (nötr, kullanılmayacak)
+     **B) decision_type: "comparison" (A mı B mi?):**
+        Örnekler: "MacBook mı Windows mu?", "Kahve mi çay mı?", "Ne yesem?"
+        → ranked_options: DOLDUR (2-5 seçenek)
+        → decision_score: 50 (nötr, kullanılmayacak)
+        → timing_recommendation: BOŞ STRING ""
+        → timing_alternatives: BOŞ DİZİ []
+        → method_steps: BOŞ DİZİ []
 
-    **D) YÖNTEM/NASIL SORUSU (Nasıl yapmalıyım?):**
-       Örnekler: "Tenise nasıl başlarım?", "Nasıl zam istemeliyim?", "Yatırıma nasıl başlarım?"
-       → method_steps: DOLDUR (4-5 adım, her biri title/description/icon)
-       → method_summary: DOLDUR (kısa özet cümlesi)
-       → ranked_options: BOŞ DİZİ []
-       → timing_recommendation: BOŞ STRING ""
-       → timing_alternatives: BOŞ DİZİ []
-       → decision_score: 50 (nötr)
-       → Icon seçenekleri: "search", "users", "package", "calendar", "check", "target", "launch"
+     **C) decision_type: "timing" (Ne zaman?):**
+        Örnekler: "Ne zaman ev almalıyım?", "Ne zaman evlenmeliyim?", "Beklemeli miyim?"
+        → timing_recommendation: DOLDUR ("now", "3_months", "6_months", "1_year", "2_years")
+        → timing_reason: DOLDUR
+        → timing_alternatives: DOLDUR (2-3 alternatif)
+        → ranked_options: BOŞ DİZİ []
+        → method_steps: BOŞ DİZİ []
+        → decision_score: 50 (nötr, kullanılmayacak)
 
-    **KARAR ŞEMASI:**
-    - "nasıl", "ne şekilde", "adım adım", "yöntem" → YÖNTEM (D)
-    - "ne zaman", "hangi zamanda", "beklemeli mi", "erken mi" → ZAMANLAMA (C)
-    - "mı...mı", "mi...mi", "hangisi", "ne X-sem", iki+ seçenek → KARŞILAŞTIRMA (B)
-    - tek eylem + "mı/mi/mu/mü" → BINARY (A)
+     **D) decision_type: "method" (Nasıl yapmalıyım?):**
+        Örnekler: "Tenise nasıl başlarım?", "Nasıl zam istemeliyim?", "Yatırıma nasıl başlarım?"
+        → method_steps: DOLDUR (4-5 adım, her biri title/description/icon)
+        → method_summary: DOLDUR (kısa özet cümlesi)
+        → ranked_options: BOŞ DİZİ []
+        → timing_recommendation: BOŞ STRING ""
+        → timing_alternatives: BOŞ DİZİ []
+        → decision_score: 50 (nötr)
+        → Icon seçenekleri: "search", "users", "package", "calendar", "check", "target", "launch"
+
+     **KARAR ŞEMASI:**
+     - "nasıl", "ne şekilde", "adım adım", "yöntem" → decision_type: "method"
+     - "ne zaman", "hangi zamanda", "beklemeli mi", "erken mi" → decision_type: "timing"
+     - "mı...mı", "mi...mi", "hangisi", "ne X-sem", iki+ seçenek → decision_type: "comparison"
+     - tek eylem + "mı/mi/mu/mü" VEYA "yapmalı mıyım?", "almalı mıyım?" → decision_type: "binary"
 `
 
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -261,6 +256,11 @@ RULES:
                         schema: {
                             type: 'object',
                             properties: {
+                                decision_type: {
+                                    type: 'string',
+                                    enum: ['binary', 'comparison', 'timing', 'method'],
+                                    description: 'Soru tipi: binary (evet/hayır), comparison (A mı B mi), timing (ne zaman), method (nasıl)'
+                                },
                                 title: { type: 'string', description: 'Spesifik başlık' },
                                 recommendation: { type: 'string', description: '1-2 cümle net tavsiye' },
                                 reasoning: { type: 'string', description: '2-3 cümle gerekçe' },
@@ -388,7 +388,7 @@ RULES:
                                     description: 'Yöntem özeti (sadece method soruları için kısa özet cümlesi)'
                                 }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives', 'method_steps', 'method_summary'],
+                            required: ['decision_type', 'title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives', 'method_steps', 'method_summary'],
                             additionalProperties: false
                         }
                     }

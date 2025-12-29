@@ -25,6 +25,8 @@ export interface MethodStep {
     icon?: string;  // Icon hint: "search", "users", "package", "calendar", "check"
 }
 
+export type DecisionType = 'binary' | 'comparison' | 'timing' | 'method';
+
 export interface AnalysisResult {
     title: string;
     recommendation: string;
@@ -37,6 +39,7 @@ export interface AnalysisResult {
     followup_question?: string;
     specific_suggestions?: { name: string; description: string }[];
     suggestion_type?: 'product' | 'food' | 'activity' | 'travel' | 'media' | 'gift' | 'other';
+    decision_type?: DecisionType; // Explicit widget selection: binary→metre, comparison→ranking, timing→timeline, method→roadmap
     decision_score?: number; // 0-100, only for binary_decision (0=YAPMA, 100=YAP)
     score_label?: string;    // "Olumlu Yaklaşım" etc.
     metre_left_label?: string;  // "YAPMA", "ALMA", "GİTME" etc.

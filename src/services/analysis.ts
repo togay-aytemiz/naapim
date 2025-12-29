@@ -19,6 +19,12 @@ export interface TimingOption {
     fit_score: number;  // 0-100
 }
 
+export interface MethodStep {
+    title: string;
+    description: string;
+    icon?: string;  // Icon hint: "search", "users", "package", "calendar", "check"
+}
+
 export interface AnalysisResult {
     title: string;
     recommendation: string;
@@ -39,6 +45,8 @@ export interface AnalysisResult {
     timing_recommendation?: string;  // "now", "3_months", "6_months", etc. for timing decisions
     timing_reason?: string;          // Why this timing
     timing_alternatives?: TimingOption[]; // Alternative timings with scores
+    method_steps?: MethodStep[];     // For method/how-to questions (4-5 steps)
+    method_summary?: string;         // Summary quote for method roadmap
 }
 
 export class AnalysisService {

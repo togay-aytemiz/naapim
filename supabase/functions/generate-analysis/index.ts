@@ -75,7 +75,14 @@ Generate a CONCISE response in strictly valid JSON:
   "specific_suggestions": [
     { "name": "Item Name", "description": "Why this specific option?" }
   ],
-  "suggestion_type": "product | food | activity | travel | media | gift | other"
+  "suggestion_type": "product | food | activity | travel | media | gift | other",
+  "method_steps": [
+    { "title": "Keşif", "description": "Yakınındaki kort ve kulüpleri incele.", "icon": "search" },
+    { "title": "Deneme", "description": "Ücretsiz derslere katıl.", "icon": "users" },
+    { "title": "Ekipman", "description": "Başlangıç seviyesi raket edin.", "icon": "package" },
+    { "title": "Rutin", "description": "Haftalık pratik planı oluştur.", "icon": "calendar" }
+  ],
+  "method_summary": "Sıfırdan başlarken önce dene sonra yatırım yap yöntemi en sürdürülebilir yaklaşımdır."
 }
 
 RULES:
@@ -212,9 +219,21 @@ RULES:
        → timing_reason: DOLDUR
        → timing_alternatives: DOLDUR (2-3 alternatif)
        → ranked_options: BOŞ DİZİ []
+       → method_steps: BOŞ DİZİ []
        → decision_score: 50 (nötr, kullanılmayacak)
 
+    **D) YÖNTEM/NASIL SORUSU (Nasıl yapmalıyım?):**
+       Örnekler: "Tenise nasıl başlarım?", "Nasıl zam istemeliyim?", "Yatırıma nasıl başlarım?"
+       → method_steps: DOLDUR (4-5 adım, her biri title/description/icon)
+       → method_summary: DOLDUR (kısa özet cümlesi)
+       → ranked_options: BOŞ DİZİ []
+       → timing_recommendation: BOŞ STRING ""
+       → timing_alternatives: BOŞ DİZİ []
+       → decision_score: 50 (nötr)
+       → Icon seçenekleri: "search", "users", "package", "calendar", "check", "target", "launch"
+
     **KARAR ŞEMASI:**
+    - "nasıl", "ne şekilde", "adım adım", "yöntem" → YÖNTEM (D)
     - "ne zaman", "hangi zamanda", "beklemeli mi", "erken mi" → ZAMANLAMA (C)
     - "mı...mı", "mi...mi", "hangisi", "ne X-sem", iki+ seçenek → KARŞILAŞTIRMA (B)
     - tek eylem + "mı/mi/mu/mü" → BINARY (A)
@@ -349,9 +368,27 @@ RULES:
                                         required: ['label', 'value', 'fit_score'],
                                         additionalProperties: false
                                     }
+                                },
+                                method_steps: {
+                                    type: 'array',
+                                    description: 'Yöntem adımları (nasıl soruları için 4-5 adım)',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            title: { type: 'string', description: 'Adım başlığı (kısa)' },
+                                            description: { type: 'string', description: 'Adım açıklaması (1 cümle)' },
+                                            icon: { type: 'string', description: 'İkon: search, users, package, calendar, check, target, launch' }
+                                        },
+                                        required: ['title', 'description', 'icon'],
+                                        additionalProperties: false
+                                    }
+                                },
+                                method_summary: {
+                                    type: 'string',
+                                    description: 'Yöntem özeti (sadece method soruları için kısa özet cümlesi)'
                                 }
                             },
-                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives'],
+                            required: ['title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives', 'method_steps', 'method_summary'],
                             additionalProperties: false
                         }
                     }

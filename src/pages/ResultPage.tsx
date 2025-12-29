@@ -5,6 +5,7 @@ import { RecoveryCode } from '../components/RecoveryCode';
 import { NaapimMetre } from '../components/NaapimMetre';
 import { ComparisonRanking } from '../components/ComparisonRanking';
 import { TimingMetre } from '../components/TimingMetre';
+import { MethodRoadmap } from '../components/MethodRoadmap';
 import { AnalysisService, type AnalysisResult } from '../services/analysis';
 import { saveAnalysis } from '../services/saveAnalysis';
 import { submitSession } from '../services/session';
@@ -427,10 +428,19 @@ export const ResultPage = () => {
                                 </h1>
 
                                 {/* Widget Selection: Only ONE widget shows at a time */}
-                                {/* Priority: 1. Timing Metre, 2. Comparison Ranking, 3. Naapim Metre */}
+                                {/* Priority: 1. Method Roadmap, 2. Timing Metre, 3. Comparison Ranking, 4. Naapim Metre */}
 
-                                {/* Timing Metre - For timing decisions (highest priority) */}
-                                {analysis.timing_recommendation && analysis.timing_recommendation !== '' ? (
+                                {/* Method Roadmap - For how-to questions (highest priority) */}
+                                {analysis.method_steps && analysis.method_steps.length > 0 ? (
+                                    <div className="mb-6">
+                                        <MethodRoadmap
+                                            steps={analysis.method_steps}
+                                            summary={analysis.method_summary}
+                                            onScrollToStories={() => document.getElementById('follow-up-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                        />
+                                    </div>
+                                ) : analysis.timing_recommendation && analysis.timing_recommendation !== '' ? (
+                                    /* Timing Metre - For timing decisions */
                                     <div className="mb-6">
                                         <TimingMetre
                                             recommendation={analysis.timing_recommendation}
@@ -440,7 +450,7 @@ export const ResultPage = () => {
                                         />
                                     </div>
                                 ) : analysis.ranked_options && analysis.ranked_options.length > 0 ? (
-                                    /* Comparison Ranking - For comparison decisions with ranked_options */
+                                    /* Comparison Ranking - For comparison decisions */
                                     <div className="mb-6">
                                         <ComparisonRanking
                                             options={analysis.ranked_options}
@@ -448,7 +458,7 @@ export const ResultPage = () => {
                                         />
                                     </div>
                                 ) : analysis.decision_score !== undefined ? (
-                                    /* Naapim Metre - Only for binary decisions (lowest priority) */
+                                    /* Naapim Metre - For binary decisions (lowest priority) */
                                     <div className="mb-6">
                                         <NaapimMetre
                                             score={analysis.decision_score}

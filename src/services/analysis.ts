@@ -16,6 +16,8 @@ export interface AnalysisResult {
     cons?: string[];
     sentiment: Sentiment;
     followup_question?: string;
+    specific_suggestions?: { name: string; description: string }[];
+    suggestion_type?: 'product' | 'food' | 'activity' | 'travel' | 'media' | 'gift' | 'other';
 }
 
 export class AnalysisService {

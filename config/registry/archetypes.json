@@ -1320,6 +1320,98 @@
                     "description": "Balayı için tarz ve atmosfer soruları"
                 }
             }
+        },
+        {
+            "id": "leisure_entertainment",
+            "label": "Eğlence ve Kültür",
+            "default_followup_days": 3,
+            "simple_category_set_id": "leisure_simple_v1",
+            "category_set_ids": [
+                "core_lifestyle_v1",
+                "leisure_v1"
+            ],
+            "routing_hints": {
+                "definition": "Film, dizi, kitap, oyun, konser, etkinlik, hobi veya boş zaman değerlendirme kararları.",
+                "positive_examples": [
+                    "Bu akşam ne izlesek?",
+                    "Haftasonu hangi filme gitsek?",
+                    "Okunacak kitap önerisi var mı?",
+                    "Hangi oyuna başlasam?",
+                    "Canım sıkılıyor ne yapsam?",
+                    "Gizemli bir dizi seyretmek istiyorum"
+                ],
+                "negative_examples": [
+                    "Ne yesem?",
+                    "Nereye tatile gitsem?",
+                    "İş değiştirmeli miyim?"
+                ],
+                "keywords": [
+                    "film",
+                    "dizi",
+                    "kitap",
+                    "oyun",
+                    "izle",
+                    "oku",
+                    "sinema",
+                    "netflix",
+                    "konser",
+                    "etkinlik",
+                    "boş zaman",
+                    "hobi",
+                    "sergi",
+                    "tiyatro"
+                ],
+                "exclusions": [
+                    "yemek (food_hospitality)",
+                    "tatil (travel_vacation)"
+                ]
+            },
+            "priority_categories": {
+                "watch": {
+                    "triggers": [
+                        "izle",
+                        "seyret",
+                        "film",
+                        "dizi",
+                        "sinema"
+                    ],
+                    "prioritize": [
+                        "leisure_genre",
+                        "current_mood",
+                        "leisure_activity_type"
+                    ],
+                    "description": "İzleme tercihi"
+                },
+                "read": {
+                    "triggers": [
+                        "oku",
+                        "kitap",
+                        "roman",
+                        "yazar"
+                    ],
+                    "prioritize": [
+                        "leisure_genre",
+                        "current_mood",
+                        "leisure_activity_type"
+                    ],
+                    "description": "Okuma tercihi"
+                },
+                "event": {
+                    "triggers": [
+                        "konser",
+                        "tiyatro",
+                        "sergi",
+                        "etkinlik",
+                        "bilet"
+                    ],
+                    "prioritize": [
+                        "leisure_activity_type",
+                        "time_constraint",
+                        "budget_flexibility"
+                    ],
+                    "description": "Etkinlik tercihi"
+                }
+            }
         }
     ]
 }

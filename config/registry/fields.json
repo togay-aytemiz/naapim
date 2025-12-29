@@ -2153,6 +2153,18 @@
             "label": "Yakının teknolojiyle arası?",
             "type": "single_select",
             "option_set_id": "eldercare_tech_v1"
+        },
+        {
+            "key": "leisure_activity_type",
+            "label": "Ne tür bir aktivite arıyorsun?",
+            "type": "single_select",
+            "option_set_id": "leisure_activity_type_v1"
+        },
+        {
+            "key": "leisure_genre",
+            "label": "Hangi tür sana hitap ediyor?",
+            "type": "single_select",
+            "option_set_id": "leisure_genre_v1"
         }
     ]
 }

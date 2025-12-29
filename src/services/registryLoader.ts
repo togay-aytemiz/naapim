@@ -120,7 +120,7 @@ export class RegistryLoader {
             const archetype = this.archetypes.find(a => a.id === archetypeId);
             if (archetype && (archetype as any).simple_category_set_id) {
                 simpleSetId = (archetype as any).simple_category_set_id;
-                console.log(`✨ Using archetype-specific simple set: ${simpleSetId} for ${archetypeId}`);
+
             }
         }
 

@@ -7255,6 +7255,72 @@
                     "label": "Dirençli"
                 }
             ]
+        },
+        {
+            "id": "leisure_activity_type_v1",
+            "options": [
+                {
+                    "id": "movie",
+                    "label": "Film"
+                },
+                {
+                    "id": "series",
+                    "label": "Dizi"
+                },
+                {
+                    "id": "book",
+                    "label": "Kitap"
+                },
+                {
+                    "id": "game",
+                    "label": "Oyun"
+                },
+                {
+                    "id": "event",
+                    "label": "Etkinlik/Konser"
+                },
+                {
+                    "id": "hobby",
+                    "label": "Hobi/Uğraş"
+                }
+            ]
+        },
+        {
+            "id": "leisure_genre_v1",
+            "options": [
+                {
+                    "id": "comedy",
+                    "label": "Komedi / Eğlenceli"
+                },
+                {
+                    "id": "drama",
+                    "label": "Dram / Duygusal"
+                },
+                {
+                    "id": "scifi",
+                    "label": "Bilim Kurgu / Fantastik"
+                },
+                {
+                    "id": "thriller",
+                    "label": "Gerilim / Gizem"
+                },
+                {
+                    "id": "action",
+                    "label": "Aksiyon / Macera"
+                },
+                {
+                    "id": "documentary",
+                    "label": "Belgesel / Bilgi"
+                },
+                {
+                    "id": "romance",
+                    "label": "Romantik"
+                },
+                {
+                    "id": "chill",
+                    "label": "Sakin / Rahatlatıcı"
+                }
+            ]
         }
     ],
     "_meta": {

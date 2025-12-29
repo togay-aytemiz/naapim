@@ -140,6 +140,17 @@ const PERSONA_POOLS: Record<string, string[]> = {
         'balayı çifti; romantizm ve mahremiyet arayan; özel hissetmek isteyen',
         'yalnız seyahat eden; kendini keşfetme yolculuğunda; güvenlik endişesi',
     ],
+    // Leisure & Entertainment
+    leisure_entertainment: [
+        'dizi maratonu seven; haftasonunu evde geçirmek isteyen; sürükleyici kurgu arıyor',
+        'sinema tutkunu; yönetmen sinemasına ilgi duyan; sanatsal derinlik arıyor',
+        'arkadaşlarıyla film gecesi planlayan; herkesin seveceği ortak bir tür arıyor',
+        'kitap okuma alışkanlığı kazanmak isteyen; kısa ve akıcı kitaplarla başlamak istiyor',
+        'belgesel meraklısı; yeni şeyler öğrenmek isteyen; tarih ve bilim odaklı',
+        'oyun tutkunu (gamer); hikaye odaklı oyunları seviyor; uzun soluklu macera arıyor',
+        'konser/etkinlik seven; canlı performans enerjisi arıyor; sosyalleşmek istiyor',
+        'bilim kurgu hayranı; distopik evrenleri seven; düşündürücü içerik arıyor',
+    ],
     // Default fallback
     default: [
         'genel karar verici; araştırma yapan; tereddütlü; farklı görüşler dinliyor',
@@ -397,6 +408,17 @@ HER BİR HİKAYE ZORUNLU OLARAK ŞU 6 ÖĞEYİ İÇERMELİ:
 5. SOMUT TETİKLEYİCİ OLAY: Kararı vermeye iten an (İhtiyaç oluşması, canın çekmesi, bozulma, davet, yorgunluk vb.)
 6. SOMUT SONRASI GÖZLEM: Beklenti karşılandı mı, tatmin düzeyi, pişmanlık nedeni veya iyi ki yapmışım dedirten detay
 
+KAT'İ YASAKLAR (BUNLARI ASLA KULLANMA):
+- ❌ "Marka A", "Marka B", "Model X", "Seçenek 1" gibi JENERİK İSİMLENDİRMELER YASAK.
+- ❌ "Bir marka", "Diğer marka" gibi belirsiz ifadeler YASAK.
+- ❌ "Tavsiye ederim", "Kesinlikle almalısın" gibi TAVSİYE DİLİ YASAK.
+- ❌ "45.000 TL", "100 Dolar" gibi KESİN SAYISAL TUTAR YASAK.
+
+GERÇEKÇİLİK KURALI (ŞUNLARI KULLAN):
+- ✅ GERÇEK MARKA/MODEL İSİMLERİ KULLAN: Eğer soru teknoloji ise "Samsung vs iPhone", "Sony vs Bose" de. Araba ise "Fiat Egea vs Renault Clio" de.
+- ✅ Eğer marka ismi vermek istemiyorsan NİTELEYİCİ SIFAT KULLAN: "Pahalı olan", "Alman malı olan", "Çin menşeli olan", "Yerli üretim olan", "Eski model", "Yeni çıkan model".
+- ✅ Hikaye sanki "Ekşi Sözlük" entry'si veya samimi bir forum yorumu gibi olmalı.
+
 YASAK İFADELER (bunları ASLA kullanma - tavsiye veren dil):
 "şunu almalısın", "kesinlikle tavsiye ederim", "en iyisi budur", "tavsiye ederim", "garanti ederim", "kesin sonuç alırsın"
 
@@ -425,7 +447,7 @@ JSON formatında yanıt ver. ÖNEMLİ: YUKARIDAKİ PERSONA, FEELING VE OUTCOME_T
     {
       "similar_question": "Kısa, spesifik başlık (format: Konu + 1 kısıt + 1 alternatif, örn: 'Kısıtlı zamanda X mi Y mi')",
       "persona": "Persona etiketi (yukarıdan al)",
-      "options_considered": ["alternatif1", "alternatif2"],
+      "options_considered": ["Gerçek marka/model 1", "Gerçek marka/model 2"],
       "constraints": ["kısıt1", "kısıt2"],
       "trigger": "Kararı tetikleyen olay",
       "tradeoffs": {
@@ -433,7 +455,7 @@ JSON formatında yanıt ver. ÖNEMLİ: YUKARIDAKİ PERSONA, FEELING VE OUTCOME_T
         "cons": ["eksi1", "eksi2"]
       },
       "what_happened_after": "1-2 cümle: karardan sonra ne oldu",
-      "outcome_text": "1-2 paragraf, doğal Türkçe, detaylı süreç + sonuç. Persona'nın kısıtlarını ve kriterlerini yansıt.",
+      "outcome_text": "1-2 paragraf, doğal Türkçe, detaylı süreç + sonuç. Marka A/B DEME, gerçek marka veya niteleyici kullan.",
       "feeling": "happy|neutral|uncertain|regret (yukarıdaki değeri kullan)",
       "outcome_type": "decided|cancelled (yukarıdaki değeri kullan)"
     }

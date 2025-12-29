@@ -1286,6 +1286,17 @@
             "field_keys": [
                 "purchase_reviews"
             ]
+        },
+        {
+            "id": "leisure_simple_context",
+            "label": "Eğlence Tercihi",
+            "description": "Basit eğlence kararları için sorular",
+            "field_keys": [
+                "leisure_activity_type",
+                "leisure_genre",
+                "current_mood",
+                "time_constraint"
+            ]
         }
     ],
     "_meta": {

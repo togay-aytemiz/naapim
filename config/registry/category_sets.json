@@ -486,6 +486,21 @@
             "category_ids": [
                 "travel_simple_context"
             ]
+        },
+        {
+            "id": "leisure_simple_v1",
+            "label": "Eğlence Basit",
+            "description": "Basit eğlence kararları için",
+            "category_ids": [
+                "leisure_simple_context"
+            ]
+        },
+        {
+            "id": "leisure_v1",
+            "label": "Eğlence Ana",
+            "category_ids": [
+                "leisure_simple_context"
+            ]
         }
     ]
 }

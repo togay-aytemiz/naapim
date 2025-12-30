@@ -11,33 +11,33 @@ export const SuggestionCards: React.FC<SuggestionCardsProps> = ({ suggestions, t
     if (!suggestions || suggestions.length === 0) return null;
 
     // Determine visual style based on suggestion type
-    let icon = <ShoppingBag className="w-4 h-4" />;
+    let icon = <ShoppingBag className="w-4 h-4" style={{ color: '#0d9488' }} />;
     let title = "ÖNERİLENLER";
 
     switch (type) {
         case 'food':
-            icon = <Utensils className="w-4 h-4" />;
+            icon = <Utensils className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "ÖNERİLEN LEZZETLER";
             break;
         case 'activity':
-            icon = <Calendar className="w-4 h-4" />;
+            icon = <Calendar className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "ÖNERİLEN AKTİVİTELER";
             break;
         case 'travel':
-            icon = <Plane className="w-4 h-4" />;
+            icon = <Plane className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "ÖNERİLEN ROTALAR";
             break;
         case 'media':
-            icon = <Film className="w-4 h-4" />;
+            icon = <Film className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "ÖNERİLEN İÇERİKLER";
             break;
         case 'gift':
-            icon = <Gift className="w-4 h-4" />;
+            icon = <Gift className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "HEDİYE FİKİRLERİ";
             break;
         case 'product':
         default:
-            icon = <ShoppingBag className="w-4 h-4" />;
+            icon = <ShoppingBag className="w-4 h-4" style={{ color: '#0d9488' }} />;
             title = "ÖNERİLEN MODELLER";
             break;
     }
@@ -45,7 +45,7 @@ export const SuggestionCards: React.FC<SuggestionCardsProps> = ({ suggestions, t
     return (
         <div className="mb-6">
             <h3
-                className="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center gap-2"
+                className="text-sm font-semibold uppercase tracking-wider mb-4 flex items-center gap-2"
                 style={{ color: 'var(--text-muted)' }}
             >
                 {icon}
@@ -55,20 +55,28 @@ export const SuggestionCards: React.FC<SuggestionCardsProps> = ({ suggestions, t
                 {suggestions.map((item, idx) => (
                     <div
                         key={idx}
-                        className="p-3 rounded-xl flex items-start gap-3 transition-colors hover:bg-neutral-50"
+                        className="p-4 rounded-2xl flex items-start gap-4"
                         style={{
+                            backgroundColor: 'var(--bg-secondary)',
                             border: '1px solid var(--border-secondary)',
-                            backgroundColor: 'var(--bg-secondary)'
                         }}
                     >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-white border border-gray-100 shadow-sm">
-                            <span className="text-xs font-bold text-gray-500">{idx + 1}</span>
+                        {/* Soft Teal Badge */}
+                        <div
+                            className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{
+                                backgroundColor: 'rgba(13, 148, 136, 0.15)',
+                            }}
+                        >
+                            <span className="text-sm font-semibold" style={{ color: '#2dd4bf' }}>{idx + 1}</span>
                         </div>
-                        <div>
-                            <p className="font-semibold text-sm text-gray-900 leading-tight mb-1">
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-[15px] leading-snug mb-1" style={{ color: 'var(--text-primary)' }}>
                                 {item.name}
                             </p>
-                            <p className="text-xs text-gray-500 leading-normal">
+                            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                                 {item.description}
                             </p>
                         </div>

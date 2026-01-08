@@ -24,7 +24,21 @@ export const fetchDecoded = async <T>(
     url: string,
     options: RequestInit
 ): Promise<T> => {
-    const response = await fetch(url, options);
+    const controller = new AbortController();
+    const timeoutMs = 20000;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    let response: Response;
+    try {
+        response = await fetch(url, { ...options, signal: controller.signal });
+    } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+            throw new Error(`Request timed out after ${timeoutMs}ms`);
+        }
+        throw err;
+    } finally {
+        clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
         // Try to get error message from encoded response

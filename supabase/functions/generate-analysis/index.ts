@@ -12,6 +12,26 @@ interface AnalysisRequest {
     archetype_label: string;
 }
 
+const safeParseJson = (content: string) => {
+    const trimmed = content.trim();
+    const withoutFences = trimmed
+        .replace(/^```(?:json)?\s*/i, '')
+        .replace(/```$/i, '')
+        .trim();
+
+    try {
+        return JSON.parse(withoutFences);
+    } catch {
+        const firstBrace = withoutFences.indexOf('{');
+        const lastBrace = withoutFences.lastIndexOf('}');
+        if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+            throw new Error('No JSON object found in model response');
+        }
+        const sliced = withoutFences.slice(firstBrace, lastBrace + 1);
+        return JSON.parse(sliced);
+    }
+};
+
 serve(async (req) => {
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
@@ -404,7 +424,7 @@ RULES:
             throw new Error('No content in response')
         }
 
-        const result = JSON.parse(content)
+        const result = safeParseJson(content)
         console.log('📊 Analysis generated:', result.title)
 
         return createEncodedResponse(result, corsHeaders)

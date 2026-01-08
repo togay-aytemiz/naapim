@@ -12,6 +12,10 @@ interface AnalysisRequest {
     archetype_label: string;
 }
 
+const stripTrailingCommas = (input: string) => {
+    return input.replace(/,\s*([}\]])/g, '$1');
+};
+
 const safeParseJson = (content: string) => {
     const trimmed = content.trim();
     const withoutFences = trimmed
@@ -28,7 +32,12 @@ const safeParseJson = (content: string) => {
             throw new Error('No JSON object found in model response');
         }
         const sliced = withoutFences.slice(firstBrace, lastBrace + 1);
-        return JSON.parse(sliced);
+        try {
+            return JSON.parse(sliced);
+        } catch {
+            const cleaned = stripTrailingCommas(sliced);
+            return JSON.parse(cleaned);
+        }
     }
 };
 
@@ -249,6 +258,152 @@ RULES:
      - tek eylem + "mı/mi/mu/mü" VEYA "yapmalı mıyım?", "almalı mıyım?" → decision_type: "binary"
 `
 
+        const responseFormat = {
+            type: 'json_schema',
+            json_schema: {
+                name: 'analysis_response',
+                strict: true,
+                schema: {
+                    type: 'object',
+                    properties: {
+                        decision_type: {
+                            type: 'string',
+                            enum: ['binary', 'comparison', 'timing', 'method'],
+                            description: 'Soru tipi: binary (evet/hayır), comparison (A mı B mi), timing (ne zaman), method (nasıl)'
+                        },
+                        title: { type: 'string', description: 'Spesifik başlık' },
+                        recommendation: { type: 'string', description: '1-2 cümle net tavsiye' },
+                        reasoning: { type: 'string', description: '2-3 cümle gerekçe' },
+                        steps: {
+                            type: 'array',
+                            items: { type: 'string' },
+                            description: 'Maksimum 5 adım'
+                        },
+                        alternatives: {
+                            type: 'array',
+                            description: 'Alternative options for the decision (2-4 items)',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    name: { type: 'string' },
+                                    description: { type: 'string' }
+                                },
+                                required: ['name', 'description'],
+                                additionalProperties: false
+                            }
+                        },
+                        pros: {
+                            type: 'array',
+                            items: { type: 'string' },
+                            description: '3-5 artı madde'
+                        },
+                        cons: {
+                            type: 'array',
+                            items: { type: 'string' },
+                            description: '2-5 eksi madde'
+                        },
+                        sentiment: {
+                            type: 'string',
+                            enum: ['positive', 'cautious', 'warning', 'negative', 'neutral'],
+                            description: 'Genel tavsiye tonu'
+                        },
+                        followup_question: { type: 'string', description: 'Takip sorusu' },
+                        specific_suggestions: {
+                            type: 'array',
+                            description: 'Specific suggestions for product/food/activity',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    name: { type: 'string' },
+                                    description: { type: 'string' }
+                                },
+                                required: ['name', 'description'],
+                                additionalProperties: false
+                            }
+                        },
+                        suggestion_type: {
+                            type: 'string',
+                            enum: ['product', 'food', 'activity', 'travel', 'media', 'gift', 'other'],
+                            description: 'Type of suggestions provided'
+                        },
+                        decision_score: {
+                            type: 'integer',
+                            description: 'Karar skoru: 0=YAPMA, 50=NÖTR, 100=YAP. Binary kararlar için metre göstergesi.'
+                        },
+                        score_label: {
+                            type: 'string',
+                            description: 'Skoru özetleyen Türkçe etiket: Kesinlikle Uzak Dur, Dikkatli Ol, İki Tarafı da Düşün, Olumlu Yaklaşım, Kesinlikle Yap!'
+                        },
+                        metre_left_label: {
+                            type: 'string',
+                            description: 'Metre sol etiketi (negatif taraf): YAPMA, ALMA, BAŞLAMA, GİTME vb.'
+                        },
+                        metre_right_label: {
+                            type: 'string',
+                            description: 'Metre sağ etiketi (pozitif taraf): YAP, AL, BAŞLA, GİT vb.'
+                        },
+                        ranked_options: {
+                            type: 'array',
+                            description: 'Sıralı seçenekler (karşılaştırma kararları için, en yüksen fit_score\'dan en düşüğe)',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    name: { type: 'string', description: 'Seçenek adı' },
+                                    fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' },
+                                    reason: { type: 'string', description: 'Sadece 1. sıra için neden en uygun olduğunu açıkla' }
+                                },
+                                required: ['name', 'fit_score', 'reason'],
+                                additionalProperties: false
+                            }
+                        },
+                        timing_recommendation: {
+                            type: 'string',
+                            enum: ['now', '1_month', '3_months', '6_months', '1_year', '2_years', 'uncertain', ''],
+                            description: 'Zamanlama önerisi (sadece timing soruları için)'
+                        },
+                        timing_reason: {
+                            type: 'string',
+                            description: 'Neden bu zamanlama önerildi'
+                        },
+                        timing_alternatives: {
+                            type: 'array',
+                            description: 'Alternatif zamanlamalar (timing soruları için)',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    label: { type: 'string', description: 'Görüntülenecek etiket' },
+                                    value: { type: 'string', description: 'Değer: now, 1_month, 3_months, 6_months, 1_year, 2_years, uncertain' },
+                                    fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' }
+                                },
+                                required: ['label', 'value', 'fit_score'],
+                                additionalProperties: false
+                            }
+                        },
+                        method_steps: {
+                            type: 'array',
+                            description: 'Yöntem adımları (nasıl soruları için 4-5 adım)',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    title: { type: 'string', description: 'Adım başlığı (kısa)' },
+                                    description: { type: 'string', description: 'Adım açıklaması (1 cümle)' },
+                                    icon: { type: 'string', description: 'İkon: search, users, package, calendar, check, target, launch' }
+                                },
+                                required: ['title', 'description', 'icon'],
+                                additionalProperties: false
+                            }
+                        },
+                        method_summary: {
+                            type: 'string',
+                            description: 'Yöntem özeti (sadece method soruları için kısa özet cümlesi)'
+                        }
+                    },
+                    required: ['decision_type', 'title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives', 'method_steps', 'method_summary'],
+                    additionalProperties: false
+                }
+            }
+        };
+
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -263,151 +418,7 @@ RULES:
                 ],
                 temperature: 0.7,
                 max_tokens: 1500,
-                response_format: {
-                    type: 'json_schema',
-                    json_schema: {
-                        name: 'analysis_response',
-                        strict: true,
-                        schema: {
-                            type: 'object',
-                            properties: {
-                                decision_type: {
-                                    type: 'string',
-                                    enum: ['binary', 'comparison', 'timing', 'method'],
-                                    description: 'Soru tipi: binary (evet/hayır), comparison (A mı B mi), timing (ne zaman), method (nasıl)'
-                                },
-                                title: { type: 'string', description: 'Spesifik başlık' },
-                                recommendation: { type: 'string', description: '1-2 cümle net tavsiye' },
-                                reasoning: { type: 'string', description: '2-3 cümle gerekçe' },
-                                steps: {
-                                    type: 'array',
-                                    items: { type: 'string' },
-                                    description: 'Maksimum 5 adım'
-                                },
-                                alternatives: {
-                                    type: 'array',
-                                    description: 'Alternative options for the decision (2-4 items)',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            name: { type: 'string' },
-                                            description: { type: 'string' }
-                                        },
-                                        required: ['name', 'description'],
-                                        additionalProperties: false
-                                    }
-                                },
-                                pros: {
-                                    type: 'array',
-                                    items: { type: 'string' },
-                                    description: '3-5 artı madde'
-                                },
-                                cons: {
-                                    type: 'array',
-                                    items: { type: 'string' },
-                                    description: '2-5 eksi madde'
-                                },
-                                sentiment: {
-                                    type: 'string',
-                                    enum: ['positive', 'cautious', 'warning', 'negative', 'neutral'],
-                                    description: 'Genel tavsiye tonu'
-                                },
-                                followup_question: { type: 'string', description: 'Takip sorusu' },
-                                specific_suggestions: {
-                                    type: 'array',
-                                    description: 'Specific suggestions for product/food/activity',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            name: { type: 'string' },
-                                            description: { type: 'string' }
-                                        },
-                                        required: ['name', 'description'],
-                                        additionalProperties: false
-                                    }
-                                },
-                                suggestion_type: {
-                                    type: 'string',
-                                    enum: ['product', 'food', 'activity', 'travel', 'media', 'gift', 'other'],
-                                    description: 'Type of suggestions provided'
-                                },
-                                decision_score: {
-                                    type: 'integer',
-                                    description: 'Karar skoru: 0=YAPMA, 50=NÖTR, 100=YAP. Binary kararlar için metre göstergesi.'
-                                },
-                                score_label: {
-                                    type: 'string',
-                                    description: 'Skoru özetleyen Türkçe etiket: Kesinlikle Uzak Dur, Dikkatli Ol, İki Tarafı da Düşün, Olumlu Yaklaşım, Kesinlikle Yap!'
-                                },
-                                metre_left_label: {
-                                    type: 'string',
-                                    description: 'Metre sol etiketi (negatif taraf): YAPMA, ALMA, BAŞLAMA, GİTME vb.'
-                                },
-                                metre_right_label: {
-                                    type: 'string',
-                                    description: 'Metre sağ etiketi (pozitif taraf): YAP, AL, BAŞLA, GİT vb.'
-                                },
-                                ranked_options: {
-                                    type: 'array',
-                                    description: 'Sıralı seçenekler (karşılaştırma kararları için, en yüksen fit_score\'dan en düşüğe)',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            name: { type: 'string', description: 'Seçenek adı' },
-                                            fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' },
-                                            reason: { type: 'string', description: 'Sadece 1. sıra için neden en uygun olduğunu açıkla' }
-                                        },
-                                        required: ['name', 'fit_score', 'reason'],
-                                        additionalProperties: false
-                                    }
-                                },
-                                timing_recommendation: {
-                                    type: 'string',
-                                    enum: ['now', '1_month', '3_months', '6_months', '1_year', '2_years', 'uncertain', ''],
-                                    description: 'Zamanlama önerisi (sadece timing soruları için)'
-                                },
-                                timing_reason: {
-                                    type: 'string',
-                                    description: 'Neden bu zamanlama önerildi'
-                                },
-                                timing_alternatives: {
-                                    type: 'array',
-                                    description: 'Alternatif zamanlamalar (timing soruları için)',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            label: { type: 'string', description: 'Görüntülenecek etiket' },
-                                            value: { type: 'string', description: 'Değer: now, 1_month, 3_months, 6_months, 1_year, 2_years, uncertain' },
-                                            fit_score: { type: 'integer', description: 'Uygunluk skoru 0-100' }
-                                        },
-                                        required: ['label', 'value', 'fit_score'],
-                                        additionalProperties: false
-                                    }
-                                },
-                                method_steps: {
-                                    type: 'array',
-                                    description: 'Yöntem adımları (nasıl soruları için 4-5 adım)',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            title: { type: 'string', description: 'Adım başlığı (kısa)' },
-                                            description: { type: 'string', description: 'Adım açıklaması (1 cümle)' },
-                                            icon: { type: 'string', description: 'İkon: search, users, package, calendar, check, target, launch' }
-                                        },
-                                        required: ['title', 'description', 'icon'],
-                                        additionalProperties: false
-                                    }
-                                },
-                                method_summary: {
-                                    type: 'string',
-                                    description: 'Yöntem özeti (sadece method soruları için kısa özet cümlesi)'
-                                }
-                            },
-                            required: ['decision_type', 'title', 'recommendation', 'reasoning', 'steps', 'alternatives', 'pros', 'cons', 'sentiment', 'followup_question', 'specific_suggestions', 'suggestion_type', 'decision_score', 'score_label', 'metre_left_label', 'metre_right_label', 'ranked_options', 'timing_recommendation', 'timing_reason', 'timing_alternatives', 'method_steps', 'method_summary'],
-                            additionalProperties: false
-                        }
-                    }
-                }
+                response_format: responseFormat
             })
         })
 
@@ -424,7 +435,48 @@ RULES:
             throw new Error('No content in response')
         }
 
-        const result = safeParseJson(content)
+        let result;
+        try {
+            result = safeParseJson(content);
+        } catch (parseErr) {
+            console.error('Invalid JSON from model. First 800 chars:', content.slice(0, 800));
+            const repairResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${openaiApiKey}`,
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You fix malformed JSON. Return ONLY a valid JSON object that matches the schema. Do not include code fences or commentary.'
+                        },
+                        {
+                            role: 'user',
+                            content: `Fix this into valid JSON matching the schema. Return only JSON:\n${content}`
+                        }
+                    ],
+                    temperature: 0,
+                    max_tokens: 1200,
+                    response_format: responseFormat
+                })
+            });
+
+            if (!repairResponse.ok) {
+                const errorText = await repairResponse.text();
+                console.error('OpenAI repair error:', errorText);
+                throw parseErr;
+            }
+
+            const repairData = await repairResponse.json();
+            const repairContent = repairData.choices[0]?.message?.content;
+            if (!repairContent) {
+                throw parseErr;
+            }
+            result = safeParseJson(repairContent);
+        }
         console.log('📊 Analysis generated:', result.title)
 
         return createEncodedResponse(result, corsHeaders)
